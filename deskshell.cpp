@@ -14,6 +14,8 @@ namespace deskshell {
     };
 
     class Task_bar : Panel {
+    public:
+        unsigned int transparency;
     };
 
     class Panel_widget : Widget {
@@ -59,8 +61,9 @@ namespace deskshell {
 
     class Button : Widget {
     public:
-        Button(const wstring label) 
-            : label(label) {}
+        Button(const wstring label) : label(label) {
+            // TODO: Check if label fits the button window size.
+        }
 
         void change_label(const wstring new_label) {
             label = new_label;
@@ -69,11 +72,27 @@ namespace deskshell {
     private:
         wstring label;
     };
+
+    class Main_display {
+    public:
+        Main_display() {
+            display = XOpenDisplay(NULL);
+            if (!display)
+                die("Failed to open main display!");
+        }
+        void run() {}
+        ~Main_display() {
+            XCloseDisplay(display);
+        }
+    private:
+        Display *display;
+    };
 }
 
+using namespace deskshell;
+
 int main() {
-    auto display = XOpenDisplay(NULL);
-    if (!display)
-        deskshell::die("Failed to open main display!");
+    Main_display d;
+    d.run();
     return EXIT_SUCCESS;
 }
