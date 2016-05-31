@@ -30,6 +30,22 @@ namespace dshell {
             // TODO: Error check?
             return fbp[x + (y * xres)];
         }
+
+        uint maxw() {
+            return 0;
+        }
+
+        uint maxh() {
+            return 0;
+        }
+
+        uint minw() {
+            return 0;
+        }
+
+        uint minh() {
+            return 0;
+        }
     
         ~Fb() {
             munmap(fbp, size);
