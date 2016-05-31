@@ -2,33 +2,39 @@
 using namespace std;
 #include <X11/Xlib.h>
 #include "log.hpp"
+#include "conn.hpp"
 
 namespace deskshell {
+    class Wnd {
+    };
+
     // A widget is a desktop object a user can interact with.
-    class Widget {
+    class Widget : Wnd {
     protected:
         void draw();
     };
 
-    class Panel {
-    };
-
-    class Task_bar : Panel {
+    class Panel : Widget {
     public:
+        void drag_to(const int x, const int y) {
+        }
+    };
+
+    class Taskbar {
+    public:
+        Taskbar() {
+            c.create_window();
+        }
         unsigned int transparency;
+    private:
+        Conn c;
     };
 
-    class Panel_widget : Widget {
-    };
-
-    class Menu : Panel_widget {
-    };
-
-    class Window {
+    class Menu : Panel {
     };
 
     // A dialog to ask the user questions.
-    class Dialog : Window {
+    class Dlg : Wnd {
     public:
     };
 
@@ -49,9 +55,9 @@ namespace deskshell {
     };
     
     // Ask the user which file to open on the system.
-    class File_dialog : Dialog {
+    class Filedlg : Dlg {
     public:
-        File_dialog(const char *pwd) {
+        Filedlg(const char *pwd) {
             FILE *fp = fopen(pwd, "r");
             if (!fp)
                 throw -NOT_FOUND;
@@ -59,40 +65,26 @@ namespace deskshell {
     private:
     };
 
-    class Button : Widget {
+    class Btn : Widget {
     public:
-        Button(const wstring label) : label(label) {
+        Btn(const wstring label) : l(label) {
             // TODO: Check if label fits the button window size.
         }
 
-        void change_label(const wstring new_label) {
-            label = new_label;
+        void change(const wstring label) {
+            l = label;
             draw();
         }
     private:
-        wstring label;
+        wstring l;
     };
 
-    class Main_display {
-    public:
-        Main_display() {
-            display = XOpenDisplay(NULL);
-            if (!display)
-                die("Failed to open main display!");
-        }
-        void run() {}
-        ~Main_display() {
-            XCloseDisplay(display);
-        }
-    private:
-        Display *display;
-    };
 }
 
 using namespace deskshell;
 
 int main() {
-    Main_display d;
-    d.run();
+    Conn c;
+    c.create_window("deskshell");
     return EXIT_SUCCESS;
 }
