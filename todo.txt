@@ -1,0 +1,3 @@
+Xdshell
+GTK+shell
+GTKshell

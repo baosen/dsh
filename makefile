@@ -1,6 +1,6 @@
 CFLAGS = -std=c++14
 
-all: deskshell
+all: dshell
 
-deskshell: deskshell.cpp
-	g++ $< -o $@ $(CFLAGS) `pkg-config --cflags --libs xcb-atom`
+dshell: dshell.cpp log.cpp
+	g++ $^ -o $@ $(CFLAGS)

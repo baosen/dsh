@@ -1,0 +1,4 @@
+namespace dshell {
+    class Fb {
+    };
+}

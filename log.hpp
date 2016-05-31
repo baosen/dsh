@@ -1,3 +1,3 @@
-namespace deskshell {
+namespace dshell {
     void die(const char* error);
 }
