@@ -37,11 +37,18 @@ namespace {
         destroy_taskb();
         destroy_fb();
     }
+
+    void run() {
+        for (;;) {
+        }
+    }
 }
 
 int main() {
     try {
         setup();
+        run();
+        destroy();
     } catch(...) {
         destroy();
         throw;

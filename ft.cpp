@@ -1,5 +1,6 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
+#include "fb.hpp"
 #include "log.hpp"
 using namespace dshell;
 
@@ -10,5 +11,8 @@ namespace {
         auto err = FT_Init_FreeType(&lib);
         if (err)
             die("Failed to initialize Freetype!");
+    }
+
+    void draw_text(const uint x, const uint y, const char* s) {
     }
 }
