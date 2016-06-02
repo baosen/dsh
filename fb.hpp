@@ -1,11 +1,9 @@
 #include "types.hpp"
 
 namespace dshell {
-    class Fb {
-    public:
-        uint maxw();
-        uint maxh();
-        uint minw();
-        uint minh();
-    };
+    void init_fb();
+    char& access(const uint x, const uint y);
+    uint maxw();
+    uint maxh();
+    void destroy_fb();
 }
