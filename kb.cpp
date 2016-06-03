@@ -47,8 +47,8 @@ int getkbcode() {
                 break;
             }
     }
-    if (e.type == EV_KEY && e.value >= 0 && e.value <= 2)
+    if (e.type == EV_KEY && 0 <= e.value && e.value <= 2)
         printf("%s 0x%04x (%d)\n", evval[e.value], (int)e.code, (int)e.code);
 
-    return 0;
+    return e.code;
 }
