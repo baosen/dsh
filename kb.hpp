@@ -1,2 +1,2 @@
-namespace dshell {
-}
+void openkb();
+int getkbcode();

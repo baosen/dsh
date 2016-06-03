@@ -2,29 +2,26 @@
 #include "fb.hpp"
 #include "taskb.hpp"
 
-namespace dshell {
-    class Pan {
-    public:
-    // TODO: Drag.
-    };
+class Pan {
+public:
+// TODO: Drag.
+};
 
-    // Different ways for windows to be laid out.
-    class Lay {
-    protected:
-        void place();
-    };
+// Different ways for windows to be laid out.
+class Lay {
+protected:
+    void place();
+};
 
-    class Float : Lay {
-    };
+class Float : Lay {
+};
 
-    class Tiled : Lay {
-    };
-    
-    enum {
-        NOT_FOUND
-    };
-}
-using namespace dshell;
+class Tiled : Lay {
+};
+
+enum {
+    NOT_FOUND
+};
 
 namespace {
     void setup() {

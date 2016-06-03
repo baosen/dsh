@@ -12,7 +12,7 @@ namespace {
         if (err)
             die("Failed to initialize Freetype!");
     }
+}
 
-    void draw_text(const uint x, const uint y, const char* s) {
-    }
+void draw(const uint x, const uint y, const char *text) {
 }

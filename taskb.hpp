@@ -1,4 +1,2 @@
-namespace dshell {
-    void make_taskb();
-    void destroy_taskb();
-}
+void make_taskb();
+void destroy_taskb();
