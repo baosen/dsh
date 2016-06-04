@@ -6,6 +6,7 @@
 #include <linux/input.h>
 #include <cstring>
 #include <cstdio>
+#include "kb.hpp"
 
 namespace {
     const char *d = "/dev/input/event1";
@@ -17,7 +18,7 @@ namespace {
         "REPEATED"
     };
 
-    const wchar_t c2wchar[255] {
+    const wchar_t c2wchar[NCODES] {
         0, 0, 
         '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=',
         0,
