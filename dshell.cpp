@@ -1,5 +1,6 @@
 #include "ft.hpp"
 #include "fb.hpp"
+#include "kb.hpp"
 #include "taskb.hpp"
 
 class Pan {
@@ -23,6 +24,9 @@ enum {
     NOT_FOUND
 };
 
+void h1() {
+}
+
 namespace {
     void setup() {
         init_ft();
@@ -37,6 +41,7 @@ namespace {
 
     void run() {
         for (;;) {
+            auto code = getkbcode();
         }
     }
 }
