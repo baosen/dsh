@@ -18,7 +18,7 @@ namespace {
         "REPEATED"
     };
 
-    const wchar_t c2wchar[NCODES] {
+    const wchar_t kbcode2wchar[MAX_KEYBOARD_CODES] {
         0, 0, 
         '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=',
         0,
@@ -30,7 +30,7 @@ namespace {
     bool caps = false;
 }
 
-void openkb() {
+void open_keyboard() {
     fd = open(d, O_RDONLY);
     if (fd == -1) {
         fprintf(stderr, "Cannot open %s: %s.\n", d, strerror(errno));
@@ -39,34 +39,34 @@ void openkb() {
 }
 
 // Get the pressed keyboard codes from the keyboard queue.
-int getkbcode() {
-    struct input_event e;
+int get_keyboard_code() {
+    struct input_event event;
 
     for (;;) {
-        const ssize_t n = read(fd, &e, sizeof e);
+        const ssize_t n = read(fd, &event, sizeof event);
         if (n == (ssize_t)-1) {
             if (errno == EINTR)
                 continue;
             else
                 break;
         } else
-            if (e.type == EV_KEY) {
+            if (event.type == EV_KEY) {
                 errno = EIO;
                 break;
             }
     }
-    if (e.type == EV_KEY && 0 <= e.value && e.value <= 2)
-        printf("%s 0x%04x (%d)\n", state[e.value], (int)e.code, (int)e.code);
+    if (event.type == EV_KEY && 0 <= event.value && event.value <= 2)
+        printf("%s 0x%04x (%d)\n", state[event.value], (int)event.code, (int)event.code);
 
-    return e.code;
+    return event.code;
 }
 
 // Get UTF-16 character.
-wchar_t getc() {
-    auto c = getkbcode();
-    if (c == KEY_LEFTSHIFT || c == KEY_RIGHTSHIFT)
-        return towupper(c2wchar[c]);
-    else if (c == KEY_CAPSLOCK)
+wchar_t get_wide_character() {
+    auto kbcode = get_keyboard_code();
+    if (kbcode == KEY_LEFTSHIFT || kbcode == KEY_RIGHTSHIFT)
+        return towupper(kbcode2wchar[kbcode]);
+    else if (kbcode == KEY_CAPSLOCK)
         caps = !caps;
-    return c2wchar[c];
+    return kbcode2wchar[kbcode];
 }

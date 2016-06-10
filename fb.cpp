@@ -7,46 +7,55 @@
 using namespace dshell;
 
 namespace {
-    int fd; // Framebuffer's file descriptor.
-    unsigned int width, height;
-    long int size;
-    char *fbp;
+    int          framebuf_file_desc;
+
+    unsigned int width_of_screen_in_px, 
+                 height_of_screen_in_px;
+
+    char*        framebuffer;
+    long int     framebuffer_size;
+
+    char* map_framebuffer_to_memory() {
+        return static_cast<char*>(mmap(0, framebuffer_size, 
+                                          PROT_READ | PROT_WRITE, 
+                                          MAP_SHARED, framebuf_file_desc, 0));
+    }
 }
 
-void init_fb() {
-    fd = open("/dev/fb0", O_RDWR);
-    if (fd == -1)
+void init_framebuffer() {
+    framebuf_file_desc = open("/dev/fb0", O_RDWR);
+    if (framebuf_file_desc == -1)
         die("Cannot open framebuffer 0!");
 
     struct fb_var_screeninfo vinfo;
-    if (ioctl(fd, FBIOGET_VSCREENINFO, &vinfo))
-        die("Error reading video screen information.");
-    width = vinfo.xres;
-    height = vinfo.yres;
+    if (ioctl(framebuf_file_desc, FBIOGET_VSCREENINFO, &vinfo))
+        die("Can't read video screen information.");
+    width_of_screen_in_px = vinfo.xres;
+    height_of_screen_in_px = vinfo.yres;
 
     struct fb_fix_screeninfo finfo;
-    if (ioctl(fd, FBIOGET_FSCREENINFO, &finfo))
-        die("Error reading fixed screen information.");
+    if (ioctl(framebuf_file_desc, FBIOGET_FSCREENINFO, &finfo))
+        die("Can't read fixed screen information.");
 
-    size = finfo.smem_len;
-    fbp = (char*)mmap(0, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    framebuffer_size = finfo.smem_len;
+    framebuffer = map_framebuffer_to_memory();
 }
 
-char& access(const uint x, const uint y) {
+char& get(const uint x, const uint y) {
     // TODO: Error check?
-    return fbp[x + (y * width)];
+    return framebuffer[x + (y * width_of_screen_in_px)];
 }
 
 uint maxw() {
-    return width;
+    return width_of_screen_in_px;
 }
 
 uint maxh() {
-    return height;
+    return height_of_screen_in_px;
 }
 
-void destroy_fb() {
-    munmap(fbp, size);
-    if (close(fd) == -1)
+void destroy_framebuffer() {
+    munmap(framebuffer, framebuffer_size);
+    if (close(framebuf_file_desc) == -1)
         die("Failed to close framebuffer 0!");
 }

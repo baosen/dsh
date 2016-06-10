@@ -1,7 +1,7 @@
 #include "kb.hpp"
 
 int main() {
-    openkb();
+    open_keyboard();
     for (;;)
         getkbcode();
 }

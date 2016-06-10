@@ -3,45 +3,40 @@
 #include "kb.hpp"
 #include "taskb.hpp"
 
-class Pan {
+class Panel {
 public:
 // TODO: Drag.
 };
 
 // Different ways for windows to be laid out.
-class Lay {
+class Layout {
 protected:
     void place();
-};
-
-class Float : Lay {
-};
-
-class Tiled : Lay {
 };
 
 enum {
     NOT_FOUND
 };
 
-void h1() {
-}
+#define forever for (;;)
 
 namespace {
     void setup() {
         init_ft();
-        init_fb();
+        init_framebuffer();
         make_taskb();
     }
     
-    void destroy() {
+    void destroy_shell() {
         destroy_taskb();
-        destroy_fb();
+        destroy_framebuffer();
     }
 
     void run() {
-        for (;;) {
-            auto code = getkbcode();
+        forever {
+            auto kbcode = get_keyboard_code();
+            switch (kbcode) {
+            }
         }
     }
 }
@@ -50,9 +45,9 @@ int main() {
     try {
         setup();
         run();
-        destroy();
+        destroy_shell();
     } catch(...) {
-        destroy();
+        destroy_shell();
         throw;
     }
     return 0;
