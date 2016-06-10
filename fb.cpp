@@ -7,8 +7,8 @@
 using namespace dshell;
 
 namespace {
-    int fd;
-    unsigned int xres, yres;
+    int fd; // Framebuffer's file descriptor.
+    unsigned int width, height;
     long int size;
     char *fbp;
 }
@@ -21,8 +21,8 @@ void init_fb() {
     struct fb_var_screeninfo vinfo;
     if (ioctl(fd, FBIOGET_VSCREENINFO, &vinfo))
         die("Error reading video screen information.");
-    xres = vinfo.xres;
-    yres = vinfo.yres;
+    width = vinfo.xres;
+    height = vinfo.yres;
 
     struct fb_fix_screeninfo finfo;
     if (ioctl(fd, FBIOGET_FSCREENINFO, &finfo))
@@ -34,15 +34,15 @@ void init_fb() {
 
 char& access(const uint x, const uint y) {
     // TODO: Error check?
-    return fbp[x + (y * xres)];
+    return fbp[x + (y * width)];
 }
 
 uint maxw() {
-    return xres;
+    return width;
 }
 
 uint maxh() {
-    return yres;
+    return height;
 }
 
 void destroy_fb() {
