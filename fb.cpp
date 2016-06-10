@@ -30,7 +30,7 @@ void init_framebuffer() {
     struct fb_var_screeninfo vinfo;
     if (ioctl(framebuf_file_desc, FBIOGET_VSCREENINFO, &vinfo))
         die("Can't read video screen information.");
-    width_of_screen_in_px = vinfo.xres;
+    width_of_screen_in_px  = vinfo.xres;
     height_of_screen_in_px = vinfo.yres;
 
     struct fb_fix_screeninfo finfo;
@@ -46,11 +46,11 @@ char& get(const uint x, const uint y) {
     return framebuffer[x + (y * width_of_screen_in_px)];
 }
 
-uint maxw() {
+uint get_max_width() {
     return width_of_screen_in_px;
 }
 
-uint maxh() {
+uint get_max_height() {
     return height_of_screen_in_px;
 }
 

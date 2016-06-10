@@ -7,7 +7,7 @@ using namespace dshell;
 namespace {
     FT_Library lib;
     
-    void init_ft() {
+    void init_freetype() {
         auto err = FT_Init_FreeType(&lib);
         if (err)
             die("Failed to initialize Freetype!");

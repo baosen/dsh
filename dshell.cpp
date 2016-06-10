@@ -21,14 +21,12 @@ enum {
 #define forever for (;;)
 
 namespace {
-    void setup() {
-        init_ft();
+    void setup_dshell() {
+        init_freetype();
         init_framebuffer();
-        make_taskb();
     }
     
-    void destroy_shell() {
-        destroy_taskb();
+    void destroy_dshell() {
         destroy_framebuffer();
     }
 
@@ -43,11 +41,11 @@ namespace {
 
 int main() {
     try {
-        setup();
+        setup_dshell();
         run();
-        destroy_shell();
+        destroy_dshell();
     } catch(...) {
-        destroy_shell();
+        destroy_dshell();
         throw;
     }
     return 0;
