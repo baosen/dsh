@@ -3,30 +3,40 @@
 #include <linux/fb.h>
 #include <sys/mman.h>
 #include <sys/ioctl.h>
+#include "log.hpp"
 
-namespace {
-    int          framebuffer_file_descriptor;
+class Pixel {
+};
 
-    unsigned int width_resolution_in_pixels,
-                 height_resolution_in_pixels;
+typedef Byte char;
 
-    char*        framebuffer;
-    long int     framebuffer_size;
-
-    char* map_framebuffer_to_memory(const size_t framebuf_size)
+class Framebuffer {
+public:
+    Framebuffer()
     {
-        framebuffer_size = framebuf_size;
-        return static_cast<char*>(mmap(0, framebuffer_size, PROT_READ | PROT_WRITE, MAP_SHARED, framebuffer_file_descriptor, 0));
+        open_framebuffer_file();
+        setup_screen_resolution();
+        framebuffer = map_framebuffer();
     }
 
-    void open_framebuffer()
+    Byte& get_pixel(const unsigned int x, const unsigned int y)
     {
-        framebuffer_file_descriptor = open("/dev/fb0", O_RDWR);
-        if (framebuffer_file_descriptor == -1) {
-            die("Cannot open framebuffer 0!");
+        // TODO: Error check?
+        return framebuffer[x + (y * width_resolution_in_pixels)];
+    }
+
+    ~Framebuffer()
+    {
+        // Unmap framebuffer from the address space.
+        munmap(framebuffer, framebuffer_size);
+
+        // Close the framebuffer file descriptor.
+        if (close(framebuffer_file_descriptor) == -1) {
+            die("Failed to close framebuffer 0!");
         }
     }
 
+private:
     auto get_variable_screen_info()
     {
         fb_var_screeninfo variable_screeninfo;
@@ -48,41 +58,34 @@ namespace {
 
         return fixed_screeninfo;
     }
-}
 
-void setup_screen_resolution()
-{
-    const auto variable_info    = get_variable_screen_info();
-    width_resolution_in_pixels  = variable_info.xres;
-    height_resolution_in_pixels = variable_info.yres;
-}
+    char* map_framebuffer()
+    {
+        framebuffer_size = get_fixed_screen_info().smem_len;
+        return static_cast<char*>(mmap(0, framebuffer_size, PROT_READ | PROT_WRITE, MAP_SHARED, framebuffer_file_descriptor, 0));
+    }
 
-void setup_framebuffer()
-{
-    open_framebuffer();
-    setup_screen_resolution();
-    framebuffer = map_framebuffer_to_memory(get_fixed_screen_info().smem_len);
-}
+    void open_framebuffer_file()
+    {
+        framebuffer_file_descriptor = open("/dev/fb0", O_RDWR);
 
-char& get(const unsigned int x, const unsigned int y)
-{
-    // TODO: Error check?
-    return framebuffer[x + (y * width_resolution_in_pixels)];
-}
+        if (framebuffer_file_descriptor == -1) {
+            die("Cannot open framebuffer 0!");
+        }
+    }
 
-unsigned int get_max_width()
-{
-    return width_resolution_in_pixels;
-}
+    void setup_screen_resolution()
+    {
+        const auto variable_info    = get_variable_screen_info();
+        width_resolution_in_pixels  = variable_info.xres;
+        height_resolution_in_pixels = variable_info.yres;
+    }
 
-unsigned int get_max_height()
-{
-    return height_resolution_in_pixels;
-}
+    int framebuffer_file_descriptor;
 
-void destroy_framebuffer()
-{
-    munmap(framebuffer, framebuffer_size);
-    if (close(framebuffer_file_descriptor) == -1)
-        die("Failed to close framebuffer 0!");
-}
+    unsigned int width_resolution_in_pixels,
+            height_resolution_in_pixels;
+
+    char*  framebuffer = nullptr;
+    size_t framebuffer_size = 0;
+};
