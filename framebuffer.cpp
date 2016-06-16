@@ -43,7 +43,7 @@ namespace {
     }
 }
 
-void init_framebuffer() {
+void initialize_framebuffer() {
     open_framebuffer();
 
     const auto vinfo = get_variable_screen_info();

@@ -1,6 +1,6 @@
 #include "types.hpp"
 #include "wnd.hpp"
-#include "fb.hpp"
+#include "framebuffer.hpp"
 using namespace dshell;
 
 namespace {

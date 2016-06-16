@@ -1,4 +1,4 @@
-#include "kb.hpp"
+#include "keyboard.hpp"
 
 int main() {
     open_keyboard();

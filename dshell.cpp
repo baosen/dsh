@@ -1,7 +1,6 @@
-#include "ft.hpp"
-#include "fb.hpp"
-#include "kb.hpp"
-#include "taskb.hpp"
+#include "freetype.hpp"
+#include "framebuffer.hpp"
+#include "keyboard.hpp"
 
 class Panel {
 public:
@@ -23,14 +22,14 @@ enum {
 namespace {
     void setup_dshell() {
         init_freetype();
-        init_framebuffer();
+        initialize_framebuffer();
     }
     
     void destroy_dshell() {
         destroy_framebuffer();
     }
 
-    void run() {
+    void run_dshell() {
         forever {
             auto kbcode = get_keyboard_code();
             switch (kbcode) {
@@ -39,14 +38,15 @@ namespace {
     }
 }
 
-int main() {
+int main()
+{
     try {
         setup_dshell();
-        run();
+        run_dshell();
         destroy_dshell();
     } catch(...) {
         destroy_dshell();
         throw;
     }
-    return 0;
+    return EXIT_SUCCESS;
 }

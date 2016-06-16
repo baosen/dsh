@@ -1,6 +1,6 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include "fb.hpp"
+#include "framebuffer.hpp"
 #include "log.hpp"
 using namespace dshell;
 

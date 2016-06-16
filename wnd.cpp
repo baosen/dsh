@@ -1,4 +1,4 @@
-#include "fb.hpp"
+#include "framebuffer.hpp"
 #include "wnd.hpp"
 
 namespace {
@@ -8,7 +8,7 @@ namespace {
 Wnd::Wnd(const uint x, const uint y, const uint w, const uint h) 
     : x(x), y(y), width(w), height(h) {}
 
-// Maximize.
+// Maximize the window.
 void Wnd::max() {
     // Save old position.
     oldw = width;
@@ -20,7 +20,7 @@ void Wnd::max() {
     paint();
 }
 
-// Minimize.
+// Minimize the window.
 void Wnd::min() {
     paint();
 }
