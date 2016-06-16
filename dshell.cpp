@@ -1,5 +1,6 @@
 #include "freetype.hpp"
 #include "framebuffer.hpp"
+#include "singleton.h"
 #include "keyboard.hpp"
 
 class Panel {
@@ -34,6 +35,8 @@ namespace {
 
 int main()
 {
+    auto framebuffer = Singleton<Framebuffer>::get_instance();
+
     try {
         setup_dshell();
         run_dshell();
@@ -42,5 +45,6 @@ int main()
         destroy_dshell();
         throw;
     }
+
     return EXIT_SUCCESS;
 }

@@ -25,6 +25,6 @@ set(SOURCE_FILES
     types.hpp
     wgt.cpp
     wgt.hpp
-    wnd.hpp window.cpp)
+    wnd.hpp window.cpp framebuffer.h singleton.h)
 
 add_executable(dshell ${SOURCE_FILES})
