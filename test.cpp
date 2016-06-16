@@ -1,7 +1,12 @@
 #include "keyboard.hpp"
 
-int main() {
+int main()
+{
     open_keyboard();
-    for (;;)
+
+    for (;;) {
         getkbcode();
+    }
+
+    return EXIT_SUCCESS;
 }

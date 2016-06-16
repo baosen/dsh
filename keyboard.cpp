@@ -6,6 +6,7 @@
 #include <cstring>
 #include <cstdio>
 #include <stdexcept>
+#include <cstdlib>
 #include "keyboard.hpp"
 
 namespace {
@@ -16,6 +17,9 @@ namespace {
         "RELEASED",
         "PRESSED ",
         "REPEATED"
+    };
+
+    const char keyboard_to_ascii_character[MAX_KEYBOARD_CODES] {
     };
 
     // A conversion lookup-table converting a USB keyboard code to a wide character.
@@ -31,8 +35,8 @@ namespace {
     bool caps_lock = false;
 }
 
-const int READING_ERROR = -1;
-const int OPENING_ERROR = -1;
+const int READING_ERROR = -1; // Failed to read the file.
+const int OPENING_ERROR = -1; // Failed to open a file.
 
 // Opens the keyboard file descriptor.
 void open_keyboard()
@@ -86,7 +90,12 @@ int get_keyboard_code()
 // Returns the ASCII character pressed from the keyboard.
 char read_character_pressed_from_keyboard()
 {
+    const auto keyboard_code = get_keyboard_code();
+
+    // TODO: Implementing converting characters.
     throw std::runtime_error("Not implemented yet...");
+
+    return keyboard_to_ascii_character[keyboard_code];
 }
 
 // Returns UTF-16 character the user pressed.

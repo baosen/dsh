@@ -4,9 +4,10 @@ using namespace std;
 
 namespace {
     typedef void (*f)();
-    list<f> kb[NCODES];
+    list<f> keyboard_codes[MAX_KEYBOARD_CODES];
 }
 
-void handle(const int code, f f) {
-    kb[code].push_back(f);
+void handle(const int code, f f)
+{
+    keyboard_codes[code].push_back(f);
 }
