@@ -5,6 +5,7 @@
 #include <linux/input.h>
 #include <cstring>
 #include <cstdio>
+#include <stdexcept>
 #include "keyboard.hpp"
 
 namespace {
@@ -46,23 +47,21 @@ void open_keyboard()
 
 #define forever for (;;)
 
-input_event get_keyboard_event()
+// Reads the keyboard event that is returned by the operating system
+// when the user interacts with the keyboard.
+input_event read_keyboard_event_from_keyboard()
 {
     input_event keyboard_event;
 
     // Read keyboard_event from the keyboard file device.
     forever {
         const ssize_t bytes_read = read(keyboard_file_descriptor, &keyboard_event, sizeof keyboard_event);
-        if (bytes_read == static_cast<ssize_t>(READING_ERROR)) {
-            if (errno == EINTR) // Error Interrupt.
-                continue;
-            else
-                break;
-        } else {
-            if (keyboard_event.type == EV_KEY) {
-                errno = EIO; // Error I/O.
-                break;
-            }
+
+        if (bytes_read == static_cast<ssize_t>(READING_ERROR) && errno == EINTR) { // Error Interrupt.
+            break;
+        } else if (keyboard_event.type == EV_KEY) { // should not happen.
+            errno = EIO; // Error I/O.
+            break;
         }
     }
 
@@ -72,26 +71,38 @@ input_event get_keyboard_event()
 // Get the pressed keyboard codes from the keyboard queue.
 int get_keyboard_code()
 {
-    const auto keyboard_event = get_keyboard_event();
+    // Reads the keyboard event from the keyboard.
+    const auto keyboard_event = read_keyboard_event_from_keyboard();
 
     // Print keyboard code if keyboard_event is a key change.
-    if (keyboard_event.type == EV_KEY && 0 <= keyboard_event.value && keyboard_event.value <= 2)
-        printf("%s 0x%04x (%d)\n", button_state[keyboard_event.value], (int)keyboard_event.code, (int)keyboard_event.code);
+    if (keyboard_event.type == EV_KEY && 0 <= keyboard_event.value && keyboard_event.value <= 2) {
+        printf("%s 0x%04x (%d)\n", button_state[keyboard_event.value], static_cast<int>(keyboard_event.code), static_cast<int>(keyboard_event.code));
+    }
 
+    // Returns the keyboard code read.
     return keyboard_event.code;
 }
 
-// Get UTF-16 character the user pressed.
-wchar_t get_wide_character()
+// Returns the ASCII character pressed from the keyboard.
+char read_character_pressed_from_keyboard()
+{
+    throw std::runtime_error("Not implemented yet...");
+}
+
+// Returns UTF-16 character the user pressed.
+wchar_t read_wide_character_from_keyboard()
 {
     // Get the keyboard code pressed or released.
-    auto keyboard_code = get_keyboard_code();
+    const auto keyboard_code = get_keyboard_code();
 
     // Convert the keyboard-code to the corresponding wide character.
-    if (keyboard_code == KEY_LEFTSHIFT || keyboard_code == KEY_RIGHTSHIFT) // To uppercase if user is holding shift.
+    if (keyboard_code == KEY_LEFTSHIFT || keyboard_code == KEY_RIGHTSHIFT) {
+        // Convert to uppercase if the user is holding shift.
         return towupper(keyboard_to_widechar[keyboard_code]);
-    else if (keyboard_code == KEY_CAPSLOCK) // To uppercase if user is caps lock is on.
+    } else if (keyboard_code == KEY_CAPSLOCK) { // To uppercase if user is caps lock is on.
+        // Turn on and off caps lock.
         caps_lock = !caps_lock;
+    }
 
     // Convert the keyboard code to the related wide character and return it.
     return keyboard_to_widechar[keyboard_code];

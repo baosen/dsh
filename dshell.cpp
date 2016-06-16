@@ -13,16 +13,10 @@ protected:
     void place();
 };
 
-enum {
-    NOT_FOUND
-};
-
-#define forever for (;;)
-
 namespace {
     void setup_dshell() {
         init_freetype();
-        initialize_framebuffer();
+        setup_framebuffer();
     }
     
     void destroy_dshell() {

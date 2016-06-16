@@ -1,14 +1,14 @@
 #include <iostream>
-using namespace std;
+#include <cstdlib>
 
-namespace dshell {
-    void die(const char* error) {
-        cerr << error;
-        exit(EXIT_FAILURE);
-    }
-    
-    void warn(const char *msg) {
-        // TODO: Yellowify!
-        cout << msg;
-    }
+void die(const char* error_message)
+{
+    std::cerr << error_message;
+    exit(EXIT_FAILURE);
+}
+
+void warn(const char *warning_message)
+{
+    // TODO: Yellowify!
+    std::cout << warning_message;
 }
