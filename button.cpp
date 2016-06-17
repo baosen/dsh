@@ -1,13 +1,6 @@
-namespace {
-    // Find app/program icon.
-    const char* find(const char *icon) {
-        return "";
-    }
+#include "button.hpp"
+using namespace std;
 
-    class Svg {
-    };
-
-    Svg load(const char *fpath) {
-        return Svg();
-    }
+Button::Button(const string label)
+{
 }

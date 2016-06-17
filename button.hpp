@@ -1,22 +1,13 @@
-namespace dshell {
-    class Mouse {
-    public:
-        Mouse() {
-        }
-    };
+class Image {
+public:
+    Image(const char* filepath) {
+    }
+private:
+};
 
-    class Img {
-    public:
-        Img(const char* filepath) {
-        }
-    private:
-    };
-
-    // A classical button.
-    class Btn {
-    public:
-        Btn(const string label) {}
-    private:
-        Wnd w;
-    };
-}
+class Button {
+public:
+    Button(const std::string label);
+private:
+    Wnd w;
+};
