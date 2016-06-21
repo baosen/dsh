@@ -1,5 +1,4 @@
-#ifndef FRAMEBUFFER_H
-#define FRAMEBUFFER_H
+#pragma once
 
 #include <unistd.h>
 #include <fcntl.h>
@@ -8,85 +7,83 @@
 #include <sys/ioctl.h>
 #include "log.hpp"
 
-class Framebuffer {
+template<int nrows, int ncols>
+class Vec<nrows, ncols> {
+};
+
+class Fb {
 public:
-    Framebuffer()
+    Fb()
     {
-        // Setup the framebuffer.
-        open_framebuffer_file();
+        // Setup the fb.
+        open_fb_file();
         setup_screen_resolution();
-        framebuffer = map_framebuffer();
+        fb = map();
     }
 
-    char& get_pixel_from_framebuffer(const unsigned int x, const unsigned int y)
+    char& operator()(const unsigned int x, const unsigned int y)
     {
         // TODO: Error check?
-        return framebuffer[x + (y * width_resolution_in_pixels)];
+        return fb[x + (y * widthres)];
     }
 
-    ~Framebuffer()
+    ~Fb()
     {
-        // Unmap framebuffer from the address space.
-        munmap(framebuffer, framebuffer_size);
+        // Unmap fb from the address space.
+        munmap(fb, fb_size);
 
-        // Close the framebuffer file descriptor.
-        if (close(framebuffer_file_descriptor) == -1) {
-            die("Failed to close framebuffer 0!");
-        }
+        // Close the fb file descriptor.
+        if (close(fbfd) == -1)
+            die("Failed to close fb 0!");
     }
 
 private:
-    auto get_variable_screen_info()
+    auto get_vinfo()
     {
-        fb_var_screeninfo variable_screeninfo;
+        fb_var_screeninfo vinfo;
 
-        if (ioctl(framebuffer_file_descriptor, FBIOGET_VSCREENINFO, &variable_screeninfo)) {
+        if (ioctl(fbfd, FBIOGET_VSCREENINFO, &vinfo))
             die("Can't read video screen information.");
-        }
 
-        return variable_screeninfo;
+        return vinfo;
     }
 
-    auto get_fixed_screen_info()
+    auto getfinfo()
     {
-        fb_fix_screeninfo fixed_screeninfo;
+        fb_fix_screeninfo finfo;
 
-        if (ioctl(framebuffer_file_descriptor, FBIOGET_FSCREENINFO, &fixed_screeninfo)) {
+        if (ioctl(fbfd, FBIOGET_FSCREENINFO, &finfo)) {
             die("Can't read fixed screen information.");
         }
 
-        return fixed_screeninfo;
+        return finfo;
     }
 
-    char* map_framebuffer()
+    char* map()
     {
-        framebuffer_size = get_fixed_screen_info().smem_len;
-        return static_cast<char*>(mmap(0, framebuffer_size, PROT_READ | PROT_WRITE, MAP_SHARED, framebuffer_file_descriptor, 0));
+        fb_size = getfinfo().smem_len;
+        return static_cast<char*>(mmap(nullptr, fb_size, PROT_READ | PROT_WRITE, MAP_SHARED, fbfd, 0));
     }
 
-    void open_framebuffer_file()
+    void open_fb_file()
     {
-        framebuffer_file_descriptor = open("/dev/fb0", O_RDWR);
+        fbfd = open("/dev/fb0", O_RDWR);
 
-        if (framebuffer_file_descriptor == -1) {
-            die("Cannot open framebuffer 0!");
-        }
+        if (fbfd == -1)
+            die("Cannot open fb 0!");
     }
 
     void setup_screen_resolution()
     {
-        const auto variable_info    = get_variable_screen_info();
-        width_resolution_in_pixels  = variable_info.xres;
-        height_resolution_in_pixels = variable_info.yres;
+        const auto v = get_vinfo();
+        widthres = v.xres;
+        heightres = v.yres;
     }
 
-    int framebuffer_file_descriptor;
+    int fbfd;
 
-    unsigned int width_resolution_in_pixels,
-            height_resolution_in_pixels;
+    unsigned int widthres, heightres;
 
-    char*  framebuffer = nullptr;
-    size_t framebuffer_size = 0;
+    char*  fb = nullptr;
+    size_t fb_size = 0;
 };
-
-#endif FRAMEBUFFER_H

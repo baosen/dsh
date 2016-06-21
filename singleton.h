@@ -1,16 +1,12 @@
-#ifndef DSHELL_SINGLETON_H
-#define DSHELL_SINGLETON_H
+#pragma once
 
 template<class T>
-class Singleton<T> {
+class Slt<T> {
 public:
-    static Singleton<T>& get_instance() {
-        static Singleton<T> s;
+    static Slt<T>& get() {
+        static T s;
         return s;
     }
 private:
-    Singleton();
-    T single_object;
+    Slt();
 };
-
-#endif DSHELL_SINGLETON_H
