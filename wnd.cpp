@@ -1,8 +1,8 @@
-#include "framebuffer.hpp"
+#include "fb.hpp"
 #include "wnd.hpp"
 
-Wnd::Wnd(const uint x, const uint y, const uint w, const uint h) 
-    : x(x), y(y), width(w), height(h) {}
+Wnd::Wnd(const Pos&, const Res&) {
+}
 
 // Maximize the window.
 void Wnd::max() {
@@ -17,4 +17,5 @@ void Wnd::max() {
 
 // Minimize the window.
 void Wnd::min() {
+    width = 0, height = 0;
 }
