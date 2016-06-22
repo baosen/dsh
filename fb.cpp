@@ -1,4 +1,4 @@
-class Pixel {
+class Pix {
 };
 
 void draw(const Rect& r)
