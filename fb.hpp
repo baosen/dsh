@@ -1,9 +1,10 @@
 #pragma once
+#include "types.hpp"
 
 class Fb {
 public:
     Fb();
-    char& operator()(const unsigned int x, const unsigned int y);
+    char& operator()(const uint x, const uint y);
     ~Fb();
 private:
     auto vinfo();
@@ -12,8 +13,8 @@ private:
     void open();
     void setup();
 
-    int fbfd;
-    unsigned int width, height;
+    int fd;
+    uint w, h;
     char*  fb;
     size_t size;
 };

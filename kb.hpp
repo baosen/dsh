@@ -1,4 +1,11 @@
-#define NCODES 255
+#pragma once
 
-void openkb();
-int getkbcode();
+#include <linux/input.h>
+
+class Kb {
+public:
+    Kb();
+    int getkbcode();
+private:
+    input_event read();
+};

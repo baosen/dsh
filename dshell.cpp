@@ -1,6 +1,5 @@
 #include "ft.hpp"
-#include "fb.hpp"
-#include "slt.hpp"
+#include "fbslt.hpp"
 #include "kb.hpp"
 
 int main()
@@ -9,6 +8,5 @@ int main()
     } catch(...) {
         throw;
     }
-
     return 1;
 }

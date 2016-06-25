@@ -1,9 +1,9 @@
 #pragma once
 
 template<class T>
-class Slt<T> {
+class Slt {
 public:
-    static Slt<T>& get() {
+    static auto get() {
         static T s;
         return s;
     }

@@ -1,11 +1,12 @@
+#include "slt.hpp"
 #include "kb.hpp"
 
 int main()
 {
-    openkb();
+    auto kb = Slt<Kb>::get();
 
-    for (;;) 
-        getkbcode();
+    for (;;)
+        kb.getkbcode();
 
     return 0;
 }

@@ -2,7 +2,6 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <errno.h>
-#include <linux/input.h>
 #include <cstring>
 #include <cstdio>
 #include <stdexcept>
@@ -13,6 +12,8 @@
 using namespace std;
 
 namespace {
+    const int  NCODES = 255;
+
     const char *fpath = "/dev/input/event0";
     int kfd;
 
@@ -39,25 +40,23 @@ namespace {
 }
 
 // Opens the keyboard file descriptor.
-void openkb()
-{
-    kfd = open(fpath, O_RDONLY);
+Kb::Kb() {
+    kfd = ::open(fpath, O_RDONLY);
 
     if (kfd == -1) {
         cerr << "Cannot open " << fpath << ": " << strerror(errno) << endl;
-        exit(EXIT_SUCCESS);
+        exit(1);
     }
 }
 
-// Reads the keyboard event that is returned by the operating system
-// when the user interacts with the keyboard.
-input_event read()
+// Reads the keyboard event that is returned by the operating system when the user interacts with the keyboard.
+input_event Kb::read()
 {
     input_event e;
 
     // Read e from the keyboard file device.
     for (;;) {
-        const ssize_t n = read(kfd, &e, sizeof e);
+        const ssize_t n = ::read(kfd, &e, sizeof e);
 
         if (n == (ssize_t)(-1) && errno == EINTR)
             break;
@@ -71,7 +70,7 @@ input_event read()
 }
 
 // Get the pressed keyboard codes from the keyboard queue.
-int getkbcode()
+int Kb::getkbcode()
 {
     // Reads the keyboard event from the keyboard.
     const auto e = read();
@@ -85,31 +84,31 @@ int getkbcode()
 }
 
 // Returns the ASCII character pressed from the keyboard.
-char readc()
-{
-    const auto code = getkbcode();
-
-    // TODO: Implementing converting characters.
-    throw err("Not implemented yet...");
-
-    return kbascii[code];
-}
-
-// Returns UTF-16 character the user pressed.
-wchar_t readwc()
-{
-    // Get the keyboard code pressed or released.
-    const auto code = getkbcode();
-
-    // Convert the keyboard-code to the corresponding wide character.
-    if (code == KEY_LEFTSHIFT || code == KEY_RIGHTSHIFT) {
-        // Convert to uppercase if the user is holding shift.
-        return towupper(kbwide[code]);
-    } else if (code == KEY_CAPSLOCK) { // To uppercase if user is caps lock is on.
-        // Turn on and off caps lock.
-        caps = !caps;
-    }
-
-    // Convert the keyboard code to the related wide character and return it.
-    return kbwide[code];
-}
+//char readc()
+//{
+//    const auto code = getkbcode();
+//
+//    // TODO: Implementing converting characters.
+//    throw err("Not implemented yet...");
+//
+//    return kbascii[code];
+//}
+//
+//// Returns UTF-16 character the user pressed.
+//wchar_t readwc()
+//{
+//    // Get the keyboard code pressed or released.
+//    const auto code = getkbcode();
+//
+//    // Convert the keyboard-code to the corresponding wide character.
+//    if (code == KEY_LEFTSHIFT || code == KEY_RIGHTSHIFT) {
+//        // Convert to uppercase if the user is holding shift.
+//        return towupper(kbwide[code]);
+//    } else if (code == KEY_CAPSLOCK) { // To uppercase if user is caps lock is on.
+//        // Turn on and off caps lock.
+//        caps = !caps;
+//    }
+//
+//    // Convert the keyboard code to the related wide character and return it.
+//    return kbwide[code];
+//}
