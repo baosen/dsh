@@ -2,7 +2,7 @@
 
 int main()
 {
-    open_keyboard();
+    openkb();
 
     for (;;) {
         getkbcode();
