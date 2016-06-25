@@ -1,5 +1,4 @@
 #pragma once
-
 #include <linux/input.h>
 
 class Kb {

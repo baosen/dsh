@@ -55,7 +55,7 @@ input_event Kb::read()
     input_event e;
 
     // Read e from the keyboard file device.
-    for (;;) {
+    forever {
         const ssize_t n = ::read(kfd, &e, sizeof e);
 
         if (n == (ssize_t)(-1) && errno == EINTR)
