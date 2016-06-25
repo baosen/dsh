@@ -7,23 +7,23 @@
 #include <cstdio>
 #include <stdexcept>
 #include <cstdlib>
-#include "keyboard.hpp"
+#include "kb.hpp"
 
 namespace {
     const char *fpath = "/dev/input/event1";
     int kfd = 0;
 
-    const char *const button_state[3] = {
+    const char *const state[3] = {
         "RELEASED",
         "PRESSED ",
         "REPEATED"
     };
 
-    const char kbascii[MAX_KEYBOARD_CODES] {
+    const char kbascii[NCODES] {
     };
 
     // A conversion lookup-table converting a USB keyboard code to a wide character.
-    const wchar_t kbwide[MAX_KEYBOARD_CODES] {
+    const wchar_t kbwide[NCODES] {
         0, 0, 
         '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=',
         0,
@@ -46,46 +46,43 @@ void openkb()
     }
 }
 
-#define forever for (;;)
-
 // Reads the keyboard event that is returned by the operating system
 // when the user interacts with the keyboard.
 input_event read()
 {
-    input_event keyboard_event;
+    input_event e;
 
-    // Read keyboard_event from the keyboard file device.
-    forever {
-        const ssize_t bytes_read = read(kfd, &keyboard_event, sizeof keyboard_event);
+    // Read e from the keyboard file device.
+    for (;;) {
+        const ssize_t n = read(kfd, &e, sizeof e);
 
-        if (bytes_read == static_cast<ssize_t>(READING_ERROR) && errno == EINTR) { // Error Interrupt.
+        if (n == (ssize_t)(-1) && errno == EINTR)
             break;
-        } else if (keyboard_event.type == EV_KEY) { // should not happen.
-            errno = EIO; // Error I/O.
+        else if (e.type == EV_KEY) { // should not happen.
+            errno = EIO;
             break;
         }
     }
 
-    return keyboard_event;
+    return e;
 }
 
 // Get the pressed keyboard codes from the keyboard queue.
 int getkbcode()
 {
     // Reads the keyboard event from the keyboard.
-    const auto keyboard_event = read();
+    const auto e = read();
 
-    // Print keyboard code if keyboard_event is a key change.
-    if (keyboard_event.type == EV_KEY && 0 <= keyboard_event.value && keyboard_event.value <= 2) {
-        printf("%s 0x%04x (%d)\n", button_state[keyboard_event.value], static_cast<int>(keyboard_event.code), static_cast<int>(keyboard_event.code));
-    }
+    // Print keyboard code if e is a key change.
+    if (e.type == EV_KEY && 0 <= e.value && e.value <= 2)
+        printf("%s 0x%04x (%d)\n", state[e.value], (int)(e.code), (int)(e.code));
 
     // Returns the keyboard code read.
-    return keyboard_event.code;
+    return e.code;
 }
 
 // Returns the ASCII character pressed from the keyboard.
-char read_character_pressed_from_keyboard()
+char readc()
 {
     const auto code = getkbcode();
 
@@ -96,7 +93,7 @@ char read_character_pressed_from_keyboard()
 }
 
 // Returns UTF-16 character the user pressed.
-wchar_t read_wide_character_from_keyboard()
+wchar_t readwc()
 {
     // Get the keyboard code pressed or released.
     const auto code = getkbcode();
