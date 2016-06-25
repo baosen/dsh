@@ -1,12 +1,12 @@
 #include "slt.hpp"
 #include "kb.hpp"
+#include "types.hpp"
 
 int main()
 {
     auto kb = Slt<Kb>::get();
-
-    for (;;)
+    forever {
         kb.getkbcode();
-
+    }
     return 0;
 }

@@ -1,4 +1,4 @@
-#include "fbslt.hpp"
+#include "fb.hpp"
 #include "slt.hpp"
 
 Fb& getfb() {

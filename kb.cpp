@@ -60,7 +60,7 @@ input_event Kb::read()
 
         if (n == (ssize_t)(-1) && errno == EINTR)
             break;
-        else if (e.type == EV_KEY) { // should not happen.
+        else if (e.type == EV_KEY) {
             errno = EIO;
             break;
         }
