@@ -1,6 +1,6 @@
 #include "freetype.hpp"
 #include "framebuffer.hpp"
-#include "singleton.h"
+#include "slt.hpp"
 #include "keyboard.hpp"
 
 class Panel {
