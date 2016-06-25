@@ -4,15 +4,18 @@
 #include "log.hpp"
 using namespace dshell;
 
-namespace {
-    FT_Library lib;
-    
-    void init_freetype() {
-        auto err = FT_Init_FreeType(&lib);
-        if (err)
-            die("Failed to initialize Freetype!");
-    }
+class Ft {
+public:
+    Ft();
+private:
+    FT_Library l;
+};
+
+Ft::Ft() {
+    const auto err = FT_Init_FreeType(&l);
+    if (err)
+        die("Failed to initialize Freetype!");
 }
 
-void draw(const uint x, const uint y, const char *text) {
+void draw(const Pos& p, const char *text) {
 }
