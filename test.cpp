@@ -4,9 +4,8 @@ int main()
 {
     openkb();
 
-    for (;;) {
+    for (;;) 
         getkbcode();
-    }
 
-    return EXIT_SUCCESS;
+    return 0;
 }

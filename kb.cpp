@@ -7,11 +7,14 @@
 #include <cstdio>
 #include <stdexcept>
 #include <cstdlib>
+#include <iostream>
+#include "types.hpp"
 #include "kb.hpp"
+using namespace std;
 
 namespace {
-    const char *fpath = "/dev/input/event1";
-    int kfd = 0;
+    const char *fpath = "/dev/input/event0";
+    int kfd;
 
     const char *const state[3] = {
         "RELEASED",
@@ -41,7 +44,7 @@ void openkb()
     kfd = open(fpath, O_RDONLY);
 
     if (kfd == -1) {
-        fprintf(stderr, "Cannot open %s: %s.\n", fpath, strerror(errno));
+        cerr << "Cannot open " << fpath << ": " << strerror(errno) << endl;
         exit(EXIT_SUCCESS);
     }
 }
@@ -87,7 +90,7 @@ char readc()
     const auto code = getkbcode();
 
     // TODO: Implementing converting characters.
-    throw std::runtime_error("Not implemented yet...");
+    throw err("Not implemented yet...");
 
     return kbascii[code];
 }
