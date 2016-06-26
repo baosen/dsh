@@ -1,4 +1,3 @@
-#include "fb.hpp"
 #include "wnd.hpp"
 
 Wnd::Wnd(const Pos&, const Res&) {

@@ -1,19 +1,12 @@
 #include "types.hpp"
-
-class Pos {
-public:
-    Pos(const unsigned int x, const unsigned int y)
-        : x(x), y(y) {}
-private:
-    const unsigned int x, y;
-};
+#include "pos.hpp"
 
 class Res {
 public:
-    Res(const unsigned int w, const unsigned int h)
+    Res(const uint w, const uint h)
         : w(w), h(h) {}
 private:
-    const unsigned int w, h;
+    const uint w, h;
 };
 
 // TODO: Make sure windows does overlap and not collide.
