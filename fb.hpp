@@ -8,8 +8,8 @@ public:
     char& operator()(const Pos&);
     ~Fb();
 private:
-    auto vinfo();
-    auto finfo();
+    fb_var_screeninfo vinfo();
+    fb_fix_screeninfo finfo();
     char* map();
     void open();
     void setup();

@@ -1,4 +1,6 @@
 #pragma once
+#include "pos.hpp"
+#include "res.hpp"
 
 class Rect {
 public:
