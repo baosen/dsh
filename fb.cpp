@@ -3,7 +3,9 @@
 #include <linux/fb.h>
 #include <sys/mman.h>
 #include <sys/ioctl.h>
+#include <cstring>
 #include "types.hpp"
+#include "log.hpp"
 #include "rect.hpp"
 #include "fb.hpp"
 
@@ -60,12 +62,12 @@ void Fb::fill(const Rect& r, const int c) {
     const int i = r.i();
     if (i >= w*h)
         throw 1;
-    memset(fb+i, c, i.size());
+    memset(fb+i, c, r.size());
 }
 
 // Unmap framebuffer from address space.
 Fb::~Fb() {
-    munmap(fb, fb_size);
+    munmap(fb, size);
     if (close(fd) == -1)
         die("Failed to close fb 0!");
 }

@@ -7,11 +7,11 @@ public:
     Rect(const Pos& p, const Res& r)
         : p(p), r(r) {}
 
-    int i() {
-        return p.x+(p.y*r.w);
+    int i() const {
+        return p.i(r.w);
     }
 
-    int size() {
+    size_t size() const {
         return r.h*r.w;
     }
 private:

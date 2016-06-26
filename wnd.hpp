@@ -1,13 +1,6 @@
 #include "types.hpp"
 #include "pos.hpp"
-
-class Res {
-public:
-    Res(const uint w, const uint h)
-        : w(w), h(h) {}
-private:
-    const uint w, h;
-};
+#include "res.hpp"
 
 // TODO: Make sure windows does overlap and not collide.
 class Wnd {
