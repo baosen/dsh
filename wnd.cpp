@@ -1,6 +1,6 @@
 #include "wnd.hpp"
 
-Wnd::Wnd(const Pos&, const Res&) {
+Wnd::Wnd(const Pos& p, const Res& r) {
 }
 
 // Maximize the window.

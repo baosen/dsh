@@ -55,6 +55,13 @@ char& Fb::operator()(const Pos& p) {
     return fb[i];
 }
 
+void Fb::fill(const Rect& r, const int c) {
+    const int i = r.i();
+    if (i >= w*h)
+        throw 1;
+    memset(fb+i, c, i.size());
+}
+
 // Unmap framebuffer from address space.
 Fb::~Fb() {
     munmap(fb, fb_size);
