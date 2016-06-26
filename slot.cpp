@@ -1,4 +1,0 @@
-class Slot {
-public:
-private:
-};

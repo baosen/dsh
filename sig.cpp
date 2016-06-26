@@ -9,8 +9,3 @@ public:
     const char c;
     const wchar_t wc;
 };
-
-class Sig {
-public:
-private:
-};
