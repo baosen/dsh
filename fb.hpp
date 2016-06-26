@@ -4,7 +4,7 @@
 class Fb {
 public:
     Fb();
-    char& operator()(const uint x, const uint y);
+    char& operator()(const Pos&);
     ~Fb();
 private:
     auto vinfo();
