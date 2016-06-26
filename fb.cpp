@@ -4,7 +4,7 @@
 #include <sys/mman.h>
 #include <sys/ioctl.h>
 #include "log.hpp"
-#include "pos.hpp"
+#include "fb.hpp"
 
 Fb::Fb() {
     open();
@@ -14,7 +14,7 @@ Fb::Fb() {
 
 // Open the framebuffer file descriptor.
 void Fb::open() {
-    fd = open("/dev/fb0", O_RDWR);
+    fd = ::open("/dev/fb0", O_RDWR);
     if (fd == -1)
         throw err("Cannot open fb 0!");
 }
@@ -31,6 +31,7 @@ char* Fb::map() {
     return scast<char*>(mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
 }
 
+// Returns framebuffer variable screen info.
 auto Fb::vinfo() {
     fb_var_screeninfo v;
     if (ioctl(fd, FBIOGET_VSCREENINFO, &v))
@@ -38,6 +39,7 @@ auto Fb::vinfo() {
     return v;
 }
 
+// Returns framebuffer fixed screen info.
 auto Fb::finfo() {
     fb_fix_screeninfo f;
     if (ioctl(fd, FBIOGET_FSCREENINFO, &f))
@@ -45,6 +47,7 @@ auto Fb::finfo() {
     return f;
 }
 
+// Assign a pixel to (x, y) in the framebuffer.
 char& Fb::operator()(const Pos& p) {
     const int i = p.x + (p.y * w);
     if (i >= w * h)
@@ -52,6 +55,7 @@ char& Fb::operator()(const Pos& p) {
     return fb[i];
 }
 
+// Unmap framebuffer from address space.
 Fb::~Fb() {
     munmap(fb, fb_size);
     if (close(fd) == -1)
