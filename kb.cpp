@@ -1,11 +1,6 @@
-#include <cwctype>
 #include <unistd.h>
 #include <fcntl.h>
-#include <errno.h>
 #include <cstring>
-#include <cstdio>
-#include <stdexcept>
-#include <cstdlib>
 #include <iostream>
 #include "types.hpp"
 #include "kb.hpp"
