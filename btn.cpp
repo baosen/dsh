@@ -1,6 +1,5 @@
-#include "button.hpp"
+#include "btn.hpp"
 using namespace std;
 
-Button::Button(const string label)
-{
+btn::btn(const string label) {
 }

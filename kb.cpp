@@ -19,6 +19,12 @@ namespace {
     };
 
     const char kbascii[NCODES] {
+        0, 0, 
+        '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=',
+        0,
+        'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '{', '}', '\n',
+        0, // left ctrl.
+        'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', 
     };
 
     // A conversion lookup-table converting a USB keyboard code to a wide character.

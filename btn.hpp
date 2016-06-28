@@ -5,9 +5,9 @@ public:
 private:
 };
 
-class Button {
+class Btn {
 public:
-    Button(const std::string label);
+    Btn(const std::string&);
 private:
     Wnd w;
 };
