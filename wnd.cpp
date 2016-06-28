@@ -1,8 +1,9 @@
+#include "fb.hpp"
 #include "wnd.hpp"
-#include "pen.hpp"
 
 Wnd::Wnd(const Pos& p, const Res& r) {
-    fill(Rect(p, r), 0) ;
+    Fb fb;
+    fb.fill(Rect(p, r), 0) ;
 }
 
 // Maximize the window.

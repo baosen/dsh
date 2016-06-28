@@ -61,7 +61,7 @@ Fb::Fb() {
 Fb::~Fb() {
     munmap(fb, size);
     if (close(fd) == -1)
-        die("Failed to close fb 0!");
+        die("Failed to close /dev/fb0!");
 }
 
 // Assign a pixel to (x, y) in the framebuffer.
