@@ -38,8 +38,9 @@ namespace {
         'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', 
     };
 
-    bool caps = false;
+    bool caps = false; // Caps Lock on?
 
+    // Open keyboard file.
     void openkb() {
         fd = ::open(path, O_RDONLY);
 
