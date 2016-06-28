@@ -51,8 +51,7 @@ namespace {
     }
 
     // Reads the keyboard event that is returned by the operating system when the user interacts with the keyboard.
-    input_event read()
-    {
+    input_event read() {
         input_event e;
     
         // Read event from the keyboard file device.
