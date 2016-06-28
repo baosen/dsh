@@ -2,11 +2,10 @@
 #include "fbslt.hpp"
 #include "kb.hpp"
 
-int main()
-{
+int main() {
     try {
     } catch(...) {
         throw;
     }
-    return 1;
+    return 0;
 }
