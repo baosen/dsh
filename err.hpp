@@ -1,2 +1,2 @@
 #include <stdexcept>
-using std::runtime_error = err;
+using err = std::runtime_error;
