@@ -38,16 +38,20 @@ namespace {
     };
 
     bool caps = false;
+
+    void openkb() {
+        fd = ::open(path, O_RDONLY);
+
+        if (fd == -1) {
+            cerr << "Cannot open " << path << ": " << strerror(errno) << endl;
+            exit(1);
+        }
+    }
 }
 
 // Opens the keyboard file descriptor.
 Kb::Kb() {
-    fd = ::open(path, O_RDONLY);
-
-    if (fd == -1) {
-        cerr << "Cannot open " << path << ": " << strerror(errno) << endl;
-        exit(1);
-    }
+    openkb();
 }
 
 Kb::~Kb() {
