@@ -12,5 +12,7 @@ public:
     // Minimize.
     void min();
 private:
+    void save();
+
     uint x, y, width, height, oldw, oldh;
 };

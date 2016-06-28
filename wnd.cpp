@@ -1,17 +1,21 @@
 #include "wnd.hpp"
+#include "fbslt.hpp"
 
 Wnd::Wnd(const Pos& p, const Res& r) {
+    getfb().fill(Rect(p, r), 0) ;
 }
 
 // Maximize the window.
 void Wnd::max() {
-    // Save old position.
+    save();
+}
+
+// Save old position.
+void Wnd::save() {
     oldw = width;
     oldh = height;
     width = maxw();
     height = maxh();
-
-    draw();
 }
 
 // Minimize the window.
