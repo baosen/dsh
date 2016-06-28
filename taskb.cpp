@@ -1,7 +1,6 @@
 #include <list>
 #include "button.hpp"
 using namespace std;
-using namespace dshell;
 
 namespace {
     // Task bar.
