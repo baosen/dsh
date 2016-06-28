@@ -1,2 +1,8 @@
-void init_freetype();
-void draw(const unsigned int x, const unsigned int y, const char *text);
+#pragma once
+
+class Ft {
+public:
+    Ft();
+private:
+    FT_Library l;
+};
