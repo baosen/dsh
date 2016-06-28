@@ -9,7 +9,6 @@ namespace {
 
 Mouse::Mouse() {
     fd = ::open(path, O_RDONLY);
-
     if (fd == -1) {
         cerr << "Cannot open " << path << ": " << strerror(errno) << endl;
         exit(1);
