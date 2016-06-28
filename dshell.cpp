@@ -1,5 +1,6 @@
 #include <iostream>
 #include "err.hpp"
+#include "types.hpp"
 using namespace std;
 
 ostream& operator<<(ostream& o, const err& e) {
@@ -9,8 +10,10 @@ ostream& operator<<(ostream& o, const err& e) {
 
 int main() {
     try {
+    } catch (const Err& e) {
+        cerr << "Error code: " << hex << scast<int>(e) << endl;
     } catch (const err& e) {
-        cerr << e;
+        cerr << e << endl;
     }
     return 0;
 }
