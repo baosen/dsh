@@ -19,7 +19,7 @@ namespace {
     void openfb() {
         fd = ::open("/dev/fb0", O_RDWR);
         if (fd == -1)
-            throw err("Cannot open fb 0!");
+            throw err("Cannot open /dev/fb0!");
     }
 
     // Returns framebuffer variable screen info.
