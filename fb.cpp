@@ -58,6 +58,7 @@ char& Fb::operator()(const Pos& p) {
     return fb[i];
 }
 
+// Fill a  rectangle with a color.
 void Fb::fill(const Rect& r, const int c) {
     const int i = r.i();
     if (i >= w*h)
