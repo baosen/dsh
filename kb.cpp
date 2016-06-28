@@ -7,10 +7,10 @@
 using namespace std;
 
 namespace {
-    const int  NCODES = 255;
+    const int NCODES = 255;
 
-    const char *fpath = "/dev/input/event0";
-    int kfd;
+    const char *path = "/dev/input/event0";
+    int fd;
 
     const char *const state[3] = {
         "RELEASED",
@@ -42,10 +42,17 @@ namespace {
 
 // Opens the keyboard file descriptor.
 Kb::Kb() {
-    kfd = ::open(fpath, O_RDONLY);
+    fd = ::open(path, O_RDONLY);
 
-    if (kfd == -1) {
-        cerr << "Cannot open " << fpath << ": " << strerror(errno) << endl;
+    if (fd == -1) {
+        cerr << "Cannot open " << path << ": " << strerror(errno) << endl;
+        exit(1);
+    }
+}
+
+Kb::~Kb() {
+    if (::close(fd) == -1) {
+        cerr << "Cannot close " << path << ": " << strerror(errno) << endl;
         exit(1);
     }
 }
@@ -55,9 +62,9 @@ input_event Kb::read()
 {
     input_event e;
 
-    // Read e from the keyboard file device.
+    // Read event from the keyboard file device.
     forever {
-        const ssize_t n = ::read(kfd, &e, sizeof e);
+        const ssize_t n = ::read(fd, &e, sizeof e);
 
         if (n == (ssize_t)(-1) && errno == EINTR)
             break;
