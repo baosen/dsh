@@ -1,6 +1,7 @@
 #pragma once
 #include "types.hpp"
 #include "pos.hpp"
+#include "rect.hpp"
 
 class Fb {
 public:

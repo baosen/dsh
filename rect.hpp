@@ -4,16 +4,9 @@
 
 class Rect {
 public:
-    Rect(const Pos& p, const Res& r)
-        : p(p), r(r) {}
-
-    int i() const {
-        return p.i(r.w);
-    }
-
-    size_t size() const {
-        return r.h*r.w;
-    }
+    Rect(const Pos& p, const Res& r);
+    int i() const;
+    size_t size() const;
 private:
     Pos p;
     Res r;

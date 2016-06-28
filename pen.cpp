@@ -1,5 +1,9 @@
-#include "fbslt.hpp"
+#include "fb.hpp"
+
+namespace {
+    Fb fb;
+}
 
 void fill(const Rect& r, const int c) {
-    getfb().fill(r, c);
+    fb.fill(r, c);
 }
