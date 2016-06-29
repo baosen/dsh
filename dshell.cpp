@@ -13,7 +13,7 @@ ostream& operator<<(ostream& o, const err& e) {
 int main() {
     try {
         Fb fb;
-        fb.fill(Pix(255, 0, 0, 0));
+        fb.fill(Pix(0, 0, 255, 255));
     } catch (const Err& e) {
         cerr << "Error code: " << hex << scast<int>(e) << endl;
     } catch (const err& e) {

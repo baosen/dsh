@@ -74,9 +74,9 @@ void Fb::fill(const Rect& r, const Pix c) {
     const int i = r.i();
     if (i >= w*h)
         throw Fberr::Out_of_range;
-    memset(fb+i, c, r.size());
+    memset(fb+i, c.p, r.size());
 }
 
 void Fb::fill(const Pix c) {
-    memset(fb, c, w*h*(bpp/8));
+    memset(fb, c.p, w*h*(bpp/8));
 }
