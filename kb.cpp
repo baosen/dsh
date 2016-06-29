@@ -2,7 +2,6 @@
 #include <fcntl.h>
 #include <cstring>
 #include <iostream>
-#include <linux/input.h>
 #include "types.hpp"
 #include "kb.hpp"
 using namespace std;
@@ -12,9 +11,9 @@ namespace {
     const int NCODES = 255;
     const char *path = "/dev/input/event0";
     const char *const state[3] = {
-        "RELEASED",
-        "PRESSED ",
-        "REPEATED"
+        "Released:",
+        "Pressed:",
+        "Repeated:"
     };
     // A conversion lookup-table converting a USB keyboard code to an ASCII character.
     const char kbascii[NCODES] {

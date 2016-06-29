@@ -1,4 +1,6 @@
 #pragma once
+#include <linux/input.h>
+
 class Kb {
 public:
     Kb();
@@ -6,6 +8,5 @@ public:
     int getkbcode();
 private:
    input_event read();
-
-    int fd;
+   int fd;
 };
