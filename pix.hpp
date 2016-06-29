@@ -3,7 +3,7 @@
 class Fb;
 class Pix {
 public:
-    Pix(const uint r, const uint g, const uint b, const uint a);
+    Pix(const u8 r, const u8 g, const u8 b);
 private:
     u32 p;
     friend class Fb;

@@ -50,6 +50,11 @@ fb_fix_screeninfo Fb::finfo() {
 void Fb::setup() {
     const auto v = vinfo();
     printf("Original %dx%d, %dbpp\n", v.xres, v.yres, v.bits_per_pixel);
+    printf("Offset: R%u, G%u, B%u, A%u\n", v.red.offset, v.green.offset, v.blue.offset, v.transp.offset);
+    printf("Pixel format : RGBX_%ld%ld%ld%ld\n", v.red.length,
+                                                 v.green.length,
+                                                 v.blue.length,
+                                                 v.transp.length);
     w = v.xres;
     h = v.yres;
     bpp = v.bits_per_pixel;
@@ -78,5 +83,6 @@ void Fb::fill(const Rect& r, const Pix c) {
 }
 
 void Fb::fill(const Pix c) {
-    memset(fb, c.p, w*h*(bpp/8));
+    for (size_t i = 0; i < w*h; ++i)
+        *(((uint32_t*)fb)+i) = c.p;
 }
