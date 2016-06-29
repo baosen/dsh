@@ -70,13 +70,13 @@ char& Fb::operator()(const Pos& p) {
 }
 
 // Fill a  rectangle with a color.
-void Fb::fill(const Rect& r, const uint c) {
+void Fb::fill(const Rect& r, const Pix c) {
     const int i = r.i();
     if (i >= w*h)
         throw Fberr::Out_of_range;
     memset(fb+i, c, r.size());
 }
 
-void Fb::fill(const uint c) {
+void Fb::fill(const Pix c) {
     memset(fb, c, w*h*(bpp/8));
 }

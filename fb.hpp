@@ -3,6 +3,7 @@
 #include "types.hpp"
 #include "pos.hpp"
 #include "rect.hpp"
+#include "pix.hpp"
 
 enum Fberr {
     Out_of_range,
@@ -13,8 +14,8 @@ public:
     Fb();
     uint maxw();
     uint maxh();
-    void fill(const Rect& r, const uint c);
-    void fill(const uint c);
+    void fill(const Rect& r, const Pix c);
+    void fill(const Pix c);
     char& operator()(const Pos&);
     ~Fb();
 private:
