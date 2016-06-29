@@ -4,4 +4,8 @@ public:
     Kb();
     ~Kb();
     int getkbcode();
+private:
+   input_event read();
+
+    int fd;
 };

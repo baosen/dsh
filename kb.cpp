@@ -8,11 +8,9 @@
 using namespace std;
 
 namespace {
+    // Maximum number of keyboard codes.
     const int NCODES = 255;
-
     const char *path = "/dev/input/event0";
-    int fd;
-
     const char *const state[3] = {
         "RELEASED",
         "PRESSED ",
@@ -39,25 +37,6 @@ namespace {
     };
 
     bool caps = false; // Caps Lock on?
-
-    // Reads the keyboard event that is returned by the operating system when the user interacts with the keyboard.
-    input_event read() {
-        input_event e;
-    
-        // Read event from the keyboard file device.
-        forever {
-            const ssize_t n = ::read(fd, &e, sizeof e);
-    
-            if (n == (ssize_t)(-1) && errno == EINTR)
-                break;
-            else if (e.type == EV_KEY) {
-                errno = EIO;
-                break;
-            }
-        }
-    
-        return e;
-    }
 }
 
 // Opens the keyboard file descriptor.
@@ -75,6 +54,25 @@ Kb::~Kb() {
         cerr << "Cannot close " << path << ": " << strerror(errno) << endl;
         exit(1);
     }
+}
+
+    // Reads the keyboard event that is returned by the operating system when the user interacts with the keyboard.
+input_event Kb::read() {
+    input_event e;
+
+    // Read event from the keyboard file device.
+    forever {
+        const ssize_t n = ::read(fd, &e, sizeof e);
+
+        if (n == (ssize_t)(-1) && errno == EINTR)
+            break;
+        else if (e.type == EV_KEY) {
+            errno = EIO;
+            break;
+        }
+    }
+
+    return e;
 }
 
 // Get the pressed keyboard codes from the keyboard queue.
