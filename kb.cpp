@@ -16,7 +16,7 @@ namespace {
         "PRESSED ",
         "REPEATED"
     };
-
+    // A conversion lookup-table converting a USB keyboard code to an ASCII character.
     const char kbascii[NCODES] {
         0, 0, 
         '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=',
@@ -25,7 +25,6 @@ namespace {
         0, // left ctrl.
         'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', 
     };
-
     // A conversion lookup-table converting a USB keyboard code to a wide character.
     const wchar_t kbwide[NCODES] {
         0, 0, 
@@ -35,8 +34,8 @@ namespace {
         0, // left ctrl.
         'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', 
     };
-
-    bool caps = false; // Caps Lock on?
+    // Is Caps Lock on?
+    bool caps = false; 
 }
 
 // Opens the keyboard file descriptor.
