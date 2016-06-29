@@ -1,6 +1,5 @@
 #include <unistd.h>
 #include <fcntl.h>
-#include <linux/fb.h>
 #include <sys/mman.h>
 #include <sys/ioctl.h>
 #include <cstring>
@@ -72,4 +71,8 @@ void Fb::fill(const Rect& r, const int c) {
     if (i >= w*h)
         throw 1;
     memset(fb+i, c, r.size());
+}
+
+void Fb::fill(const int c) {
+    memset(fb, c, w*h);
 }

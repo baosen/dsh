@@ -1,6 +1,7 @@
 #include <iostream>
 #include "err.hpp"
 #include "types.hpp"
+#include "fb.hpp"
 using namespace std;
 
 ostream& operator<<(ostream& o, const err& e) {
@@ -10,6 +11,8 @@ ostream& operator<<(ostream& o, const err& e) {
 
 int main() {
     try {
+        Fb fb;
+        fb.fill(255);
     } catch (const Err& e) {
         cerr << "Error code: " << hex << scast<int>(e) << endl;
     } catch (const err& e) {

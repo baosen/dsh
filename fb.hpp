@@ -1,4 +1,5 @@
 #pragma once
+#include <linux/fb.h>
 #include "types.hpp"
 #include "pos.hpp"
 #include "rect.hpp"
@@ -9,6 +10,7 @@ public:
     uint maxw();
     uint maxh();
     void fill(const Rect& r, const int c);
+    void fill(const int c);
     char& operator()(const Pos&);
     ~Fb();
 private:

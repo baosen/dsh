@@ -8,6 +8,6 @@ int Rect::i() const {
     return p.i(r.w);
 }
 
-size_t size() const {
+size_t Rect::size() const {
     return r.h*r.w;
 }
