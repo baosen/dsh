@@ -40,16 +40,6 @@ namespace {
 
     bool caps = false; // Caps Lock on?
 
-    // Open keyboard file.
-    void openkb() {
-        fd = ::open(path, O_RDONLY);
-
-        if (fd == -1) {
-            cerr << "Cannot open " << path << ": " << strerror(errno) << endl;
-            exit(1);
-        }
-    }
-
     // Reads the keyboard event that is returned by the operating system when the user interacts with the keyboard.
     input_event read() {
         input_event e;
@@ -72,7 +62,12 @@ namespace {
 
 // Opens the keyboard file descriptor.
 Kb::Kb() {
-    openkb();
+    fd = ::open(path, O_RDONLY);
+    
+    if (fd == -1) {
+        cerr << "Cannot open " << path << ": " << strerror(errno) << endl;
+        exit(1);
+    }
 }
 
 Kb::~Kb() {
