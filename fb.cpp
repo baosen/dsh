@@ -9,6 +9,7 @@
 #include "rect.hpp"
 #include "fb.hpp"
 
+// Setup framebuffer file.
 Fb::Fb() {
     openfb();
     setup();
