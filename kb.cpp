@@ -56,35 +56,30 @@ Kb::~Kb() {
     }
 }
 
-    // Reads the keyboard event that is returned by the operating system when the user interacts with the keyboard.
+// Reads the keyboard event that is returned by the operating system when the user interacts with the keyboard.
 input_event Kb::read() {
     input_event e;
-
-    // Read event from the keyboard file device.
     forever {
         const ssize_t n = ::read(fd, &e, sizeof e);
-
+        // Check if it is a keyboard interrupt.
         if (n == (ssize_t)(-1) && errno == EINTR)
             break;
+        // Check if it is a key event, which should not happen at all.
         else if (e.type == EV_KEY) {
             errno = EIO;
             break;
         }
     }
-
     return e;
 }
 
 // Get the pressed keyboard codes from the keyboard queue.
-int Kb::getkbcode()
-{
+int Kb::getkbcode() {
     // Reads the keyboard event from the keyboard.
     const auto e = read();
-
     // Print keyboard code if e is a key change.
     if (e.type == EV_KEY && 0 <= e.value && e.value <= 2)
         printf("%s 0x%04x (%d)\n", state[e.value], (int)(e.code), (int)(e.code));
-
     // Returns the keyboard code read.
     return e.code;
 }
