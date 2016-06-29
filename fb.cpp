@@ -49,15 +49,22 @@ fb_fix_screeninfo Fb::finfo() {
 // Setup framebuffer.
 void Fb::setup() {
     const auto v = vinfo();
-    printf("Original %dx%d, %dbpp\n", v.xres, v.yres, v.bits_per_pixel);
-    printf("Offset: R%u, G%u, B%u, A%u\n", v.red.offset, v.green.offset, v.blue.offset, v.transp.offset);
-    printf("Pixel format : RGBX_%ld%ld%ld%ld\n", v.red.length,
-                                                 v.green.length,
-                                                 v.blue.length,
-                                                 v.transp.length);
     w = v.xres;
     h = v.yres;
     bpp = v.bits_per_pixel;
+    printf("Original %ux%d, %ubpp\n", v.xres, v.yres, v.bits_per_pixel);
+
+    roff = v.red.offset;
+    goff = v.green.offset;
+    boff = v.blue.offset;
+    aoff = v.transp.offset;
+    printf("Offset: R%u, G%u, B%u, A%u\n", roff, goff, boff, aoff);
+
+    rl = v.red.length; 
+    gl = v.green.length; 
+    bl = v.blue.length; 
+    al = v.transp.length;
+    printf("Pixel format : RGBA_%u%u%u%u\n", rl, gl, bl, al);
 }
 
 // Map fraembuffer to address space.
@@ -76,13 +83,15 @@ char& Fb::operator()(const Pos& p) {
 
 // Fill a  rectangle with a color.
 void Fb::fill(const Rect& r, const Pix c) {
-    const int i = r.i();
+    const auto i = r.i();
     if (i >= w*h)
         throw Fberr::Out_of_range;
-    memset(fb+i, c.p, r.size());
+    for (size_t i = 0; i < w*h; ++i)
+        *(((u32*)fb)+i) = c.p;
 }
 
-void Fb::fill(const Pix c) {
+void Fb::fill(const uint r, const uint g, const uint b) {
+    const u32 p = (r << roff) | (g << goff) | (b << boff);
     for (size_t i = 0; i < w*h; ++i)
-        *(((uint32_t*)fb)+i) = c.p;
+        *(((u32*)fb)+i) = p;
 }

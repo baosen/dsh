@@ -15,7 +15,7 @@ public:
     uint maxw();
     uint maxh();
     void fill(const Rect& r, const Pix c);
-    void fill(const Pix c);
+    void fill(const uint r, const uint g, const uint b);
     char& operator()(const Pos&);
     ~Fb();
 private:
@@ -26,7 +26,9 @@ private:
     fb_fix_screeninfo finfo();
 
     int fd;
-    uint w, h, bpp;
-    char*  fb;
+    uint w, h, bpp, 
+         roff, goff, boff, aoff,
+         rl, gl, bl, al;
+    char* fb;
     size_t size;
 };
