@@ -64,7 +64,7 @@ char* Fb::map() {
 char& Fb::operator()(const Pos& p) {
     const int i = p.i(w);
     if (i >= w*h)
-        throw 1;
+        throw Fberr::Out_of_range;
     return fb[i];
 }
 
@@ -72,7 +72,7 @@ char& Fb::operator()(const Pos& p) {
 void Fb::fill(const Rect& r, const uint c) {
     const int i = r.i();
     if (i >= w*h)
-        throw 1;
+        throw Fberr::Out_of_range;
     memset(fb+i, c, r.size());
 }
 

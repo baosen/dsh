@@ -4,6 +4,10 @@
 #include "pos.hpp"
 #include "rect.hpp"
 
+enum Fberr {
+    Out_of_range,
+};
+
 class Fb {
 public:
     Fb();
