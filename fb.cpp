@@ -7,6 +7,7 @@
 #include "log.hpp"
 #include "rect.hpp"
 #include "fb.hpp"
+#include "pix.hpp"
 
 // Setup framebuffer file.
 Fb::Fb() {
