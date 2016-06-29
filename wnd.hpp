@@ -6,13 +6,13 @@
 class Wnd {
 public:
     Wnd(const Pos&, const Res&);
-
-    // Maximize.
+    // Maximize the window.
     void max();
-    // Minimize.
+    // Minimize the window.
     void min();
 private:
+    // Save old position.
     void save();
 
-    uint x, y, width, height, oldw, oldh;
+    Res r, old;
 };

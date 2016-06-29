@@ -6,6 +6,8 @@
 class Fb {
 public:
     Fb();
+    uint maxw();
+    uint maxh();
     void fill(const Rect& r, const int c);
     char& operator()(const Pos&);
     ~Fb();
