@@ -48,7 +48,10 @@ fb_fix_screeninfo Fb::finfo() {
 // Setup framebuffer.
 void Fb::setup() {
     const auto v = vinfo();
-    w = v.xres; h = v.yres;
+    printf("Original %dx%d, %dbpp\n", v.xres, v.yres, v.bits_per_pixel);
+    w = v.xres;
+    h = v.yres;
+    bpp = v.bits_per_pixel;
 }
 
 // Map fraembuffer to address space.
@@ -60,19 +63,19 @@ char* Fb::map() {
 // Assign a pixel to (x, y) in the framebuffer.
 char& Fb::operator()(const Pos& p) {
     const int i = p.i(w);
-    if (i >= w * h)
+    if (i >= w*h)
         throw 1;
     return fb[i];
 }
 
 // Fill a  rectangle with a color.
-void Fb::fill(const Rect& r, const int c) {
+void Fb::fill(const Rect& r, const uint c) {
     const int i = r.i();
     if (i >= w*h)
         throw 1;
     memset(fb+i, c, r.size());
 }
 
-void Fb::fill(const int c) {
-    memset(fb, c, w*h);
+void Fb::fill(const uint c) {
+    memset(fb, c, w*h*(bpp/8));
 }
