@@ -75,7 +75,7 @@ char* Fb::map() {
 
 // Assign a pixel to (x, y) in the framebuffer.
 char& Fb::operator()(const Pos& p) {
-    const int i = p.i(w);
+    const auto i = p.i(w);
     if (i >= w*h)
         throw Fberr::Out_of_range;
     return fb[i];

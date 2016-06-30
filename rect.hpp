@@ -5,7 +5,7 @@
 class Rect {
 public:
     Rect(const Pos& p, const Res& r);
-    int i() const;
+    uint i() const;
     size_t size() const;
 private:
     Pos p;
