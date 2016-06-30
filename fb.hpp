@@ -14,8 +14,8 @@ public:
     Fb();
     uint maxw();
     uint maxh();
-    void fill(const Rect& r, const Pix c);
-    void fill(const uint r, const uint g, const uint b);
+    void fill(const Rect& r, const Pix& c);
+    void fill(const Pix& c);
     char& operator()(const Pos&);
     ~Fb();
 private:

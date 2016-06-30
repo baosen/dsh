@@ -82,16 +82,16 @@ char& Fb::operator()(const Pos& p) {
 }
 
 // Fill a  rectangle with a color.
-void Fb::fill(const Rect& r, const Pix c) {
+void Fb::fill(const Rect& r, const Pix& c) {
     const auto i = r.i();
     if (i >= w*h)
         throw Fberr::Out_of_range;
     for (size_t i = 0; i < w*h; ++i)
-        *(((u32*)fb)+i) = c.p;
+        *(((u32*)fb)+i) = c.val(roff, goff, boff);
 }
 
-void Fb::fill(const uint r, const uint g, const uint b) {
-    const u32 p = (r << roff) | (g << goff) | (b << boff);
+void Fb::fill(const Pix& c) {
+    const u32 p = c.val(roff, goff, boff);
     for (size_t i = 0; i < w*h; ++i)
         *(((u32*)fb)+i) = p;
 }
