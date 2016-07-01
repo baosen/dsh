@@ -5,6 +5,7 @@
 #include "fb.hpp"
 class Rect {
 public:
+    Rect();
     Rect(const Pos& p, const Res& r);
     uint i() const;
     size_t size() const;

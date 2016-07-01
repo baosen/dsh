@@ -1,7 +1,7 @@
 #include "rect.hpp"
 
-Rect::Rect(const Pos& p, const Res& r)
-    : p(p), r(r) {}
+Rect::Rect() {}
+Rect::Rect(const Pos& p, const Res& r) : p(p), r(r) {}
 
 // Computes the index of its position in the framebuffer.
 uint Rect::i() const {

@@ -1,6 +1,5 @@
 #include "types.hpp"
-#include "pos.hpp"
-#include "res.hpp"
+#include "rect.hpp"
 
 // TODO: Make sure windows does overlap and not collide.
 class Wnd {
@@ -11,6 +10,8 @@ public:
     void max();
     // Minimize the window.
     void min();
+    // Draw the window.
+    void draw();
 private:
     // Save old position.
     void save();

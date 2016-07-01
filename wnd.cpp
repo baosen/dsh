@@ -16,7 +16,7 @@ void Wnd::min() {
 
 // Save old position.
 void Wnd::save() {
-    old = cur;
+    //old = cur;
 }
 
 void Wnd::draw() {

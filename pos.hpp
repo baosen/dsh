@@ -3,6 +3,7 @@
 
 class Pos {
 public:
+    Pos() : x(0), y(0) {}
     Pos(const uint x, const uint y);
     uint i(const uint w) const;
 private:
