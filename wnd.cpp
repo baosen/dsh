@@ -1,9 +1,8 @@
 #include "fb.hpp"
 #include "wnd.hpp"
 
-Wnd::Wnd(const Rect& r) {
-    Fb fb;
-    fb.fill(Rect(p, r), 0) ;
+Wnd::Wnd(const Rect& r) : cur(r) {
+    draw();
 }
 
 // Maximize the window.
@@ -22,5 +21,5 @@ void Wnd::save() {
 
 void Wnd::draw() {
     Fb fb;
-    fb.fill(Rect(p, r), Col(255, 0, 0));
+    fb.fill(cur, Col(255, 0, 0));
 }

@@ -1,7 +1,8 @@
+#include <iostream>
 #include <stdexcept>
 using err = std::runtime_error;
 
-inline ostream& operator<<(ostream& o, const err& e) {
+inline std::ostream& operator<<(std::ostream& o, const err& e) {
     o << e.what();
     return o;
 }
