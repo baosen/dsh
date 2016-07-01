@@ -5,7 +5,8 @@
 // TODO: Make sure windows does overlap and not collide.
 class Wnd {
 public:
-    Wnd(const Pos&, const Res&);
+    // Create and place the window.
+    Wnd(const Rect&);
     // Maximize the window.
     void max();
     // Minimize the window.
@@ -13,6 +14,5 @@ public:
 private:
     // Save old position.
     void save();
-
-    Res r, old;
+    Rect cur, old;
 };

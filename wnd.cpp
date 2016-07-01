@@ -1,7 +1,7 @@
 #include "fb.hpp"
 #include "wnd.hpp"
 
-Wnd::Wnd(const Pos& p, const Res& r) {
+Wnd::Wnd(const Rect& r) {
     Fb fb;
     fb.fill(Rect(p, r), 0) ;
 }
@@ -13,10 +13,14 @@ void Wnd::max() {
 
 // Minimize the window.
 void Wnd::min() {
-    r = Res(0, 0);
 }
 
 // Save old position.
 void Wnd::save() {
-    r = Res(maxw(), maxh());
+    old = cur;
+}
+
+void Wnd::draw() {
+    Fb fb;
+    fb.fill(Rect(p, r), Col(255, 0, 0));
 }
