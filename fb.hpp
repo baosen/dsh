@@ -31,4 +31,5 @@ private:
          rl, gl, bl, al;
     char* fb;
     size_t size;
+    friend class Rect;
 };

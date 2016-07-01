@@ -7,4 +7,5 @@ public:
     uint i(const uint w) const;
 private:
     const uint x, y;
+    friend class Rect;
 };
