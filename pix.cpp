@@ -1,8 +1,0 @@
-#include "pix.hpp"
-
-Pix::Pix(const u8 r, const u8 g, const u8 b) 
-    : r(r), g(g), b(b) {}
-
-u32 Pix::val(const uint roff, const uint goff, const uint boff) const {
-    return (r << roff) | (g << goff) | (b << boff);
-}

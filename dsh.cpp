@@ -2,7 +2,7 @@
 #include "err.hpp"
 #include "types.hpp"
 #include "fb.hpp"
-#include "pix.hpp"
+#include "col.hpp"
 using namespace std;
 
 ostream& operator<<(ostream& o, const err& e) {
@@ -13,7 +13,7 @@ ostream& operator<<(ostream& o, const err& e) {
 int main() {
     try {
         Fb fb;
-        fb.fill(Rect(Pos(0, 0), Res(200, 200)), Pix(0, 0, 255));
+        fb.fill(Rect(Pos(0, 0), Res(200, 200)), Col(0, 0, 255));
     } catch (const Err& e) {
         cerr << "Error code: " << hex << scast<int>(e) << endl;
     } catch (const err& e) {

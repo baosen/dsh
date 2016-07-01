@@ -7,7 +7,7 @@
 #include "log.hpp"
 #include "rect.hpp"
 #include "fb.hpp"
-#include "pix.hpp"
+#include "col.hpp"
 
 // Setup framebuffer file.
 Fb::Fb() {
@@ -64,7 +64,7 @@ void Fb::setup() {
     gl = v.green.length; 
     bl = v.blue.length; 
     al = v.transp.length;
-    printf("Pixel format : RGBA_%u%u%u%u\n", rl, gl, bl, al);
+    printf("Color: RGBA_%u%u%u%u\n", rl, gl, bl, al);
 }
 
 // Map fraembuffer to address space.
@@ -82,16 +82,20 @@ char& Fb::operator()(const Pos& p) {
 }
 
 // Fill a  rectangle with a color.
-void Fb::fill(const Rect& r, const Pix& c) {
-    const auto i = r.i();
-    if (i >= w*h)
+void Fb::fill(const Rect& r, const Col& c) {
+    const auto start = r.i();
+    const auto p = c.val(roff, goff, boff);
+
+    if (start >= w*h)
         throw Fberr::Out_of_range;
-    for (size_t ii = 0; ii < r.size(); ++ii)
-        *((((u32*)fb)+i)+ii) = c.val(roff, goff, boff);
+
+    //for (size_t i = r.p.x; r.r.h; ++i)
+    //    for (size_t j = r.p.y; j < r.r.w; ++j)
+    //        *(((u32*)fb)+i) = p;
 }
 
-void Fb::fill(const Pix& c) {
-    const u32 p = c.val(roff, goff, boff);
+void Fb::fill(const Col& c) {
+    const auto p = c.val(roff, goff, boff);
     for (size_t i = 0; i < w*h; ++i)
         *(((u32*)fb)+i) = p;
 }
