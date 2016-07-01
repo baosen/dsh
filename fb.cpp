@@ -86,8 +86,8 @@ void Fb::fill(const Rect& r, const Pix& c) {
     const auto i = r.i();
     if (i >= w*h)
         throw Fberr::Out_of_range;
-    for (size_t i = 0; i < w*h; ++i)
-        *(((u32*)fb)+i) = c.val(roff, goff, boff);
+    for (size_t ii = 0; ii < r.size(); ++ii)
+        *((((u32*)fb)+i)+ii) = c.val(roff, goff, boff);
 }
 
 void Fb::fill(const Pix& c) {
