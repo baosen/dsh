@@ -5,11 +5,6 @@
 #include "col.hpp"
 using namespace std;
 
-ostream& operator<<(ostream& o, const err& e) {
-    o << e.what();
-    return o;
-}
-
 int main() {
     try {
         Fb fb;
