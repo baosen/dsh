@@ -14,6 +14,8 @@ int main() {
     try {
         Fb fb;
         fb.fill(Rect(Pos(100, 100), Res(100, 100)), Col(255, 0, 0));
+        fb.fill(Rect(Pos(100, 200), Res(100, 100)), Col(0, 255, 0));
+        fb.fill(Rect(Pos(100, 300), Res(100, 100)), Col(0, 0, 255));
     } catch (const Err& e) {
         cerr << "Error code: " << hex << scast<int>(e) << endl;
     } catch (const err& e) {
