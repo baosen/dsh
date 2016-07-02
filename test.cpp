@@ -1,8 +1,8 @@
-#include "mouse.hpp"
+#include "ms.hpp"
 #include "types.hpp"
 
 int main() {
-    Mouse m;
+    Ms m;
     forever {
         m.read();
     }

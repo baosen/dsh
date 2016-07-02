@@ -3,7 +3,7 @@
 #include <iostream>
 #include <cstring>
 #include <cstdio>
-#include "mouse.hpp"
+#include "ms.hpp"
 using namespace std;
 
 namespace {
@@ -11,7 +11,7 @@ namespace {
     int fd;
 }
 
-Mouse::Mouse() {
+Ms::Ms() {
     fd = ::open(path, O_RDONLY);
     if (fd == -1) {
         cerr << "Cannot open " << path << ": " << strerror(errno) << endl;
@@ -19,14 +19,14 @@ Mouse::Mouse() {
     }
 }
 
-Mouse::~Mouse() {
+Ms::~Ms() {
     if (::close(fd) == -1) {
         cerr << "Cannot close " << path << ": " << strerror(errno) << endl;
         exit(1);
     }
 }
 
-input_event Mouse::read() {
+input_event Ms::read() {
     input_event e;
     while (::read(fd, &e, sizeof e))
         printf("time %ld.%06ld\ttype %d\tcode %d\tvalue %d\n", e.time.tv_sec, e.time.tv_usec, e.type, e.code, e.value);

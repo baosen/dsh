@@ -1,8 +1,8 @@
 #pragma once
 #include <linux/input.h>
-class Mouse {
+class Ms {
 public:
-    Mouse();
-    ~Mouse();
+    Ms();
+    ~Ms();
     input_event read();
 };
