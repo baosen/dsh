@@ -8,5 +8,5 @@ typedef uint8_t u8;
 #define scast static_cast
 #define rcast reinterpret_cast 
 #define ccast const_cast 
-#define forever for(;;)
+#define forever for (;;)
 using err = std::runtime_error;

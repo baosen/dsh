@@ -1,10 +1,10 @@
-#include "kb.hpp"
+#include "mouse.hpp"
 #include "types.hpp"
 
 int main() {
-    Kb kb;
+    Mouse m;
     forever {
-        kb.getkbcode();
+        m.read();
     }
     return 0;
 }

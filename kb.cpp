@@ -42,7 +42,6 @@ namespace {
 // Opens the keyboard file descriptor.
 Kb::Kb() {
     fd = ::open(path, O_RDONLY);
-    
     if (fd == -1) {
         cerr << "Cannot open " << path << ": " << strerror(errno) << endl;
         exit(1);
