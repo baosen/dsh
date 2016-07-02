@@ -81,13 +81,14 @@ char& Fb::operator()(const Pos& p) {
     return fb[i];
 }
 
-// Fill a  rectangle with a color.
+// Fill a rectangle with a color.
 void Fb::fill(const Rect& r, const Col& c) {
     if (r.i() >= w*h)
         throw Fberr::Out_of_range;
     r.fill(*this, c);
 }
 
+// Fill the entire screen with a color.
 void Fb::fill(const Col& c) {
     const auto p = c.val(roff, goff, boff);
     for (size_t i = 0; i < w*h; ++i)
