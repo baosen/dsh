@@ -1,7 +1,7 @@
 #include "fb.hpp"
 #include "wnd.hpp"
 
-Wnd::Wnd(const Rect& r) : cur(r) {
+Wnd::Wnd(const Rect& r, const Col& bg) : cur(r), bg(bg) {
     draw();
 }
 
@@ -21,5 +21,5 @@ void Wnd::save() {
 
 void Wnd::draw() {
     Fb fb;
-    fb.fill(cur, Col(255, 0, 0));
+    fb.fill(cur, bg);
 }

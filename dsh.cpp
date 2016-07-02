@@ -9,9 +9,9 @@ using namespace std;
 
 int main() {
     try {
-        Wnd w1(Rect(Pos(100, 200), Res(100, 100)));
-        Wnd w2(Rect(Pos(200, 300), Res(100, 100)));
-        Wnd w3(Rect(Pos(300, 400), Res(100, 100)));
+        Wnd w1(Rect(Pos(100, 200), Res(100, 100)), Col(0, 0, 255));
+        Wnd w2(Rect(Pos(200, 300), Res(100, 100)), Col(0, 0, 255));
+        Wnd w3(Rect(Pos(300, 400), Res(100, 100)), Col(0, 0, 255));
         //Fb fb;
         //for (int i = 0; i < 5; i++) {
         //    fb.fill(Rect(Pos(100+(i*100), 100), Res(100, 100)), Col(255, 0, 0));

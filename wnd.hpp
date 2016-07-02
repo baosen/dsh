@@ -5,7 +5,7 @@
 class Wnd {
 public:
     // Create and place the window.
-    Wnd(const Rect&);
+    Wnd(const Rect&, const Col& bg);
     // Maximize the window.
     void max();
     // Minimize the window.
@@ -16,4 +16,5 @@ private:
     // Save old position.
     void save();
     Rect cur, old;
+    Col bg;
 };
