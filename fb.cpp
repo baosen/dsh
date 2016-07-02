@@ -78,7 +78,7 @@ char& Fb::operator()(const Pos& p) {
     const auto i = p.i(w);
     if (i >= w*h)
         throw Fberr::Out_of_range;
-    return fb[i];
+    return rcast<char*>(fb)[i];
 }
 
 // Fill a rectangle with a color.

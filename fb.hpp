@@ -26,10 +26,8 @@ private:
     fb_fix_screeninfo finfo();
 
     int fd;
-    uint w, h, bpp, 
-         roff, goff, boff, aoff,
-         rl, gl, bl, al;
-    char* fb;
+    uint w, h, bpp, roff, goff, boff, aoff, rl, gl, bl, al;
+    void* fb;
     size_t size;
     friend class Rect;
 };
