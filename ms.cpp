@@ -26,9 +26,15 @@ Ms::~Ms() {
     }
 }
 
-input_event Ms::read() {
-    input_event e;
-    while (::read(fd, &e, sizeof e))
-        printf("type %d\tcode %d\tvalue %d\n", e.type, e.code, e.value);
-    return e;
+void Ms::read() {
+    char e[3], x, y;
+    int left, mid, right;
+    while (::read(fd, &e, sizeof e)) {
+        left = e[0] & 1;
+        mid = e[0] & 2;
+        right = e[0] & 4;
+        x = e[1];
+        y = e[2];
+        printf("x=%d, y=%d, left=%d, middle=%d, right=%d\n", x, y, left, mid, right);
+    }
 }

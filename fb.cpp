@@ -92,5 +92,5 @@ void Fb::fill(const Rect& r, const Col& c) {
 void Fb::fill(const Col& c) {
     const auto p = c.val(roff, goff, boff);
     for (size_t i = 0; i < w*h; ++i)
-        *(((u32*)fb)+i) = p;
+        *((scast<u32*>(fb))+i) = p;
 }

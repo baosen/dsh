@@ -4,5 +4,5 @@ class Ms {
 public:
     Ms();
     ~Ms();
-    input_event read();
+    void read();
 };

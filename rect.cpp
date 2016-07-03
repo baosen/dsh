@@ -13,7 +13,7 @@ void Rect::fill(Fb& f, const Col& c) const {
     const auto start = p.x+(p.y*f.w);
     for (size_t row = 0; row < r.h; ++row)
         for (size_t col = 0; col < r.w; ++col)
-            *(((u32*)f.fb)+start+col+(row*f.w)) = x;
+            *((scast<u32*>(f.fb))+start+col+(row*f.w)) = x;
 }
 
 size_t Rect::size() const {
