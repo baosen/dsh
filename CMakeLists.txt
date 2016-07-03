@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
-project(dshell)
+project(dsh)
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-aux_source_directory(. SOURCE_FILES)
-add_executable(dshell ${SOURCE_FILES})
+
+aux_source_directory(. SRCS)
+add_executable(dsh ${SRCS})
