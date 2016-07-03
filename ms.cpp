@@ -29,6 +29,6 @@ Ms::~Ms() {
 input_event Ms::read() {
     input_event e;
     while (::read(fd, &e, sizeof e))
-        printf("time %ld.%06ld\ttype %d\tcode %d\tvalue %d\n", e.time.tv_sec, e.time.tv_usec, e.type, e.code, e.value);
+        printf("type %d\tcode %d\tvalue %d\n", e.type, e.code, e.value);
     return e;
 }
