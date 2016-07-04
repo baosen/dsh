@@ -52,19 +52,17 @@ void Fb::setup() {
     w = v.xres;
     h = v.yres;
     bpp = v.bits_per_pixel;
-    printf("Original %ux%d, %ubpp\n", v.xres, v.yres, v.bits_per_pixel);
-
+    //printf("Original %ux%d, %ubpp\n", v.xres, v.yres, v.bits_per_pixel);
     roff = v.red.offset;
     goff = v.green.offset;
     boff = v.blue.offset;
     aoff = v.transp.offset;
-    printf("Offset: R%u, G%u, B%u, A%u\n", roff, goff, boff, aoff);
-
+    //printf("Offset: R%u, G%u, B%u, A%u\n", roff, goff, boff, aoff);
     rl = v.red.length; 
     gl = v.green.length; 
     bl = v.blue.length; 
     al = v.transp.length;
-    printf("Color: RGBA_%u%u%u%u\n", rl, gl, bl, al);
+    //printf("Color: RGBA_%u%u%u%u\n", rl, gl, bl, al);
 }
 
 // Map fraembuffer to address space.
