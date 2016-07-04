@@ -5,18 +5,20 @@
 #include "fb.hpp"
 #include "col.hpp"
 #include "wnd.hpp"
+#include "log.hpp"
 using namespace std;
 
 int main() {
     try {
         Wnd w1(Rect(Pos(100, 200), Res(100, 100)), Col(0, 0, 255));
-        Wnd w2(Rect(Pos(200, 300), Res(100, 100)), Col(0, 0, 255));
-        Wnd w3(Rect(Pos(300, 400), Res(100, 100)), Col(0, 0, 255));
-        Wnd w4(Rect(Pos(400, 500), Res(100, 100)), Col(0, 0, 255));
-    } catch (const Err& e) {
-        cerr << "Error code: " << hex << scast<int>(e) << endl;
+        Wnd w2(Rect(Pos(200, 300), Res(200, 200)), Col(0, 0, 255));
+        Wnd w3(Rect(Pos(300, 400), Res(300, 300)), Col(0, 0, 255));
+        Wnd w4(Rect(Pos(400, 500), Res(400, 400)), Col(0, 0, 255));
+        return 0;
+    } catch (const int c) {
+        die(c);
     } catch (const err& e) {
         cerr << e << endl;
     }
-    return 0;
+    return 1;
 }

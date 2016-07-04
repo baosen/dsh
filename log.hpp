@@ -1,2 +1,3 @@
-void die(const char* error_message);
-void warn(const char* warning_message);
+void die(const int);
+void die(const char*);
+void warn(const char*);
