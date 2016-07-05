@@ -1,5 +1,4 @@
 #include <iostream>
-#include <algorithm>
 #include "err.hpp"
 #include "types.hpp"
 #include "fb.hpp"
