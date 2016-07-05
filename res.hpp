@@ -6,9 +6,10 @@ public:
     Res();
     Res(const uint w, const uint h);
 
-    Res& operator=(const Res& r) {
+    const Res& operator=(const Res& r) {
         w = r.w;
         h = r.h;
+        return *this;
     }
 
     uint getw() {
