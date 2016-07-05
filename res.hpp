@@ -3,8 +3,13 @@
 class Rect;
 class Res {
 public:
-    Res() : w(0), h(0) {}
+    Res();
     Res(const uint w, const uint h);
+
+    Res& operator=(const Res& r) {
+        w = r.w;
+        h = r.h;
+    }
 
     uint getw() {
         if (!w)
@@ -18,6 +23,6 @@ public:
         return h;
     }
 private:
-    const uint w, h;
+    uint w, h;
     friend class Rect;
 };
