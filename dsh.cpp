@@ -1,5 +1,4 @@
 #include <iostream>
-#include "err.hpp"
 #include "types.hpp"
 #include "fb.hpp"
 #include "col.hpp"
@@ -17,7 +16,7 @@ int main() {
     } catch (const int c) {
         die(c);
     } catch (const err& e) {
-        cerr << e << endl;
+        error(e);
     }
     return 1;
 }
