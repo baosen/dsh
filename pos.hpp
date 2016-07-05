@@ -3,10 +3,11 @@
 
 class Pos {
 public:
-    Pos() : x(0), y(0) {}
+    Pos();
     Pos(const uint x, const uint y);
     uint i(const uint w) const;
+    const Pos& operator=(const Pos&);
 private:
-    const uint x, y;
+    uint x, y;
     friend class Rect;
 };
