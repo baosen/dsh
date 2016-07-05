@@ -12,6 +12,8 @@ void Wnd::max() {
 
 // Minimize the window.
 void Wnd::min() {
+    save();
+    cur = Rect();
 }
 
 // Save old position.
