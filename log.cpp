@@ -8,8 +8,8 @@ void die(const int code) {
     exit(1);
 }
 
-void die(const char* msg) {
-    cerr << msg;
+void die(const char* e) {
+    cerr << e;
     exit(1);
 }
 
