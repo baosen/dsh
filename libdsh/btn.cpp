@@ -1,6 +1,6 @@
-#include "btn.hpp"
 #include <iostream>
+#include "btn.hpp"
 using namespace std;
 
-btn::btn(const string label) {
+Btn::Btn(const string& label) {
 }
