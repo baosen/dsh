@@ -4,7 +4,7 @@
 using namespace std;
 
 int main() {
-    auto path = getenv("PATH");
+    const auto path = getenv("PATH");
     cout << "PATH: " << path << endl;
     return 0;
 }
