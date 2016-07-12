@@ -1,7 +1,7 @@
-#include "libdsh/ms.hpp"
+#include "libdsh/mouse.hpp"
 
 int main() {
-    Ms m;
+    Mouse m;
     m.read();
     return 0;
 }

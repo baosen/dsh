@@ -1,8 +1,9 @@
 #pragma once
 #include <linux/input.h>
-class Ms {
+
+class Mouse {
 public:
-    Ms();
-    ~Ms();
+    Mouse();
+    ~Mouse();
     void read();
 };
