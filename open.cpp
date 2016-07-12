@@ -4,7 +4,7 @@
 #include "path.hpp"
 using namespace std;
 
-vector<FILE*> open(const vector<string>& paths) {
+auto open(const vector<string>& paths) {
     vector<FILE*> v;
     for (const auto& p : paths) {
         const auto f = fopen(p.c_str(), "r");
