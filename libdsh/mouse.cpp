@@ -6,7 +6,7 @@
 using namespace std;
 
 namespace {
-    const char *path = "/dev/input/mouse0";
+    const char *path = "/dev/input/mouse0"; // path to the mouse input file.
     int fd;
 }
 
@@ -29,12 +29,12 @@ void Mouse::read() {
     char e[4], x, y;
     int left, mid, right, wheel;
     while (::read(fd, &e, sizeof e)) {
-        left = e[0] & 1; // 1 bit is left mouse button.
+        left  = e[0] & 1;        // 1 bit is left mouse button.
         right = (e[0] >> 1) & 1; // 2 bit is right mouse button.
-        mid = (e[0] >> 2) & 1; // 3 bit is middle mouse button.
-        x = e[1];
-        y = e[2];
-        wheel = e[3];
+        mid   = (e[0] >> 2) & 1; // 3 bit is middle mouse button.
+        x     = e[1];
+        y     = e[2];
+        wheel = e[3]; // mouse wheel change.
         printf("x=%d, y=%d, left=%d, middle=%d, right=%d, wheel=%d\n", x, y, left, mid, right, wheel);
     }
 }
