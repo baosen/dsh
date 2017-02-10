@@ -16,6 +16,7 @@ class Scr {
     size_t size;
     char* fb;
     friend class Ptr;
+    friend class Fb;
 public:
     typedef fb_var_screeninfo varinfo;
     typedef fb_fix_screeninfo fixinfo;
@@ -42,7 +43,8 @@ public:
         fb = scast<char*>(mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_SHARED, s.fd, 0));
     }
 
-    char* operator*(const uint i) {
+    char& operator[](const uint i) {
+        return rcast<char*>(fb)[i];
     }
 
     Ptr(const Ptr&) {

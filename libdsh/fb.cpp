@@ -15,20 +15,20 @@ Scr::Scr() {
         throw err("Cannot open /dev/fb0!");
     // Setup screen.
     const auto v = vinfo();
-    w   = v.xres;
-    h   = v.yres;
-    bpp = v.bits_per_pixel;
-    printf("Screen resolution: %ux%u, %ubpp\n", v.xres, v.yres, v.bits_per_pixel);
+    w    = v.xres;
+    h    = v.yres;
+    bpp  = v.bits_per_pixel;
     roff = v.red.offset;
     goff = v.green.offset;
     boff = v.blue.offset;
     aoff = v.transp.offset;
+    rl   = v.red.length; 
+    gl   = v.green.length; 
+    bl   = v.blue.length; 
+    al   = v.transp.length;
+    printf("Screen resolution: %ux%u, %ubpp\n", v.xres, v.yres, v.bits_per_pixel);
     printf("Offset: R%u, G%u, B%u, A%u\n", roff, goff, boff, aoff);
-    rl = v.red.length; 
-    gl = v.green.length; 
-    bl = v.blue.length; 
-    al = v.transp.length;
-    printf("Color: RGBA_%u%u%u%u\n", rl, gl, bl, al);
+    printf("Color: RGBA%u%u%u%u\n", rl, gl, bl, al);
 }
 
 // Close framebuffer file.
@@ -78,22 +78,22 @@ Fb::~Fb() {
 
 // Assign a pixel to (x, y) in the framebuffer.
 char& Fb::operator()(const Pos& p) {
-    const auto i = p.i(w);
-    if (i >= w*h)
+    const auto i = p.i(scr.w);
+    if (i >= scr.w * scr.h)
         throw Fb::Err::OOR;
-    return rcast<char*>(fb)[i];
+    return fb[i];
 }
 
-// Fill a rectangle with a color.
+// Fill a rectangle in the framebuffer with a color.
 void Fb::fill(const Rect& r, const Col& c) {
-    if (r.i() >= w*h)
+    if (r.i() >= scr.w * scr.h)
         throw Fb::Err::OOR;
     r.fill(*this, c);
 }
 
 // Fill the entire screen with a color.
 void Fb::fill(const Col& c) {
-    const auto p = c.val(roff, goff, boff);
-    for (size_t i = 0; i < w*h; ++i)
+    const auto p = c.val(scr.roff, scr.goff, scr.boff);
+    for (size_t i = 0; i < scr.w*scr.h; ++i)
         *((scast<u32*>(fb))+i) = p;
 }
