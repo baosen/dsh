@@ -1,9 +1,11 @@
 #include "fb.hpp"
 #include "wnd.hpp"
 
-Wnd::Wnd(const Rect& r, const Col& bg) : cur(r), bg(bg) {
-    draw();
-}
+// Create new window.
+Wnd::Wnd(const Rect& r) : cur(r) {}
+
+// Create null window.
+Wnd::Wnd() {}
 
 // Maximize the window.
 void Wnd::max() {
@@ -16,12 +18,12 @@ void Wnd::min() {
     cur = Rect();
 }
 
-// Save old position.
+// Save old rectangle.
 void Wnd::save() {
     old = cur;
 }
 
-void Wnd::draw() {
-    Fb fb;
-    fb.fill(cur, bg);
+// Fill entire window with colour c.
+void Wnd::fill(const Col& c) {
+    Fill(cur, c);
 }

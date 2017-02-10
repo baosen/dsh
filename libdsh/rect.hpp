@@ -3,15 +3,16 @@
 #include "res.hpp"
 #include "col.hpp"
 #include "fb.hpp"
+
 class Rect {
-public:
-    Rect();
-    Rect(const Pos& p, const Res& r);
-    uint i() const;
-    size_t size() const;
-    void fill(Fb& fb, const Col& c) const;
-private:
     Pos p;
     Res r;
     friend class Fb;
+public:
+    Rect();
+    Rect(const Pos& p, const Res& r);
+    uint   i()                        const;
+    // Returns the rectangle area size.
+    size_t size()                     const;
+    void   fill(Fb& fb, const Col& c) const;
 };

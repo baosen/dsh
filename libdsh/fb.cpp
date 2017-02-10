@@ -1,7 +1,6 @@
+#include <cstdarg>
 #include <unistd.h>
 #include <fcntl.h>
-#include <sys/mman.h>
-#include <sys/ioctl.h>
 #include <cstring>
 #include "types.hpp"
 #include "log.hpp"
@@ -9,57 +8,22 @@
 #include "fb.hpp"
 #include "col.hpp"
 
-// Setup framebuffer file.
-Fb::Fb() {
-    openfb();
-    setup();
-    fb = map();
-}
-
-// Unmap framebuffer from address space.
-Fb::~Fb() {
-    munmap(fb, size);
-    if (close(fd) == -1)
-        die("Failed to close /dev/fb0!");
-}
-
-// Open the framebuffer file descriptor.
-void Fb::openfb() {
+// Open the framebuffer file.
+Scr::Scr() {
     fd = ::open("/dev/fb0", O_RDWR);
     if (fd == -1)
         throw err("Cannot open /dev/fb0!");
-}
-
-// Returns framebuffer variable screen info.
-fb_var_screeninfo Fb::vinfo() {
-    fb_var_screeninfo v;
-    if (ioctl(fd, FBIOGET_VSCREENINFO, &v))
-        throw err("Can't read video screen information.");
-    return v;
-}
-
-// Returns framebuffer fixed screen info.
-fb_fix_screeninfo Fb::finfo() {
-    fb_fix_screeninfo f;
-    if (ioctl(fd, FBIOGET_FSCREENINFO, &f))
-        throw err("Can't read fixed screen information.");
-    return f;
-}
-
-// Setup framebuffer.
-void Fb::setup() {
+    // Setup screen.
     const auto v = vinfo();
-    w = v.xres;
-    h = v.yres;
+    w   = v.xres;
+    h   = v.yres;
     bpp = v.bits_per_pixel;
-    printf("Framebuffer resolution: %ux%u, %ubpp\n", v.xres, v.yres, v.bits_per_pixel);
-
+    printf("Screen resolution: %ux%u, %ubpp\n", v.xres, v.yres, v.bits_per_pixel);
     roff = v.red.offset;
     goff = v.green.offset;
     boff = v.blue.offset;
     aoff = v.transp.offset;
     printf("Offset: R%u, G%u, B%u, A%u\n", roff, goff, boff, aoff);
-
     rl = v.red.length; 
     gl = v.green.length; 
     bl = v.blue.length; 
@@ -67,24 +31,63 @@ void Fb::setup() {
     printf("Color: RGBA_%u%u%u%u\n", rl, gl, bl, al);
 }
 
-// Map fraembuffer to address space.
-char* Fb::map() {
-    size = finfo().smem_len;
-    return scast<char*>(mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
+// Close framebuffer file.
+Scr::~Scr() {
+    if (close(fd) == -1)
+        die("Failed to close /dev/fb0!");
+}
+
+// Control screen.
+int Scr::ctl(unsigned long req, ...) {
+    va_list a;
+    va_start(a, req);
+    ioctl(fd, req);
+    va_end(a);
+}
+
+// Map framebuffer to computer's address space.
+Ptr Scr::map() {
+    Ptr(*this);
+}
+
+// Returns framebuffer variable screen info.
+Scr::varinfo Scr::vinfo() {
+    varinfo v;
+    if (ctl(FBIOGET_VSCREENINFO, &v))
+        throw err("Can't read video screen information.");
+    return v;
+}
+
+// Returns framebuffer fixed screen info.
+Scr::fixinfo Scr::finfo() {
+    fixinfo f;
+    if (ctl(FBIOGET_FSCREENINFO, &f))
+        throw err("Can't read fixed screen information.");
+    return f;
+}
+
+// Setup framebuffer file.
+Fb::Fb() {
+    fb = scr.map();
+}
+
+// Unmap framebuffer from address space.
+Fb::~Fb() {
+    // TODO:
 }
 
 // Assign a pixel to (x, y) in the framebuffer.
 char& Fb::operator()(const Pos& p) {
     const auto i = p.i(w);
     if (i >= w*h)
-        throw Fberr::Out_of_range;
+        throw Fb::Err::OOR;
     return rcast<char*>(fb)[i];
 }
 
 // Fill a rectangle with a color.
 void Fb::fill(const Rect& r, const Col& c) {
     if (r.i() >= w*h)
-        throw Fberr::Out_of_range;
+        throw Fb::Err::OOR;
     r.fill(*this, c);
 }
 
