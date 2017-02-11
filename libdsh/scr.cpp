@@ -11,24 +11,13 @@ Scr::Scr() {
     fd = ::open("/dev/fb0", O_RDWR);
     if (fd == -1)
         throw err("Cannot open /dev/fb0!");
-    // Setup screen.
     const auto v = vinfo();
-    w    = v.xres;
-    h    = v.yres;
-    bpp  = v.bits_per_pixel;
-    // Set offsets to pixel in the RGB value.
-    roff = v.red.offset;
-    goff = v.green.offset;
-    boff = v.blue.offset;
-    aoff = v.transp.offset;
-    // Set the length in bits to the pixel.
-    rl   = v.red.length; 
-    gl   = v.green.length; 
-    bl   = v.blue.length; 
-    al   = v.transp.length;
+    // Display screen resolution.
     printf("Screen resolution: %ux%u, %ubpp\n", v.xres, v.yres, v.bits_per_pixel);
-    printf("Offset: R%u, G%u, B%u, A%u\n", roff, goff, boff, aoff);
-    printf("Color: RGBA%u%u%u%u\n", rl, gl, bl, al);
+    // Display the offsets to pixel in the RGB value.
+    printf("Offset: R%u, G%u, B%u, A%u\n",   v.red.offset, v.green.offset, v.blue.offset, v.transp.offset);
+    // Display the length in bits of a pixel.
+    printf("Color: RGBA%u%u%u%u\n", v.red.length, v.green.length, v.blue.length, v.transp.length);
 }
 
 // Close framebuffer file.

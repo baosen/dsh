@@ -6,10 +6,9 @@
 
 // Framebuffer.
 class Fb {
-    Scr  scr;
-
+    Scr    scr;
     size_t size;
-    char*  fb;
+    u8*  fb;
 
     friend class Rect;
 public:
@@ -19,13 +18,6 @@ public:
     ~Fb();
 
     // Access its memory.
-    char& operator[](const uint i);
-};
-
-class Fill {
-    Fb f;
-public:
-    Fill(const Rect& r, const Col& c) {
-        f.fill(r, c);
-    }
+    u8&   get8(const uint i);
+    u32&  get32(const uint i);
 };

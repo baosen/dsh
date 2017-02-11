@@ -4,7 +4,7 @@
 // Create new window.
 Wnd::Wnd(const Rect& r) : cur(r) {}
 
-// Create null window.
+// Create empty window.
 Wnd::Wnd() {}
 
 // Maximize the window.
@@ -25,5 +25,4 @@ void Wnd::save() {
 
 // Fill entire window with colour c.
 void Wnd::fill(const Col& c) {
-    Fill(cur, c);
 }

@@ -7,9 +7,10 @@
 
 // Setup framebuffer file.
 Fb::Fb() {
-    // Map framebuffer to computer's address space.
+    // Get size of framebuffer in bytes.
     size = scr.finfo().smem_len;
-    fb = scast<char*>(mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_SHARED, scr.fd, 0));
+    // Map framebuffer to computer's address space.
+    fb = scast<u8*>(mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_SHARED, scr.fd, 0));
 }
 
 // Unmap framebuffer from address space.
@@ -20,9 +21,14 @@ Fb::~Fb() {
     }
 }
 
-// Access its memory.
-char& Fb::operator[](const uint i) {
+// Access framebuffer memory 8 bits at a time.
+u8& Fb::get8(const uint i) {
     return fb[i];
+}
+
+// Access framebuffer memory 32 bits at a time.
+u32& Fb::get32(const uint i) {
+    return *rcast<u32*>(fb+i);
 }
 
 /*

@@ -5,14 +5,17 @@
 #include "fb.hpp"
 
 class Rect {
-    Pos p;
-    Res r;
-    friend class Scr;
+    Pos p; // Position.
+    Res r; // Resolution.
 public:
     Rect();
     Rect(const Pos& p, const Res& r);
-    uint   i()                        const;
+
+    // Fill rectangle with colour.
+    void fill(const Col& c) const;
+
+    // Returns the index to its position in the framebuffer.
+    uint   i()    const;
     // Returns the rectangle area size.
-    size_t size()                     const;
-    void fill(Scr& s, const Col& c) const;
+    size_t size() const;
 };

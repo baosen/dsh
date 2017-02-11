@@ -1,4 +1,5 @@
 #include "rect.hpp"
+#include "fb.hpp"
 
 Rect::Rect(const Pos& p, const Res& r) : p(p), r(r) {}
 Rect::Rect() {}
@@ -9,12 +10,18 @@ uint Rect::i() const {
 }
 
 // Fill rectangle in framebuffer with the colour c.
-void Rect::fill(Scr& s, const Col& c) const {
-    const auto x = c.val(s.roff, s.boff, s.goff);
-    const auto start = p.x+(p.y*f.w);
-    for (size_t row = 0; row < r.h; ++row)
-        for (size_t col = 0; col < r.w; ++col)
-            *((rcast<u32*>(s.fb))+start+col+(row*f.w)) = x;
+void Rect::fill(const Col& c) const {
+    Fb fb;
+
+    // Compute pixel and position.
+    const auto v = fb.scr.vinfo();
+    const auto pix = c.val(v.red.offset, v.green.offset, v.blue.offset);
+    const auto start = p.x + (p.y * r.w);
+
+    // Fill!
+    for (size_t i = 0; i < r.h; ++i)
+        for (size_t j = 0; j < r.w; ++j)
+            fb.get32(start+i) = pix;
 }
 
 size_t Rect::size() const {

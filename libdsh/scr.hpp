@@ -9,7 +9,6 @@ class Scr {
          bpp,                    // Bits per pixel.
          roff, goff, boff, aoff, // Offset to pixel in bits. Bitshift to reach it.
          rl, gl, bl, al;         // Length of pixel in bits.
-
     friend class Fb;
 public:
     typedef fb_var_screeninfo varinfo;
