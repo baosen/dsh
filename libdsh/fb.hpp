@@ -12,11 +12,11 @@ class Ptr;
 // Computer screen.
 class Scr {
     int fd;
-    uint w,   // width.
-         h,   // height.
-         bpp, // bits per pixel.
-         roff, goff, boff, aoff, // Bitshift offset.
-         rl, gl, bl, al; // length.
+    uint w,                      // Width.
+         h,                      // Height.
+         bpp,                    // Bits per pixel.
+         roff, goff, boff, aoff, // Offset to pixel in bits. Bitshift to reach it.
+         rl, gl, bl, al;         // Length in bits.
     size_t size;
     char* fb;
     friend class Ptr;

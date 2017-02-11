@@ -18,10 +18,12 @@ Scr::Scr() {
     w    = v.xres;
     h    = v.yres;
     bpp  = v.bits_per_pixel;
+    // Set offsets to pixel in the RGB value.
     roff = v.red.offset;
     goff = v.green.offset;
     boff = v.blue.offset;
     aoff = v.transp.offset;
+    // Set the length in bits to the pixel.
     rl   = v.red.length; 
     gl   = v.green.length; 
     bl   = v.blue.length; 
