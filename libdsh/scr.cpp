@@ -1,15 +1,13 @@
 #include <cstdarg>
 #include <unistd.h>
-#include <sys/mman.h>
 #include <sys/ioctl.h>
-#include <linux/fb.h>
 #include <fcntl.h>
 #include "log.hpp"
 #include "scr.hpp"
-#include "ptr.hpp"
 
-// Open the framebuffer file.
+// Setup screen.
 Scr::Scr() {
+    // Open the framebuffer file.
     fd = ::open("/dev/fb0", O_RDWR);
     if (fd == -1)
         throw err("Cannot open /dev/fb0!");
@@ -41,11 +39,6 @@ Scr::~Scr() {
 
 // Control screen.
 #define CTL(req, ...) ioctl(fd, req, __VA_ARGS__)
-
-// Map framebuffer to computer's address space.
-Ptr Scr::map() {
-    Ptr(*this);
-}
 
 // Returns framebuffer variable screen info.
 Scr::varinfo Scr::vinfo() {

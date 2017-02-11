@@ -3,27 +3,23 @@
 #include "rect.hpp"
 #include "col.hpp"
 #include "scr.hpp"
-#include "ptr.hpp"
 
 // Framebuffer.
 class Fb {
     Scr  scr;
-    Ptr  fb;
+
+    size_t size;
+    char*  fb;
+
     friend class Rect;
 public:
-    enum Err {
-        OOR, // Out of range.
-    };
+    // Grab framebuffer.
     Fb();
+    // Release framebuffer.
     ~Fb();
 
-    uint maxw();
-    uint maxh();
-
-    void fill(const Rect& r, const Col& c);
-    void fill(const Col& c);
-
-    char& operator()(const Pos&);
+    // Access its memory.
+    char& operator[](const uint i);
 };
 
 class Fill {

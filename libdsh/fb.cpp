@@ -1,4 +1,5 @@
 #include <cstring>
+#include <sys/mman.h>
 #include "types.hpp"
 #include "rect.hpp"
 #include "fb.hpp"
@@ -6,14 +7,25 @@
 
 // Setup framebuffer file.
 Fb::Fb() {
-    fb = scr.map();
+    // Map framebuffer to computer's address space.
+    size = scr.finfo().smem_len;
+    fb = scast<char*>(mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_SHARED, scr.fd, 0));
 }
 
 // Unmap framebuffer from address space.
 Fb::~Fb() {
-    // TODO:
+    if (munmap(fb, size) == -1) {
+        perror("Error");
+        exit(errno);
+    }
 }
 
+// Access its memory.
+char& Fb::operator[](const uint i) {
+    return fb[i];
+}
+
+/*
 // Assign a pixel to (x, y) in the framebuffer.
 char& Fb::operator()(const Pos& p) {
     const auto i = p.i(scr.w);
@@ -35,3 +47,4 @@ void Fb::fill(const Col& c) {
     for (size_t i = 0; i < scr.w*scr.h; ++i)
         fb.i32(i) = p;
 }
+*/
