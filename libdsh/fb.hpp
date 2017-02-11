@@ -35,7 +35,7 @@ public:
     Ptr map();
 };
 
-#include "scr.hpp"
+#include "ptr.hpp"
 
 // Framebuffer.
 class Fb {
