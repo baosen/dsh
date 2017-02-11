@@ -8,12 +8,13 @@ uint Rect::i() const {
     return p.i(r.w);
 }
 
+// Fill rectangle in framebuffer with the colour c.
 void Rect::fill(Scr& s, const Col& c) const {
-    const auto x = c.val(f.roff, f.boff, f.goff);
+    const auto x = c.val(s.roff, s.boff, s.goff);
     const auto start = p.x+(p.y*f.w);
     for (size_t row = 0; row < r.h; ++row)
         for (size_t col = 0; col < r.w; ++col)
-            *((scast<u32*>(f.fb))+start+col+(row*f.w)) = x;
+            *((rcast<u32*>(s.fb))+start+col+(row*f.w)) = x;
 }
 
 size_t Rect::size() const {

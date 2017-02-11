@@ -7,12 +7,12 @@
 class Rect {
     Pos p;
     Res r;
-    friend class Fb;
+    friend class Scr;
 public:
     Rect();
     Rect(const Pos& p, const Res& r);
     uint   i()                        const;
     // Returns the rectangle area size.
     size_t size()                     const;
-    void fill(Ptr& f, const Col& c) const;
+    void fill(Scr& s, const Col& c) const;
 };

@@ -1,40 +1,8 @@
 #pragma once
-#include <sys/mman.h>
-#include <sys/ioctl.h>
-#include <linux/fb.h>
-#include "types.hpp"
 #include "pos.hpp"
 #include "rect.hpp"
 #include "col.hpp"
-
-class Ptr;
-
-// Computer screen.
-class Scr {
-    int fd;
-    uint w,                      // Width.
-         h,                      // Height.
-         bpp,                    // Bits per pixel.
-         roff, goff, boff, aoff, // Offset to pixel in bits. Bitshift to reach it.
-         rl, gl, bl, al;         // Length in bits.
-    size_t size;
-    char* fb;
-    friend class Ptr;
-    friend class Fb;
-public:
-    typedef fb_var_screeninfo varinfo;
-    typedef fb_fix_screeninfo fixinfo;
-
-    Scr();
-    ~Scr();
-
-    varinfo vinfo();
-    fixinfo finfo();
-
-    int ctl(unsigned long, ...);
-    Ptr map();
-};
-
+#include "scr.hpp"
 #include "ptr.hpp"
 
 // Framebuffer.
