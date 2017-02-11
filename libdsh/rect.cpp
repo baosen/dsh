@@ -1,7 +1,9 @@
 #include "rect.hpp"
 #include "fb.hpp"
 
+// Create a rectangle in the framebuffer.
 Rect::Rect(const Pos& p, const Res& r) : p(p), r(r) {}
+// Create an empty rectangle in the framebuffer.
 Rect::Rect() {}
 
 // Computes the index of its position in the framebuffer.
@@ -19,9 +21,9 @@ void Rect::fill(const Col& c) const {
     const auto start = p.x + (p.y * r.w);
 
     // Fill!
-    for (size_t i = 0; i < r.h; ++i)
-        for (size_t j = 0; j < r.w; ++j)
-            fb.get32(start+i) = pix;
+    for (size_t y = 0; y < r.h; ++y)
+        for (size_t x = 0; x < r.w; ++x)
+            fb.get32(start+x*(y*r.w)) = pix;
 }
 
 size_t Rect::size() const {
