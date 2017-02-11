@@ -15,8 +15,8 @@ class Scr {
     uint w,   // width.
          h,   // height.
          bpp, // bits per pixel.
-         roff, goff, boff, aoff, 
-         rl, gl, bl, al;
+         roff, goff, boff, aoff, // Bitshift offset.
+         rl, gl, bl, al; // length.
     size_t size;
     char* fb;
     friend class Ptr;

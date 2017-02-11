@@ -88,12 +88,12 @@ char& Fb::operator()(const Pos& p) {
 void Fb::fill(const Rect& r, const Col& c) {
     if (r.i() >= scr.w * scr.h)
         throw Fb::Err::OOR;
-    r.fill(*this, c);
+    r.fill(fb, c);
 }
 
 // Fill the entire screen with a color.
 void Fb::fill(const Col& c) {
     const auto p = c.val(scr.roff, scr.goff, scr.boff);
     for (size_t i = 0; i < scr.w*scr.h; ++i)
-        *((scast<u32*>(fb))+i) = p;
+        fb.i32(i) = p;
 }

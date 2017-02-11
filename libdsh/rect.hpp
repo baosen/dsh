@@ -14,5 +14,5 @@ public:
     uint   i()                        const;
     // Returns the rectangle area size.
     size_t size()                     const;
-    void   fill(Fb& fb, const Col& c) const;
+    void fill(Ptr& f, const Col& c) const;
 };

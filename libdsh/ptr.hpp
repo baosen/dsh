@@ -2,8 +2,7 @@ class Ptr {
     size_t size;
     char* fb;
 public:
-    Ptr() {
-    }
+    Ptr() {}
 
     Ptr(Scr& s) {
         size = s.finfo().smem_len;
@@ -12,6 +11,10 @@ public:
 
     char& operator[](const uint i) {
         return rcast<char*>(fb)[i];
+    }
+
+    u32& i32(const uint i) {
+        return *(rcast<u32*>(fb)+i);
     }
 
     Ptr(const Ptr&) {
