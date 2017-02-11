@@ -15,9 +15,9 @@ Scr::Scr() {
     // Display screen resolution.
     printf("Screen resolution: %ux%u, %ubpp\n", v.xres, v.yres, v.bits_per_pixel);
     // Display the offsets to pixel in the RGB value.
-    printf("Offset: R%u, G%u, B%u, A%u\n",   v.red.offset, v.green.offset, v.blue.offset, v.transp.offset);
+    printf("Pixel offset: R%u, G%u, B%u, A%u\n",   v.red.offset, v.green.offset, v.blue.offset, v.transp.offset);
     // Display the length in bits of a pixel.
-    printf("Color: RGBA%u%u%u%u\n", v.red.length, v.green.length, v.blue.length, v.transp.length);
+    printf("Color format: RGBA%u%u%u%u\n", v.red.length, v.green.length, v.blue.length, v.transp.length);
 }
 
 // Close framebuffer file.

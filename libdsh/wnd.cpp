@@ -25,4 +25,5 @@ void Wnd::save() {
 
 // Fill entire window with colour c.
 void Wnd::fill(const Col& c) {
+    cur.fill(c);
 }
