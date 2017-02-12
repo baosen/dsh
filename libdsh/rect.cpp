@@ -14,6 +14,7 @@ uint Rect::i() const {
 
 // Fill rectangle in framebuffer with the colour c.
 void Rect::fill(const Col& c) const {
+    // Open framebuffer.
     Fb fb;
 
     // Compute pixel and position.
@@ -24,7 +25,7 @@ void Rect::fill(const Col& c) const {
     // Fill!
     for (size_t y = 0; y < r.h; ++y)
         for (size_t x = 0; x < r.w; ++x)
-            fb.get32(start+x*(y*r.w)) = pix;
+            fb.get32(start+x+(y*r.w)) = pix;
 }
 
 size_t Rect::size() const {

@@ -28,7 +28,7 @@ u8& Fb::get8(const uint i) {
 
 // Access framebuffer memory 32 bits at a time.
 u32& Fb::get32(const uint i) {
-    return *rcast<u32*>(fb+i);
+    return *(rcast<u32*>(fb)+i);
 }
 
 /*

@@ -8,7 +8,7 @@
 class Fb {
     Scr    scr;
     size_t size;
-    u8*  fb;
+    u8*    fb;
 
     friend class Rect;
 public:
