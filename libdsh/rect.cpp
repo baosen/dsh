@@ -20,7 +20,7 @@ void Rect::fill(const Col& c) const {
     // Compute pixel color and position.
     const auto v = fb.scr.vinfo();
     const auto pix = c.val(v.red.offset, v.green.offset, v.blue.offset);
-    const auto s = p.x + (p.y * r.w);
+    const auto s = p.x + (p.y * v.xres);
 
     // Fill!
     for (size_t y = 0; y < r.h; ++y)
