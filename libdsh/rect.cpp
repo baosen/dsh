@@ -17,15 +17,15 @@ void Rect::fill(const Col& c) const {
     // Open framebuffer.
     Fb fb;
 
-    // Compute pixel and position.
+    // Compute pixel color and position.
     const auto v = fb.scr.vinfo();
     const auto pix = c.val(v.red.offset, v.green.offset, v.blue.offset);
-    const auto start = p.x + (p.y * r.w);
+    const auto s = p.x + (p.y * r.w);
 
     // Fill!
     for (size_t y = 0; y < r.h; ++y)
         for (size_t x = 0; x < r.w; ++x)
-            fb.get32(start+x+(y*r.w)) = pix;
+            fb.get32(s+x+(y*v.xres)) = pix;
 }
 
 size_t Rect::size() const {
