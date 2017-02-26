@@ -4,7 +4,7 @@
 using namespace std;
 
 void die(const int code) {
-    cerr << "Error code: " << hex << code << endl;
+    cerr << "\033[1;31m" << "Error code: " << hex << code << "\033[0m" << endl;
     exit(1);
 }
 
@@ -14,10 +14,9 @@ void die(const char* e) {
 }
 
 void error(const err& e) {
-    cerr << e << endl;
+    cout << "\033[1;31mError:\033[0m " << e << endl;
 }
 
-void warn(const char *msg) {
-// TODO: Yellowify!
-    cout << msg;
+void warn(const char *m) {
+    cout << "\033[1;33mWarning:\033[0m " << m << endl;
 }
