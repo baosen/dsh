@@ -15,6 +15,7 @@ auto open(const vector<string>& paths) {
     return v;
 }
 
+/*
 int main() {
     const auto path = getpath();
     cout << "PATH: " << path << endl;
@@ -23,3 +24,4 @@ int main() {
         cout << s << endl;
     return 0;
 }
+*/
