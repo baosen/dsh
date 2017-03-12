@@ -13,6 +13,10 @@ void die(const char* e) {
     exit(1);
 }
 
+void error(const string& s) {
+    cout << "\033[1;31mError:\033[0m " << s << endl;
+}
+
 void error(const err& e) {
     cout << "\033[1;31mError:\033[0m " << e << endl;
 }

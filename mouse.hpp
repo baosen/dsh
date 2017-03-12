@@ -1,7 +1,10 @@
 #pragma once
-#include <linux/input.h>
+#include <string>
 
 class Mouse {
+    std::string path; // file path to device file.
+    int fd;           // mouse input device file descriptor.
+    bool isevt;       // is using event file.
 public:
     Mouse();
     ~Mouse();
