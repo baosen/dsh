@@ -44,7 +44,8 @@ Mouse::~Mouse() {
     }
 }
 
-void evtrd(const int fd) {
+// Read mouse event device file.
+static void evtrd(const int fd) {
     input_event e;
     while (::read(fd, &e, sizeof e)) {
         switch (e.type) {
