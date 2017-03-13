@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <sstream>
 #include <cstring>
 #include <unistd.h>
@@ -20,19 +21,22 @@ Mouse::Mouse() {
     if ((fd = ::open(evtp, O_RDONLY)) != -1) {
         path = evtp;
         isevt = true;
+        cout << "Event mouse" << endl;
         return;
     }
-    ss << "Cannot open " << path << ": " << strerror(errno);
+    ss << "Cannot open " << evtp << ": " << strerror(errno);
     error(ss.str());
     // Generic mouse input using mouse0 device file.
     if ((fd = ::open(mp, O_RDONLY)) != -1) {
         path = mp; 
         isevt = false;
+        cout << "Generic mouse" << endl;
         return;
     }
     ss.str("");
-    ss << "Cannot open " << path << ": " << strerror(errno);
+    ss << "Cannot open " << mp << ": " << strerror(errno);
     error(ss.str());
+    exit(1);
 }
 
 // Close mouse input device file.
@@ -49,18 +53,26 @@ static void evtrd(const int fd) {
     input_event e;
     while (::read(fd, &e, sizeof e)) {
         switch (e.type) {
-        case EV_SYN:
-            cout << "EV_SYN" << endl;
+        case EV_SYN: // Synaptic value?
+            cout << "EV_SYN: " << e.value << endl;
             break;
-        case EV_REL:
-            cout << "EV_REL" << endl;
+        case EV_REL: // Relative value.
+            cout << "EV_REL: " << e.value << endl;
             break;
-        case EV_ABS:
-            cout << "EV_REL" << endl;
+        case EV_ABS: // Absolute value.
+            cout << "EV_ABS: " << e.value << endl;
+            break;
+        case EV_KEY: // Mouse button press and release.
+            cout << "EV_KEY: " << e.value << endl;
+            break;
+        case EV_MSC: // Miscellanous?
+            cout << "EV_MSC: " << e.value << endl;
             break;
         default:
+            cout << "Unknown type:" << hex << setw(2) << e.type << endl;
             break;
         }
+        cout << "Code: " << e.code << endl;
     }
 }
 
