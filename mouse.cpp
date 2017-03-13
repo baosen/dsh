@@ -53,13 +53,13 @@ static void evtrd(const int fd) {
     input_event e;
     while (::read(fd, &e, sizeof e)) {
         switch (e.type) {
-        case EV_SYN: // Synaptic value?
+        case EV_SYN: // Synthetic events.
             cout << "EV_SYN: " << e.value << endl;
             break;
-        case EV_REL: // Relative value.
+        case EV_REL: // Relative motion.
             cout << "EV_REL: " << e.value << endl;
             break;
-        case EV_ABS: // Absolute value.
+        case EV_ABS: // Absolute motion.
             cout << "EV_ABS: " << e.value << endl;
             break;
         case EV_KEY: // Mouse button press and release.
