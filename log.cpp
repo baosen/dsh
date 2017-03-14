@@ -5,12 +5,12 @@ using namespace std;
 
 void die(const int code) {
     cerr << "\033[1;31m" << "Error code: " << hex << code << "\033[0m" << endl;
-    exit(1);
+    exit(code);
 }
 
 void die(const char* e) {
     cerr << e;
-    exit(1);
+    exit(errno);
 }
 
 void error(const string& s) {

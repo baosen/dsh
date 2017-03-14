@@ -35,8 +35,7 @@ Mouse::Mouse() {
     }
     ss.str("");
     ss << "Cannot open " << mp << ": " << strerror(errno);
-    error(ss.str());
-    exit(1);
+    die(ss.str().c_str());
 }
 
 // Close mouse input device file.
