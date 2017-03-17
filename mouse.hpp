@@ -9,4 +9,5 @@ public:
     Mouse();
     ~Mouse();
     void read();
+    std::string name();
 };

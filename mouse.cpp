@@ -10,8 +10,22 @@
 using namespace std;
 
 namespace {
+    const char GENERIC[] = "Generic mouse";
     const char *evtp = "/dev/input/event0"; // File path to the event-driven mouse device file.
     const char *mp   = "/dev/input/mouse0"; // File path to the generic mouse input device file.
+}
+
+// Discover mouse event file.
+static int discover() {
+    int fd, n = 3;
+    stringstream ss;
+    for (int i = 0; i < n; ++i) {
+        ss << "/dev/input/event" << i;
+        if ((fd = ::open(ss.str().c_str(), O_RDONLY) != -1))
+            return fd;
+        ss.str("");
+    }
+    throw err("No mouse found!");
 }
 
 // Open mouse input device file.
@@ -30,12 +44,24 @@ Mouse::Mouse() {
     if ((fd = ::open(mp, O_RDONLY)) != -1) {
         path = mp; 
         isevt = false;
-        cout << "Generic mouse" << endl;
+        cout << GENERIC << endl;
         return;
     }
     ss.str("");
     ss << "Cannot open " << mp << ": " << strerror(errno);
     die(ss.str().c_str());
+}
+
+string Mouse::name() {
+    char buf[256] {0};
+    if (isevt) {
+        int err;
+        if ((err = ioctl(fd, EVIOCGNAME(sizeof(buf)), buf)) >= 0)
+            return string(buf);
+        else
+            throw err;
+    }
+    return GENERIC;
 }
 
 // Close mouse input device file.
@@ -56,6 +82,7 @@ static void evtrd(const int fd) {
             cout << "EV_SYN: " << e.value << endl;
             break;
         case EV_REL: // Relative motion.
+            // This is mouse movement.
             cout << "EV_REL: " << e.value << endl;
             break;
         case EV_ABS: // Absolute motion.
