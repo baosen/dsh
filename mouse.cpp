@@ -52,8 +52,9 @@ Mouse::Mouse() {
     die(ss.str().c_str());
 }
 
+// Get the name of the mouse device.
 string Mouse::name() {
-    char buf[256] {0};
+    char buf[256] = {0};
     if (isevt) {
         int err;
         if ((err = ioctl(fd, EVIOCGNAME(sizeof(buf)), buf)) >= 0)
@@ -89,7 +90,48 @@ static void evtrd(const int fd) {
             cout << "EV_ABS: " << e.value << endl;
             break;
         case EV_KEY: // Mouse button press and release.
-            cout << "EV_KEY: " << e.value << endl;
+            switch (e.code) {
+            case BTN_LEFT:
+                cout << "Left: ";
+                switch (e.value) {
+                case 0: // Released button.
+                    cout << "Released!" << endl;
+                    break;
+                case 1: // Pressed button.
+                    cout << "Pressed!" << endl;
+                    break;
+                default:
+                    cout << "Unknown " << e.value << endl;
+                    break;
+                }
+                break;
+            case BTN_RIGHT:
+                cout << "Right: ";
+                switch (e.value) {
+                case 0: // Released button.
+                    cout << "Released!" << endl;
+                    break;
+                case 1: // Pressed button.
+                    cout << "Pressed!" << endl;
+                    break;
+                default:
+                    cout << "Unknown " << e.value << endl;
+                    break;
+                }
+                break;
+            case BTN_MIDDLE:
+                break;
+            case BTN_SIDE:
+                break;
+            case BTN_EXTRA:
+                break;
+            case BTN_FORWARD:
+                break;
+            case BTN_BACK:
+                break;
+            case BTN_TASK:
+                break;
+            }
             break;
         case EV_MSC: // Miscellanous?
             cout << "EV_MSC: " << e.value << endl;
