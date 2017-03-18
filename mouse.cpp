@@ -131,6 +131,10 @@ static void side(const __s32 val) {
 static void move(const __s32 val) {
 }
 
+// Back button on web browser.
+static void back(const __s32 val) {
+}
+
 // Read mouse event device file.
 static void evtrd(const int fd) {
     input_event e;
@@ -171,6 +175,7 @@ static void evtrd(const int fd) {
             case BTN_FORWARD:
                 break;
             case BTN_BACK:
+                back(e.value);
                 break;
             case BTN_TASK:
                 break;
