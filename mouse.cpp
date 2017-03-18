@@ -135,6 +135,34 @@ static void move(const __s32 val) {
 static void back(const __s32 val) {
 }
 
+// Mouse button press or release.
+static void key(const __u16 code, const __s32 val) {
+    cout << "EV_KEY: ";
+    switch (code) {
+    case BTN_LEFT:
+        left(val);
+        break;
+    case BTN_RIGHT:
+        right(val);
+        break;
+    case BTN_MIDDLE:
+        middle(val);
+        break;
+    case BTN_SIDE:
+        side(val);
+        break;
+    case BTN_EXTRA:
+        break;
+    case BTN_FORWARD:
+        break;
+    case BTN_BACK:
+        back(val);
+        break;
+    case BTN_TASK:
+        break;
+    }
+}
+
 // Read mouse event device file.
 static void evtrd(const int fd) {
     input_event e;
@@ -156,30 +184,7 @@ static void evtrd(const int fd) {
             cout << "EV_ABS: " << e.value << endl;
             break;
         case EV_KEY: // Mouse button press and release.
-            cout << "EV_KEY: ";
-            switch (e.code) {
-            case BTN_LEFT:
-                left(e.value);
-                break;
-            case BTN_RIGHT:
-                right(e.value);
-                break;
-            case BTN_MIDDLE:
-                middle(e.value);
-                break;
-            case BTN_SIDE:
-                side(e.value);
-                break;
-            case BTN_EXTRA:
-                break;
-            case BTN_FORWARD:
-                break;
-            case BTN_BACK:
-                back(e.value);
-                break;
-            case BTN_TASK:
-                break;
-            }
+            key(e.code, e.value);
             break;
         case EV_MSC: // Miscellanous?
             cout << "EV_MSC: " << e.value << endl;
