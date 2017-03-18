@@ -163,6 +163,16 @@ static void key(const __u16 code, const __s32 val) {
     }
 }
 
+// This is mouse movement.
+static void rel(const __u16 code, const __s32 val) {
+    cout << "EV_REL: " << val << endl;
+    switch (code) {
+    default:
+        move(val);
+        break;
+    }
+}
+
 // Read mouse event device file.
 static void evtrd(const int fd) {
     input_event e;
@@ -172,13 +182,7 @@ static void evtrd(const int fd) {
             cout << "EV_SYN: " << e.value << endl;
             break;
         case EV_REL: // Relative motion.
-            // This is mouse movement.
-            cout << "EV_REL: " << e.value << endl;
-            switch (e.code) {
-            default:
-                move(e.value);
-                break;
-            }
+            rel(e.code, e.value);
             break;
         case EV_ABS: // Absolute motion.
             cout << "EV_ABS: " << e.value << endl;
