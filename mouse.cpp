@@ -74,6 +74,63 @@ Mouse::~Mouse() {
     }
 }
 
+// Handle left mouse button press.
+static void left(const __s32 val) {
+    cout << "Left: ";
+    switch (val) {
+    case 0:  // Released button.
+        cout << "Released!" << endl;
+        break;
+    case 1:  // Pressed button.
+        cout << "Pressed!" << endl;
+        break;
+    default: // Unknown value.
+        cout << "Unknown " << val << endl;
+        break;
+    }
+}
+
+// Handle right mouse button press.
+static void right(const __s32 val) {
+    cout << "Right: ";
+    switch (val) {
+    case 0: // Released button.
+        cout << "Released!" << endl;
+        break;
+    case 1: // Pressed button.
+        cout << "Pressed!" << endl;
+        break;
+    default:
+        cout << "Unknown " << val << endl;
+        break;
+    }
+}
+
+// Handle middle mouse button press.
+static void middle(const __s32 val) {
+    cout << "Middle: ";
+    switch (val) {
+    case 0: // Released button.
+        cout << "Released!" << endl;
+        break;
+    case 1: // Pressed button.
+        cout << "Pressed!" << endl;
+        break;
+    default:
+        cout << "Unknown " << val << endl;
+        break;
+    }
+}
+
+// Handle side mouse button press.
+static void side(const __s32 val) {
+    cout << "Side: " << val << endl;
+}
+
+// Move mouse.
+static void move(const __s32 val) {
+}
+
 // Read mouse event device file.
 static void evtrd(const int fd) {
     input_event e;
@@ -85,43 +142,29 @@ static void evtrd(const int fd) {
         case EV_REL: // Relative motion.
             // This is mouse movement.
             cout << "EV_REL: " << e.value << endl;
+            switch (e.code) {
+            default:
+                move(e.value);
+                break;
+            }
             break;
         case EV_ABS: // Absolute motion.
             cout << "EV_ABS: " << e.value << endl;
             break;
         case EV_KEY: // Mouse button press and release.
+            cout << "EV_KEY: ";
             switch (e.code) {
             case BTN_LEFT:
-                cout << "Left: ";
-                switch (e.value) {
-                case 0: // Released button.
-                    cout << "Released!" << endl;
-                    break;
-                case 1: // Pressed button.
-                    cout << "Pressed!" << endl;
-                    break;
-                default:
-                    cout << "Unknown " << e.value << endl;
-                    break;
-                }
+                left(e.value);
                 break;
             case BTN_RIGHT:
-                cout << "Right: ";
-                switch (e.value) {
-                case 0: // Released button.
-                    cout << "Released!" << endl;
-                    break;
-                case 1: // Pressed button.
-                    cout << "Pressed!" << endl;
-                    break;
-                default:
-                    cout << "Unknown " << e.value << endl;
-                    break;
-                }
+                right(e.value);
                 break;
             case BTN_MIDDLE:
+                middle(e.value);
                 break;
             case BTN_SIDE:
+                side(e.value);
                 break;
             case BTN_EXTRA:
                 break;
