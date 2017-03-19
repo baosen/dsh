@@ -139,6 +139,20 @@ static void ymove(const __s32 val) {
 
 // Back button on web browser.
 static void back(const __s32 val) {
+    cout << "back" << endl;
+}
+
+// Forward mouse button.
+static void forward(const __s32 val) {
+    cout << "forward" << endl;
+}
+
+// Extra mouse button.
+static void extra(const __s32 val) {
+}
+
+// Task mouse button.
+static void task(const __s32 val) {
 }
 
 // Mouse button press or release.
@@ -158,13 +172,28 @@ static void key(const __u16 code, const __s32 val) {
         side(val);
         break;
     case BTN_EXTRA:
+        extra(val);
         break;
     case BTN_FORWARD:
+        forward(val);
         break;
     case BTN_BACK:
         back(val);
         break;
     case BTN_TASK:
+        task(val);
+        break;
+    }
+}
+
+// Mouse scrolling.
+static void scroll(const __s32 val) {
+    switch (val) {
+    case 1:  // up
+        cout << "scroll up" << endl;
+        break;
+    case -1: // down
+        cout << "scroll down" << endl;
         break;
     }
 }
@@ -183,7 +212,11 @@ static void rel(const __u16 code, const __s32 val) {
         cout << "y: ";
         ymove(val);
         break;
+    case 8: // scroll.
+        scroll(val);
+        break;
     default:
+        cout << "unknown " << code;
         break;
     }
 }
@@ -212,7 +245,6 @@ static void evtrd(const int fd) {
             cout << "Unknown type:" << hex << setw(2) << e.type << endl;
             break;
         }
-        cout << "Code: " << e.code << endl;
     }
 }
 
