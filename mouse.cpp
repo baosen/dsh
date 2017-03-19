@@ -129,6 +129,7 @@ static void side(const __s32 val) {
 
 // Move mouse.
 static void move(const __s32 val) {
+    cout << "Move: " << val << endl;
 }
 
 // Back button on web browser.
@@ -165,10 +166,19 @@ static void key(const __u16 code, const __s32 val) {
 
 // This is mouse movement.
 static void rel(const __u16 code, const __s32 val) {
-    cout << "EV_REL: " << val << endl;
+    cout << "EV_REL: ";
+    // Mouse movements follows top-left coordinate system, 
+    // where origo is at the top left of the screen and the positive y-axis points downwards.
     switch (code) {
-    default:
+    case 0: // x-axis, - left, + right.
+        cout << "x: ";
         move(val);
+        break;
+    case 1: // y-axis, - upwards, + downwards.
+        cout << "y: ";
+        move(val);
+        break;
+    default:
         break;
     }
 }
