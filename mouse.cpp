@@ -127,9 +127,14 @@ static void side(const __s32 val) {
     cout << "Side: " << val << endl;
 }
 
-// Move mouse.
-static void move(const __s32 val) {
-    cout << "Move: " << val << endl;
+// X move mouse.
+static void xmove(const __s32 val) {
+    cout << " move: " << val << endl;
+}
+
+// Y move mouse.
+static void ymove(const __s32 val) {
+    cout << " move: " << val << endl;
 }
 
 // Back button on web browser.
@@ -172,11 +177,11 @@ static void rel(const __u16 code, const __s32 val) {
     switch (code) {
     case 0: // x-axis, - left, + right.
         cout << "x: ";
-        move(val);
+        xmove(val);
         break;
     case 1: // y-axis, - upwards, + downwards.
         cout << "y: ";
-        move(val);
+        ymove(val);
         break;
     default:
         break;
