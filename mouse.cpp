@@ -189,10 +189,10 @@ static void key(const __u16 code, const __s32 val) {
 // Mouse scrolling.
 static void scroll(const __s32 val) {
     switch (val) {
-    case 1:  // up
+    case 1:  // scroll up
         cout << "scroll up" << endl;
         break;
-    case -1: // down
+    case -1: // scroll down
         cout << "scroll down" << endl;
         break;
     }
@@ -249,11 +249,11 @@ static void evtrd(const int fd) {
 }
 
 // Read mouse input from mouse device file
-void Mouse::read() {
+tuple<Mouse::Evt, int> Mouse::read() {
     // Is using event-drive mouse device file?
     if (isevt) {
         evtrd(fd);
-        return;
+        return make_tuple(Evt::YDOWN, 0); // TODO: Placeholder.
     }
     // Read using generic mouse device file.
     char e[4], x, y;
@@ -267,4 +267,5 @@ void Mouse::read() {
         wheel = e[3]; // mouse wheel change.
         printf("x=%d, y=%d, left=%d, middle=%d, right=%d, wheel=%d\n", x, y, left, mid, right, wheel);
     }
+    return make_tuple(Evt::YDOWN, 0); // TODO: Placeholder.
 }
