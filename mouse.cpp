@@ -253,7 +253,7 @@ tuple<Mouse::Evt, int> Mouse::read() {
     // Is using event-drive mouse device file?
     if (isevt) {
         evtrd(fd);
-        return make_tuple(Evt::YDOWN, 0); // TODO: Placeholder.
+        return make_tuple(Evt::Y, 0); // TODO: Placeholder.
     }
     // Read using generic mouse device file.
     char e[4], x, y;
@@ -267,5 +267,5 @@ tuple<Mouse::Evt, int> Mouse::read() {
         wheel = e[3]; // mouse wheel change.
         printf("x=%d, y=%d, left=%d, middle=%d, right=%d, wheel=%d\n", x, y, left, mid, right, wheel);
     }
-    return make_tuple(Evt::YDOWN, 0); // TODO: Placeholder.
+    return make_tuple(Evt::Y, 0); // TODO: Placeholder.
 }

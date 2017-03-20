@@ -9,19 +9,23 @@ class Mouse {
 public:
     // Mouse event made by the user.
     enum class Evt {
-        LEFTPRS,  // Left mouse button press.
-        RIGHTPRS, // Right mouse button press.
-        LEFTRLS,  // Left mouse button release.
-        RIGHTRLS, // Right mouse button release.
-        UPSCR,    // Up mouse scroll.
-        DOWNSCR,  // Down mouse scroll.
-        XLEFT,    // Movement to the left of x-axis.
-        XRIGHT,   // Movement to the right of x-axis.
-        YUP,      // Movement upwards the y-axis.
-        YDOWN,    // Movement downards the y-axis.
+        LEFT,   // Left mouse button press or release.
+        RIGHT,  // Right mouse button press or release.
+        MID,    // Middle mouse button press or release.
+        SCROLL, // Up and down mouse scroll.
+        X,      // Movement of x-axis.
+        Y,      // Movement of y-axis.
     };
+
+    // Claims the mouse.    
     Mouse();
+
+    // Releases the mouse.    
     ~Mouse();
+
+    // Waits for mouse event and reads it.
     std::tuple<Mouse::Evt, int> read();
+
+    // Returns the name of the mouse device.
     std::string name();
 };
