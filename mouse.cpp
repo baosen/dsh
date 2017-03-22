@@ -10,9 +10,10 @@
 using namespace std;
 
 namespace {
-    const char GENERIC[] = "Generic mouse";
-    const char *evtp = "/dev/input/event0"; // File path to the event-driven mouse device file.
-    const char *mp   = "/dev/input/mouse0"; // File path to the generic mouse input device file.
+    const char GENERIC[] = "Generic mouse";     // Name of /dev/input/mouse* to return.
+
+    const char evtp[]    = "/dev/input/event0"; // File path to the event-driven mouse device file.
+    const char mp[]      = "/dev/input/mouse0"; // File path to the generic mouse input device file.
 }
 
 // Discover mouse event file.
@@ -186,43 +187,23 @@ static void key(const __u16 code, const __s32 val) {
     }
 }
 
-// Mouse scrolling.
-static void scroll(const __s32 val) {
-    switch (val) {
-    case 1:  // scroll up
-        cout << "scroll up" << endl;
-        break;
-    case -1: // scroll down
-        cout << "scroll down" << endl;
-        break;
-    }
-}
-
 // This is mouse movement.
-static void rel(const __u16 code, const __s32 val) {
+static tuple<Mouse::Evt, int> rel(const __u16 code, const __s32 val) {
     cout << "EV_REL: ";
     // Mouse movements follows top-left coordinate system, 
     // where origo is at the top left of the screen and the positive y-axis points downwards.
     switch (code) {
     case 0: // x-axis, - left, + right.
-        cout << "x: ";
-        xmove(val);
-        break;
+        return make_tuple(Mouse::Evt::X, val);
     case 1: // y-axis, - upwards, + downwards.
-        cout << "y: ";
-        ymove(val);
-        break;
+        return make_tuple(Mouse::Evt::Y, val);
     case 8: // scroll.
-        scroll(val);
-        break;
-    default:
-        cout << "unknown " << code;
-        break;
+        return make_tuple(Mouse::Evt::SCR, val);
     }
 }
 
 // Read mouse event device file.
-static void evtrd(const int fd) {
+static tuple<Mouse::Evt, int> evtrd(const int fd) {
     input_event e;
     while (::read(fd, &e, sizeof e)) {
         switch (e.type) {
@@ -230,8 +211,7 @@ static void evtrd(const int fd) {
             cout << "EV_SYN: " << e.value << endl;
             break;
         case EV_REL: // Relative motion.
-            rel(e.code, e.value);
-            break;
+            return rel(e.code, e.value);
         case EV_ABS: // Absolute motion.
             cout << "EV_ABS: " << e.value << endl;
             break;
@@ -251,10 +231,8 @@ static void evtrd(const int fd) {
 // Read mouse input from mouse device file
 tuple<Mouse::Evt, int> Mouse::read() {
     // Is using event-drive mouse device file?
-    if (isevt) {
-        evtrd(fd);
-        return make_tuple(Evt::Y, 0); // TODO: Placeholder.
-    }
+    if (isevt)
+        return evtrd(fd);
     // Read using generic mouse device file.
     char e[4], x, y;
     int left, mid, right, wheel;

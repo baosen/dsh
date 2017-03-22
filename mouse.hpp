@@ -9,12 +9,18 @@ class Mouse {
 public:
     // Mouse event made by the user.
     enum class Evt {
-        LEFT,   // Left mouse button press or release.
-        RIGHT,  // Right mouse button press or release.
-        MID,    // Middle mouse button press or release.
-        SCROLL, // Up and down mouse scroll.
-        X,      // Movement of x-axis.
-        Y,      // Movement of y-axis.
+        LEFT,  // Left mouse button press or release.
+        RIGHT, // Right mouse button press or release.
+        MID,   // Middle mouse button press or release.
+        SCR,   // Up and down mouse scroll.
+        X,     // Movement of x-axis.
+        Y,     // Movement of y-axis.
+    };
+
+    // Mouse-wheel scroll.
+    enum Scr {
+        UP   = 1,  // Scroll upwards.
+        DOWN = -1, // Scroll downwards.
     };
 
     // Claims the mouse.    
