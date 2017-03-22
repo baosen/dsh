@@ -157,21 +157,17 @@ static void task(const __s32 val) {
 }
 
 // Mouse button press or release.
-static void key(const __u16 code, const __s32 val) {
+static tuple<Mouse::Evt, int> key(const __u16 code, const __s32 val) {
     cout << "EV_KEY: ";
     switch (code) {
     case BTN_LEFT:
-        left(val);
-        break;
+        return make_tuple(Mouse::Evt::LEFT, val);
     case BTN_RIGHT:
-        right(val);
-        break;
+        return make_tuple(Mouse::Evt::RIGHT, val);
     case BTN_MIDDLE:
-        middle(val);
-        break;
+        return make_tuple(Mouse::Evt::MID, val);
     case BTN_SIDE:
-        side(val);
-        break;
+        return make_tuple(Mouse::Evt::SIDE, val);
     case BTN_EXTRA:
         extra(val);
         break;
@@ -216,8 +212,7 @@ static tuple<Mouse::Evt, int> evtrd(const int fd) {
             cout << "EV_ABS: " << e.value << endl;
             break;
         case EV_KEY: // Mouse button press and release.
-            key(e.code, e.value);
-            break;
+            return key(e.code, e.value);
         case EV_MSC: // Miscellanous?
             cout << "EV_MSC: " << e.value << endl;
             break;
@@ -242,7 +237,7 @@ tuple<Mouse::Evt, int> Mouse::read() {
         mid   = (e[0] >> 2) & 1; // 3 bit is middle mouse button pressed?
         x     = e[1];
         y     = e[2];
-        wheel = e[3]; // mouse wheel change.
+        wheel = e[3]; // mouse wheel change (bao: does not work!).
         printf("x=%d, y=%d, left=%d, middle=%d, right=%d, wheel=%d\n", x, y, left, mid, right, wheel);
     }
     return make_tuple(Evt::Y, 0); // TODO: Placeholder.

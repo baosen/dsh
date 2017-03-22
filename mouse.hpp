@@ -12,6 +12,7 @@ public:
         LEFT,  // Left mouse button press or release.
         RIGHT, // Right mouse button press or release.
         MID,   // Middle mouse button press or release.
+        SIDE,  // Side mouse button press or release.
         SCR,   // Up and down mouse scroll.
         X,     // Movement of x-axis.
         Y,     // Movement of y-axis.
@@ -21,6 +22,12 @@ public:
     enum Scr {
         UP   = 1,  // Scroll upwards.
         DOWN = -1, // Scroll downwards.
+    };
+
+    // Button state
+    enum Btn {
+        RLS, // Released.
+        PRS  // Pressed.
     };
 
     // Claims the mouse.    
