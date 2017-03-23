@@ -1,9 +1,5 @@
-#include <iostream>
-#include "types.hpp"
-#include "fb.hpp"
-#include "col.hpp"
-#include "wnd.hpp"
-#include "log.hpp"
+#include "libdsh/wnd.hpp"
+#include "libdsh/log.hpp"
 using namespace std;
 
 namespace {
