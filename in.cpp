@@ -93,7 +93,7 @@ Mouse::~Mouse() {
 }
 
 // Mouse button press or release.
-static tuple<Mouse::Evt, int> key(const __u16 code, const __s32 val) {
+static tuple<Mouse::Type, int> key(const __u16 code, const __s32 val) {
     switch (code) {
     case BTN_LEFT:    // Left mouse button.
         return make_tuple(Mouse::Type::LEFT, val);
@@ -115,7 +115,7 @@ static tuple<Mouse::Evt, int> key(const __u16 code, const __s32 val) {
 }
 
 // This is mouse movement.
-static tuple<Mouse::Evt, int> rel(const __u16 code, const __s32 val) {
+static tuple<Mouse::Type, int> rel(const __u16 code, const __s32 val) {
     cout << "EV_REL: ";
     // Mouse movements follows top-left coordinate system, 
     // where origo is at the top left of the screen and the positive y-axis points downwards.
@@ -130,7 +130,7 @@ static tuple<Mouse::Evt, int> rel(const __u16 code, const __s32 val) {
 }
 
 // Read mouse event device file.
-static tuple<Mouse::Evt, int> evtrd(const int fd) {
+static tuple<Mouse::Type, int> evtrd(const int fd) {
     input_event e;
     while (::read(fd, &e, sizeof e)) {
         switch (e.type) {
@@ -155,7 +155,7 @@ static tuple<Mouse::Evt, int> evtrd(const int fd) {
 }
 
 // Read mouse input from mouse device file
-tuple<Mouse::Evt, int> Mouse::read() {
+tuple<Mouse::Type, int> Mouse::read() {
     // Is using event-drive mouse device file?
     if (evt)
         return evtrd(fd);
@@ -171,5 +171,5 @@ tuple<Mouse::Evt, int> Mouse::read() {
         wheel = e[3]; // mouse wheel change (bao: does not work!).
         printf("x=%d, y=%d, left=%d, middle=%d, right=%d, wheel=%d\n", x, y, left, mid, right, wheel);
     }
-    return make_tuple(Evt::Y, 0); // TODO: Placeholder.
+    return make_tuple(Mouse::Type::Y, 0); // TODO: Placeholder.
 }

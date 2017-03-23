@@ -2,13 +2,15 @@
 #include <string>
 #include <tuple>
 
-class Mouse {
+// Class In;
+// class Out;
+class In {
     std::string path; // file path to device file.
     int         fd;   // mouse input device file descriptor.
     bool        evt;  // is using event file.
 public:
     // Mouse event type made by the user.
-    enum class Type {
+    enum class MType {
         LEFT,    // Left mouse button press or release.
         RIGHT,   // Right mouse button press or release.
         MID,     // Middle mouse button press or release.
@@ -22,13 +24,19 @@ public:
         Y,       // Movement of y-axis.
     };
 
+    enum Dev {
+        MOUSE,
+        TPAD,
+        TSCR,
+    };
+
     // Mouse event made by the user.
     struct Evt {
         Type type;
         union {
             struct {
                 int x, y;              // movement in the x and y coordinate system.
-                bool left, mid, right, // left, middle and right button pressed or released..
+                bool left, mid, right; // left, middle and right button pressed or released..
                 int wheel;             // wheel scroll.
             } coord;
         } val;
@@ -47,13 +55,12 @@ public:
     };
 
     // Claims the mouse.    
-    Mouse();
-
+    In();
     // Releases the mouse.    
-    ~Mouse();
+    ~In();
 
     // Waits for mouse event and reads it.
-    std::tuple<Mouse::Evt, int> read();
+    Evt read();
 
     // Returns the name of the mouse device.
     std::string name();
