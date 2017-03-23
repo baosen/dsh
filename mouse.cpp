@@ -121,16 +121,16 @@ static tuple<Mouse::Evt, int> evtrd(const int fd) {
     input_event e;
     while (::read(fd, &e, sizeof e)) {
         switch (e.type) {
+        case EV_REL: // Relative motion.
+            return rel(e.code, e.value);
+        case EV_KEY: // Mouse button press and release.
+            return key(e.code, e.value);
         case EV_SYN: // Synthetic events.
             cout << "EV_SYN: " << e.value << endl;
             break;
-        case EV_REL: // Relative motion.
-            return rel(e.code, e.value);
         case EV_ABS: // Absolute motion.
             cout << "EV_ABS: " << e.value << endl;
             break;
-        case EV_KEY: // Mouse button press and release.
-            return key(e.code, e.value);
         case EV_MSC: // Miscellanous?
             cout << "EV_MSC: " << e.value << endl;
             break;
