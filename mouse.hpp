@@ -4,8 +4,8 @@
 
 class Mouse {
     std::string path; // file path to device file.
-    int fd;           // mouse input device file descriptor.
-    bool isevt;       // is using event file.
+    int         fd;   // mouse input device file descriptor.
+    bool        evt;  // is using event file.
 public:
     // Mouse event made by the user.
     enum class Evt {

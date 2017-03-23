@@ -11,17 +11,30 @@ using namespace std;
 
 namespace {
     const char GENERIC[] = "Generic mouse";     // Name of /dev/input/mouse* to return.
-
     const char evtp[]    = "/dev/input/event0"; // File path to the event-driven mouse device file.
     const char mp[]      = "/dev/input/mouse0"; // File path to the generic mouse input device file.
+    // What about touch pads?
 }
 
 static uint nevtfiles() {
     return 3;
 }
 
+// Discover generic "hacked" mouse.
+static int discgen() {
+    int fd, n = nevtfiles();
+    stringstream s;
+    for (int i = 0; i < n; ++i) {
+        s << "/dev/input/mouse" << i;
+        if ((fd = ::open(s.str().c_str(), O_RDONLY) != -1))
+            return fd;
+        s.str("");
+    }
+    throw err("No generic mouse found!");
+}
+
 // Discover mouse event file.
-static int discover() {
+static int discevt() {
     int fd, n = nevtfiles();
     stringstream s;
     for (int i = 0; i < n; ++i) {
@@ -30,25 +43,27 @@ static int discover() {
             return fd;
         s.str("");
     }
-    throw err("No mouse found!");
+    throw err("No event mouse found!");
 }
 
 // Open mouse input device file.
 Mouse::Mouse() {
     stringstream ss;
+    goto skip;
     // Event-driven mouse input using event files.
     if ((fd = ::open(evtp, O_RDONLY)) != -1) {
         path = evtp;
-        isevt = true;
+        evt = true;
         cout << "Event mouse" << endl;
         return;
     }
     ss << "Cannot open " << evtp << ": " << strerror(errno);
     error(ss.str());
+skip:
     // Generic mouse input using mouse0 device file.
     if ((fd = ::open(mp, O_RDONLY)) != -1) {
         path = mp; 
-        isevt = false;
+        evt = false;
         cout << GENERIC << endl;
         return;
     }
@@ -60,7 +75,7 @@ Mouse::Mouse() {
 // Get the name of the mouse device.
 string Mouse::name() {
     char buf[256] = {0};
-    if (isevt) {
+    if (evt) {
         int err;
         if ((err = ioctl(fd, EVIOCGNAME(sizeof(buf)), buf)) >= 0)
             return string(buf);
@@ -144,8 +159,10 @@ static tuple<Mouse::Evt, int> evtrd(const int fd) {
 // Read mouse input from mouse device file
 tuple<Mouse::Evt, int> Mouse::read() {
     // Is using event-drive mouse device file?
-    if (isevt)
+    goto skip;
+    if (evt)
         return evtrd(fd);
+skip:
     // Read using generic mouse device file.
     char e[4], x, y;
     int left, mid, right, wheel;
