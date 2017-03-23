@@ -16,15 +16,19 @@ namespace {
     const char mp[]      = "/dev/input/mouse0"; // File path to the generic mouse input device file.
 }
 
+static uint nevtfiles() {
+    return 3;
+}
+
 // Discover mouse event file.
 static int discover() {
-    int fd, n = 3;
-    stringstream ss;
+    int fd, n = nevtfiles();
+    stringstream s;
     for (int i = 0; i < n; ++i) {
-        ss << "/dev/input/event" << i;
-        if ((fd = ::open(ss.str().c_str(), O_RDONLY) != -1))
+        s << "/dev/input/event" << i;
+        if ((fd = ::open(s.str().c_str(), O_RDONLY) != -1))
             return fd;
-        ss.str("");
+        s.str("");
     }
     throw err("No mouse found!");
 }
@@ -75,111 +79,25 @@ Mouse::~Mouse() {
     }
 }
 
-// Handle left mouse button press.
-static void left(const __s32 val) {
-    cout << "Left: ";
-    switch (val) {
-    case 0:  // Released button.
-        cout << "Released!" << endl;
-        break;
-    case 1:  // Pressed button.
-        cout << "Pressed!" << endl;
-        break;
-    default: // Unknown value.
-        cout << "Unknown " << val << endl;
-        break;
-    }
-}
-
-// Handle right mouse button press.
-static void right(const __s32 val) {
-    cout << "Right: ";
-    switch (val) {
-    case 0: // Released button.
-        cout << "Released!" << endl;
-        break;
-    case 1: // Pressed button.
-        cout << "Pressed!" << endl;
-        break;
-    default:
-        cout << "Unknown " << val << endl;
-        break;
-    }
-}
-
-// Handle middle mouse button press.
-static void middle(const __s32 val) {
-    cout << "Middle: ";
-    switch (val) {
-    case 0: // Released button.
-        cout << "Released!" << endl;
-        break;
-    case 1: // Pressed button.
-        cout << "Pressed!" << endl;
-        break;
-    default:
-        cout << "Unknown " << val << endl;
-        break;
-    }
-}
-
-// Handle side mouse button press.
-static void side(const __s32 val) {
-    cout << "Side: " << val << endl;
-}
-
-// X move mouse.
-static void xmove(const __s32 val) {
-    cout << " move: " << val << endl;
-}
-
-// Y move mouse.
-static void ymove(const __s32 val) {
-    cout << " move: " << val << endl;
-}
-
-// Back button on web browser.
-static void back(const __s32 val) {
-    cout << "back" << endl;
-}
-
-// Forward mouse button.
-static void forward(const __s32 val) {
-    cout << "forward" << endl;
-}
-
-// Extra mouse button.
-static void extra(const __s32 val) {
-}
-
-// Task mouse button.
-static void task(const __s32 val) {
-}
-
 // Mouse button press or release.
 static tuple<Mouse::Evt, int> key(const __u16 code, const __s32 val) {
-    cout << "EV_KEY: ";
     switch (code) {
-    case BTN_LEFT:
+    case BTN_LEFT:    // Left mouse button.
         return make_tuple(Mouse::Evt::LEFT, val);
-    case BTN_RIGHT:
+    case BTN_RIGHT:   // Right mouse button.
         return make_tuple(Mouse::Evt::RIGHT, val);
-    case BTN_MIDDLE:
+    case BTN_MIDDLE:  // Middle mouse button.
         return make_tuple(Mouse::Evt::MID, val);
-    case BTN_SIDE:
+    case BTN_SIDE:    // Side mouse button.
         return make_tuple(Mouse::Evt::SIDE, val);
-    case BTN_EXTRA:
-        extra(val);
-        break;
-    case BTN_FORWARD:
-        forward(val);
-        break;
-    case BTN_BACK:
-        back(val);
-        break;
-    case BTN_TASK:
-        task(val);
-        break;
+    case BTN_EXTRA:   // Extra mouse button?
+        return make_tuple(Mouse::Evt::EXTRA, val);
+    case BTN_FORWARD: // Forward button.
+        return make_tuple(Mouse::Evt::FORWARD, val);
+    case BTN_BACK:    // Back button (to go backwards in browser?).
+        return make_tuple(Mouse::Evt::BACK, val);
+    case BTN_TASK:    // Task button.
+        return make_tuple(Mouse::Evt::TASK, val);
     }
 }
 

@@ -9,13 +9,17 @@ class Mouse {
 public:
     // Mouse event made by the user.
     enum class Evt {
-        LEFT,  // Left mouse button press or release.
-        RIGHT, // Right mouse button press or release.
-        MID,   // Middle mouse button press or release.
-        SIDE,  // Side mouse button press or release.
-        SCR,   // Up and down mouse scroll.
-        X,     // Movement of x-axis.
-        Y,     // Movement of y-axis.
+        LEFT,    // Left mouse button press or release.
+        RIGHT,   // Right mouse button press or release.
+        MID,     // Middle mouse button press or release.
+        SIDE,    // Side mouse button press or release.
+        EXTRA,   // Extra mouse button press or release.
+        FORWARD, // Forward mouse button press or release.
+        BACK,    // Back mouse button press or release.
+        TASK,    // Task mouse button press or release.
+        SCR,     // Up and down mouse scroll.
+        X,       // Movement of x-axis.
+        Y,       // Movement of y-axis.
     };
 
     // Mouse-wheel scroll.
