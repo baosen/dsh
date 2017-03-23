@@ -32,13 +32,14 @@ public:
 
     // Mouse event made by the user.
     struct Evt {
+        Dev dev;
         Type type;
         union {
             struct {
                 int x, y;              // movement in the x and y coordinate system.
                 bool left, mid, right; // left, middle and right button pressed or released..
                 int wheel;             // wheel scroll.
-            } coord;
+            } in;
         } val;
     };
 

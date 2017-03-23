@@ -47,7 +47,7 @@ static int discevt() {
 }
 
 // Open mouse input device file.
-Mouse::Mouse() {
+In::In() {
     stringstream ss;
     // Event-driven mouse input using event files.
     if ((fd = ::open(evtp, O_RDONLY)) != -1) {
@@ -71,7 +71,7 @@ Mouse::Mouse() {
 }
 
 // Get the name of the mouse device.
-string Mouse::name() {
+string In::name() {
     char buf[256] = {0};
     if (evt) {
         int err;
@@ -84,7 +84,7 @@ string Mouse::name() {
 }
 
 // Close mouse input device file.
-Mouse::~Mouse() {
+In::~In() {
     stringstream ss;
     if (::close(fd) == -1) {
         ss << "Cannot close " << path << ": " << strerror(errno);
@@ -93,44 +93,44 @@ Mouse::~Mouse() {
 }
 
 // Mouse button press or release.
-static tuple<Mouse::Type, int> key(const __u16 code, const __s32 val) {
+static tuple<In::Type, int> key(const __u16 code, const __s32 val) {
     switch (code) {
     case BTN_LEFT:    // Left mouse button.
-        return make_tuple(Mouse::Type::LEFT, val);
+        return make_tuple(In::Type::LEFT, val);
     case BTN_RIGHT:   // Right mouse button.
-        return make_tuple(Mouse::Type::RIGHT, val);
+        return make_tuple(In::Type::RIGHT, val);
     case BTN_MIDDLE:  // Middle mouse button.
-        return make_tuple(Mouse::Type::MID, val);
+        return make_tuple(In::Type::MID, val);
     case BTN_SIDE:    // Side mouse button.
-        return make_tuple(Mouse::Type::SIDE, val);
+        return make_tuple(In::Type::SIDE, val);
     case BTN_EXTRA:   // Extra mouse button?
-        return make_tuple(Mouse::Type::EXTRA, val);
+        return make_tuple(In::Type::EXTRA, val);
     case BTN_FORWARD: // Forward button.
-        return make_tuple(Mouse::Type::FORWARD, val);
+        return make_tuple(In::Type::FORWARD, val);
     case BTN_BACK:    // Back button (to go backwards in browser?).
-        return make_tuple(Mouse::Type::BACK, val);
+        return make_tuple(In::Type::BACK, val);
     case BTN_TASK:    // Task button.
-        return make_tuple(Mouse::Type::TASK, val);
+        return make_tuple(In::Type::TASK, val);
     }
 }
 
 // This is mouse movement.
-static tuple<Mouse::Type, int> rel(const __u16 code, const __s32 val) {
+static tuple<In::Type, int> rel(const __u16 code, const __s32 val) {
     cout << "EV_REL: ";
     // Mouse movements follows top-left coordinate system, 
     // where origo is at the top left of the screen and the positive y-axis points downwards.
     switch (code) {
     case 0: // x-axis, - left, + right.
-        return make_tuple(Mouse::Type::X, val);
+        return make_tuple(In::Type::X, val);
     case 1: // y-axis, - upwards, + downwards.
-        return make_tuple(Mouse::Type::Y, val);
+        return make_tuple(In::Type::Y, val);
     case 8: // scroll.
-        return make_tuple(Mouse::Type::SCR, val);
+        return make_tuple(In::Type::SCR, val);
     }
 }
 
 // Read mouse event device file.
-static tuple<Mouse::Type, int> evtrd(const int fd) {
+static In::Evt evtrd(const int fd) {
     input_event e;
     while (::read(fd, &e, sizeof e)) {
         switch (e.type) {
@@ -155,7 +155,9 @@ static tuple<Mouse::Type, int> evtrd(const int fd) {
 }
 
 // Read mouse input from mouse device file
-tuple<Mouse::Type, int> Mouse::read() {
+Evt In::read() {
+    Evt e;
+    e.dev = Dev::MOUSE;
     // Is using event-drive mouse device file?
     if (evt)
         return evtrd(fd);
@@ -163,13 +165,13 @@ tuple<Mouse::Type, int> Mouse::read() {
     char e[4], x, y;
     int left, mid, right, wheel;
     while (::read(fd, &e, sizeof e)) {
-        left  = e[0] & 1;        // 1 bit is left mouse button pressed?
-        right = (e[0] >> 1) & 1; // 2 bit is right mouse button pressed?
-        mid   = (e[0] >> 2) & 1; // 3 bit is middle mouse button pressed?
-        x     = e[1];
-        y     = e[2];
-        wheel = e[3]; // mouse wheel change (bao: does not work!).
+        e.val.in.left  = e[0] & 1;         // 1 bit is left mouse button pressed?
+        e.val.in.right  = (e[0] >> 1) & 1; // 2 bit is right mouse button pressed?
+        e.val.in.mid   = (e[0] >> 2) & 1;  // 3 bit is middle mouse button pressed?
+        e.val.in.x     = e[1];
+        e.val.in.y     = e[2];
+        e.val.in.wheel = e[3]; // mouse wheel change (bao: does not work!).
         printf("x=%d, y=%d, left=%d, middle=%d, right=%d, wheel=%d\n", x, y, left, mid, right, wheel);
     }
-    return make_tuple(Mouse::Type::Y, 0); // TODO: Placeholder.
+    return e;
 }
