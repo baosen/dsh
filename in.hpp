@@ -1,9 +1,7 @@
 #pragma once
 #include <string>
-#include <tuple>
 
-// Class In;
-// class Out;
+// Device input.
 class In {
     std::string path; // file path to device file.
     int         fd;   // mouse input device file descriptor.
@@ -11,36 +9,44 @@ class In {
 public:
     // Mouse event type made by the user.
     enum class MType {
-        LEFT,    // Left mouse button press or release.
-        RIGHT,   // Right mouse button press or release.
-        MID,     // Middle mouse button press or release.
-        SIDE,    // Side mouse button press or release.
-        EXTRA,   // Extra mouse button press or release.
-        FORWARD, // Forward mouse button press or release.
-        BACK,    // Back mouse button press or release.
-        TASK,    // Task mouse button press or release.
-        SCR,     // Up and down mouse scroll.
+        Left,    // Left mouse button press or release.
+        Right,   // Right mouse button press or release.
+        Mid,     // Middle mouse button press or release.
+        Side,    // Side mouse button press or release.
+        Extra,   // Extra mouse button press or release.
+        Forward, // Forward mouse button press or release.
+        Back,    // Back mouse button press or release.
+        Task,    // Task mouse button press or release.
+        Wheel,   // Up and down mouse wheel scroll.
         X,       // Movement of x-axis.
         Y,       // Movement of y-axis.
     };
 
-    enum Dev {
-        MOUSE,
-        TPAD,
-        TSCR,
+    enum class TPadType {
+        Pinch,
+        Expand,
     };
 
-    // Mouse event made by the user.
+    // Input device.
+    enum class Dev {
+        Mouse,   // Mouse.
+        Tpad,    // Touchpad.
+        Tscr,    // Touchscreen.
+    };
+
+    // Input event.
     struct Evt {
-        Dev dev;
-        Type type;
+        Dev dev;                       // Input device.
         union {
-            struct {
-                int x, y;              // movement in the x and y coordinate system.
-                bool left, mid, right; // left, middle and right button pressed or released..
-                int wheel;             // wheel scroll.
-            } in;
-        } val;
+            MType m;                   // Mouse type.
+        } type;                        // Input type.
+        union {                        // Input value.
+            struct {                   
+                int  x, y;             // x and y cartesian movement.
+                bool left, mid, right; // Left, middle and right button pressed or released..
+                int  wheel;            // Wheel scroll.
+            } min;                     // Mouse input.
+        } val;                         // Input value.
     };
 
     // Mouse-wheel scroll.

@@ -6,7 +6,7 @@
 #include <fcntl.h>
 #include <linux/input.h>
 #include "log.hpp"
-#include "mouse.hpp"
+#include "in.hpp"
 using namespace std;
 
 namespace {
@@ -93,7 +93,7 @@ In::~In() {
 }
 
 // Mouse button press or release.
-static tuple<In::Type, int> key(const __u16 code, const __s32 val) {
+static Evt key(const __u16 code, const __s32 val) {
     switch (code) {
     case BTN_LEFT:    // Left mouse button.
         return make_tuple(In::Type::LEFT, val);
@@ -114,11 +114,9 @@ static tuple<In::Type, int> key(const __u16 code, const __s32 val) {
     }
 }
 
-// This is mouse movement.
-static tuple<In::Type, int> rel(const __u16 code, const __s32 val) {
-    cout << "EV_REL: ";
-    // Mouse movements follows top-left coordinate system, 
-    // where origo is at the top left of the screen and the positive y-axis points downwards.
+// Mouse movement.
+static Evt rel(const __u16 code, const __s32 val) {
+    // Mouse movements follows top-left coordinate system, where origo is at the top left of the screen and the positive y-axis points downwards.
     switch (code) {
     case 0: // x-axis, - left, + right.
         return make_tuple(In::Type::X, val);
@@ -131,47 +129,62 @@ static tuple<In::Type, int> rel(const __u16 code, const __s32 val) {
 
 // Read mouse event device file.
 static In::Evt evtrd(const int fd) {
-    input_event e;
-    while (::read(fd, &e, sizeof e)) {
-        switch (e.type) {
-        case EV_REL: // Relative motion.
-            return rel(e.code, e.value);
-        case EV_KEY: // Mouse button press and release.
-            return key(e.code, e.value);
-        case EV_SYN: // Synthetic events.
-            cout << "EV_SYN: " << e.value << endl;
-            break;
-        case EV_ABS: // Absolute motion.
-            cout << "EV_ABS: " << e.value << endl;
-            break;
-        case EV_MSC: // Miscellanous?
-            cout << "EV_MSC: " << e.value << endl;
-            break;
-        default:
-            cout << "Unknown type:" << hex << setw(2) << e.type << endl;
-            break;
-        }
-    }
 }
 
 // Read mouse input from mouse device file
 Evt In::read() {
-    Evt e;
-    e.dev = Dev::MOUSE;
+    Evt ev;
+    ev.dev = Dev::Mouse;
     // Is using event-drive mouse device file?
-    if (evt)
-        return evtrd(fd);
+    if (evt) {
+        input_event e;
+        while (::read(fd, &e, sizeof e)) {
+            switch (e.type) {
+            case EV_REL: // Relative motion.
+                // Mouse movements follows top-left coordinate system, where origo is at the top left of the screen and the positive y-axis points downwards.
+                switch (e.code) {
+                case 0: // x-axis, - left, + right.
+                    ev.type.m = MType::X;
+                    ev.val.min.x = e.value;
+                    break;
+                case 1: // y-axis, - upwards, + downwards.
+                    ev.type.m = MType::Y;
+                    ev.val.min.y = e.value;
+                    break;
+                case 8: // wheel scroll.
+                    ev.type.m = MType::Wheel;
+                    ev.val.min.wheel = e.value;
+                    break;
+                }
+                break;
+            case EV_KEY: // Mouse button press and release.
+                return key(e.code, e.value);
+            case EV_SYN: // Synthetic events.
+                cout << "EV_SYN: " << e.value << endl;
+                break;
+            case EV_ABS: // Absolute motion.
+                cout << "EV_ABS: " << e.value << endl;
+                break;
+            case EV_MSC: // Miscellanous?
+                cout << "EV_MSC: " << e.value << endl;
+                break;
+            default:
+                cout << "Unknown type:" << hex << setw(2) << e.type << endl;
+                break;
+            }
+        }
+    }
     // Read using generic mouse device file.
     char e[4], x, y;
     int left, mid, right, wheel;
     while (::read(fd, &e, sizeof e)) {
-        e.val.in.left  = e[0] & 1;         // 1 bit is left mouse button pressed?
-        e.val.in.right  = (e[0] >> 1) & 1; // 2 bit is right mouse button pressed?
-        e.val.in.mid   = (e[0] >> 2) & 1;  // 3 bit is middle mouse button pressed?
-        e.val.in.x     = e[1];
-        e.val.in.y     = e[2];
-        e.val.in.wheel = e[3]; // mouse wheel change (bao: does not work!).
+        ev.val.min.left  = e[0] & 1;         // 1 bit is left mouse button pressed?
+        ev.val.min.right  = (e[0] >> 1) & 1; // 2 bit is right mouse button pressed?
+        ev.val.min.mid   = (e[0] >> 2) & 1;  // 3 bit is middle mouse button pressed?
+        ev.val.min.x     = e[1];
+        ev.val.min.y     = e[2];
+        ev.val.min.wheel = e[3]; // mouse wheel change (bao: does not work!).
         printf("x=%d, y=%d, left=%d, middle=%d, right=%d, wheel=%d\n", x, y, left, mid, right, wheel);
     }
-    return e;
+    return ev;
 }
