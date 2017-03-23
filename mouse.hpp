@@ -7,8 +7,8 @@ class Mouse {
     int         fd;   // mouse input device file descriptor.
     bool        evt;  // is using event file.
 public:
-    // Mouse event made by the user.
-    enum class Evt {
+    // Mouse event type made by the user.
+    enum class Type {
         LEFT,    // Left mouse button press or release.
         RIGHT,   // Right mouse button press or release.
         MID,     // Middle mouse button press or release.
@@ -20,6 +20,18 @@ public:
         SCR,     // Up and down mouse scroll.
         X,       // Movement of x-axis.
         Y,       // Movement of y-axis.
+    };
+
+    // Mouse event made by the user.
+    struct Evt {
+        Type type;
+        union {
+            struct {
+                int x, y;              // movement in the x and y coordinate system.
+                bool left, mid, right, // left, middle and right button pressed or released..
+                int wheel;             // wheel scroll.
+            } coord;
+        } val;
     };
 
     // Mouse-wheel scroll.

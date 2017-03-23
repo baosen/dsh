@@ -11,7 +11,7 @@ using namespace std;
 
 namespace {
     const char GENERIC[] = "Generic mouse";     // Name of /dev/input/mouse* to return.
-    const char evtp[]    = "/dev/input/event0"; // File path to the event-driven mouse device file.
+    const char evtp[]    = "/dev/input/event7"; // File path to the event-driven mouse device file.
     const char mp[]      = "/dev/input/mouse0"; // File path to the generic mouse input device file.
     // What about touch pads?
 }
@@ -49,7 +49,6 @@ static int discevt() {
 // Open mouse input device file.
 Mouse::Mouse() {
     stringstream ss;
-    goto skip;
     // Event-driven mouse input using event files.
     if ((fd = ::open(evtp, O_RDONLY)) != -1) {
         path = evtp;
@@ -59,7 +58,6 @@ Mouse::Mouse() {
     }
     ss << "Cannot open " << evtp << ": " << strerror(errno);
     error(ss.str());
-skip:
     // Generic mouse input using mouse0 device file.
     if ((fd = ::open(mp, O_RDONLY)) != -1) {
         path = mp; 
@@ -98,21 +96,21 @@ Mouse::~Mouse() {
 static tuple<Mouse::Evt, int> key(const __u16 code, const __s32 val) {
     switch (code) {
     case BTN_LEFT:    // Left mouse button.
-        return make_tuple(Mouse::Evt::LEFT, val);
+        return make_tuple(Mouse::Type::LEFT, val);
     case BTN_RIGHT:   // Right mouse button.
-        return make_tuple(Mouse::Evt::RIGHT, val);
+        return make_tuple(Mouse::Type::RIGHT, val);
     case BTN_MIDDLE:  // Middle mouse button.
-        return make_tuple(Mouse::Evt::MID, val);
+        return make_tuple(Mouse::Type::MID, val);
     case BTN_SIDE:    // Side mouse button.
-        return make_tuple(Mouse::Evt::SIDE, val);
+        return make_tuple(Mouse::Type::SIDE, val);
     case BTN_EXTRA:   // Extra mouse button?
-        return make_tuple(Mouse::Evt::EXTRA, val);
+        return make_tuple(Mouse::Type::EXTRA, val);
     case BTN_FORWARD: // Forward button.
-        return make_tuple(Mouse::Evt::FORWARD, val);
+        return make_tuple(Mouse::Type::FORWARD, val);
     case BTN_BACK:    // Back button (to go backwards in browser?).
-        return make_tuple(Mouse::Evt::BACK, val);
+        return make_tuple(Mouse::Type::BACK, val);
     case BTN_TASK:    // Task button.
-        return make_tuple(Mouse::Evt::TASK, val);
+        return make_tuple(Mouse::Type::TASK, val);
     }
 }
 
@@ -123,11 +121,11 @@ static tuple<Mouse::Evt, int> rel(const __u16 code, const __s32 val) {
     // where origo is at the top left of the screen and the positive y-axis points downwards.
     switch (code) {
     case 0: // x-axis, - left, + right.
-        return make_tuple(Mouse::Evt::X, val);
+        return make_tuple(Mouse::Type::X, val);
     case 1: // y-axis, - upwards, + downwards.
-        return make_tuple(Mouse::Evt::Y, val);
+        return make_tuple(Mouse::Type::Y, val);
     case 8: // scroll.
-        return make_tuple(Mouse::Evt::SCR, val);
+        return make_tuple(Mouse::Type::SCR, val);
     }
 }
 
@@ -159,10 +157,8 @@ static tuple<Mouse::Evt, int> evtrd(const int fd) {
 // Read mouse input from mouse device file
 tuple<Mouse::Evt, int> Mouse::read() {
     // Is using event-drive mouse device file?
-    goto skip;
     if (evt)
         return evtrd(fd);
-skip:
     // Read using generic mouse device file.
     char e[4], x, y;
     int left, mid, right, wheel;
