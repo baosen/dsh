@@ -46,23 +46,23 @@ static int discevt() {
     throw err("No event mouse found!");
 }
 
-// Open mouse input device file.
+// Open input device file.
 In::In() {
     stringstream ss;
-    // Event-driven mouse input using event files.
+    // Event-driven input using event* device file.
     if ((fd = ::open(evtp, O_RDONLY)) != -1) {
         path = evtp;
         evt = true;
-        cout << "Event mouse" << endl;
+        //cout << "Event mouse" << endl;
         return;
     }
     ss << "Cannot open " << evtp << ": " << strerror(errno);
     error(ss.str());
-    // Generic mouse input using mouse0 device file.
+    // Generic input using mouse* device file.
     if ((fd = ::open(mp, O_RDONLY)) != -1) {
         path = mp; 
         evt = false;
-        cout << GENERIC << endl;
+        //cout << GENERIC << endl;
         return;
     }
     ss.str("");
