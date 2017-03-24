@@ -22,6 +22,7 @@ public:
         Y,       // Movement of y-axis.
     };
 
+    // Touch pad event type
     enum class TPadType {
         Pinch,
         Expand,
@@ -36,17 +37,21 @@ public:
 
     // Input event.
     struct Evt {
-        Dev dev;                       // Input device.
+        // Input device.
+        Dev d;                         // Tells what kind of input device that threw this event.
+        // Input type.
         union {
             MType m;                   // Mouse type.
-        } type;                        // Input type.
+            TPadType t;                // Touchpad type.
+        } type;                        // Type of input value.
+        // Input value.
         union {                        // Input value.
             struct {                   
                 int  x, y;             // x and y cartesian movement.
                 bool left, mid, right; // Left, middle and right button pressed or released..
                 int  wheel;            // Wheel scroll.
             } min;                     // Mouse input.
-        } val;                         // Input value.
+        } val;                         // The value given by the input device.
     };
 
     // Mouse-wheel scroll.
