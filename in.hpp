@@ -47,11 +47,15 @@ public:
         // Input value.
         union {                        // Input value.
             struct {                   
-                int  x, y;             // x and y cartesian movement.
-                bool left, mid, right; // Left, middle and right button pressed or released..
-                int  wheel;            // Wheel scroll.
-            } min;                     // Mouse input.
-        } val;                         // The value given by the input device.
+                int  x, y;                   // x and y cartesian movement.
+                // Pressed or released mouse buttons.
+                bool left, mid, right,       // Left, middle and right mouse buttons.
+                     side, extra,            // Side and extra mouse buttons.
+                     forward, back,          // Forward and back mouse buttons.
+                     task;                   // Task mouse button.
+                int  wheel;                  // Wheel scroll.
+            } min;                           // Mouse input.
+        } val;                               // The value given by the input device.
     };
 
     // Mouse-wheel scroll.

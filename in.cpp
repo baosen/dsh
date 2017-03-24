@@ -11,7 +11,7 @@ using namespace std;
 
 namespace {
     const char GENERIC[] = "Generic mouse";     // Name of /dev/input/mouse* to return.
-    const char evtp[]    = "/dev/input/event7"; // File path to the event-driven mouse device file.
+    const char evtp[]    = "/dev/input/event0"; // File path to the event-driven mouse device file.
     const char mp[]      = "/dev/input/mouse0"; // File path to the generic mouse input device file.
     // What about touch pads?
 }
@@ -109,6 +109,7 @@ static void key(In::Evt& ev, input_event& e) {
         break;
     case BTN_SIDE:    // Side mouse button.
         ev.type.m = In::MType::Side;
+        ev.val.min.side = e.value;
         break;
     case BTN_EXTRA:   // Extra mouse button?
         ev.type.m = In::MType::Extra;
@@ -146,35 +147,51 @@ static void rel(In::Evt& ev, input_event& e) {
     }
 }
 
+// Absolute value to announce touch pad movement speed?
+static void abs(In::Evt& ev, input_event& e) {
+    //cout << "EV_ABS: " << e.value << endl;
+}
+
 // Fill in event based on its read type.
-static void fill(In::Evt& ev, input_event& e) {
+static bool fill(In::Evt& ev, input_event& e) {
     switch (e.type) {
     case EV_REL: // Relative motion.
         rel(ev, e);
-        break;
+        return true;
     case EV_KEY: // Mouse button press and release.
         key(ev, e);
-        break;
+        return true;
     case EV_SYN: // Synthetic events.
-        cout << "EV_SYN: " << e.value << endl;
-        break;
+        switch (e.code) {
+        case SYN_REPORT:
+            break;
+        case SYN_DROPPED: // Oh snap!
+            break; // TODO: Throw away all frames!
+        }
+        return false;
     case EV_ABS: // Absolute motion.
-        cout << "EV_ABS: " << e.value << endl;
-        break;
+        //abs(ev, e);
+        return false;
     case EV_MSC: // Miscellanous?
-        cout << "EV_MSC: " << e.value << endl;
-        break;
+        return false;
     default:
-        cout << "Unknown type:" << hex << setw(2) << e.type << endl;
+        //cout << "Unknown type:" << hex << setw(2) << e.type << endl;
         break;
     }
+    throw err("Unknown type!");
 }
 
 // Read mouse event device file.
 static void evtrd(In::Evt& ev, const int fd) {
     input_event e;
-    while (::read(fd, &e, sizeof e))
-        fill(ev, e);
+    ssize_t ret;
+    do {
+        ret = ::read(fd, &e, sizeof e);
+        if (fill(ev, e))
+            break;
+    } while (ret != 0 && ret != -1);
+    if (ret == -1)
+        throw errno; // todo.
 }
 
 // Read generic mouse file.
@@ -199,8 +216,10 @@ In::Evt In::read() {
     zero(ev);
     ev.d = In::Dev::Mouse;
     // Is using event-drive mouse device file?
-    if (evt)
+    if (evt) {
         evtrd(ev, fd);
+        return ev;
+    }
     mrd(ev, fd);
     return ev;
 }
