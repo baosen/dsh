@@ -12,7 +12,7 @@ using namespace std;
 namespace {
     const char GENERIC[] = "Generic mouse";     // Name of /dev/input/mouse* to return.
     const char evtp[]    = "/dev/input/event0"; // File path to the event-driven mouse device file.
-    const char mp[]      = "/dev/input/mouse0"; // File path to the generic mouse input device file.
+    const char mp[]      = "/dev/input/mouse0"; // File path to the "hacky" generic mouse input device file.
     // What about touch pads?
 }
 
@@ -50,6 +50,7 @@ static int discevt() {
 In::In() {
     stringstream ss;
     // Event-driven input using event* device file.
+    goto skip;
     if ((fd = ::open(evtp, O_RDONLY)) != -1) {
         path = evtp;
         evt = true;
@@ -58,6 +59,7 @@ In::In() {
     }
     ss << "Cannot open " << evtp << ": " << strerror(errno);
     error(ss.str());
+skip:
     // Generic input using mouse* device file.
     if ((fd = ::open(mp, O_RDONLY)) != -1) {
         path = mp; 
@@ -152,6 +154,16 @@ static void abs(In::Evt& ev, input_event& e) {
     //cout << "EV_ABS: " << e.value << endl;
 }
 
+// Handle synthetic events.
+static void syn(In::Evt& ev, input_event& e) {
+    switch (e.code) {
+    case SYN_REPORT:
+        break;
+    case SYN_DROPPED: // Oh snap!
+        break; // TODO: Throw away all frames between the reports.
+    }
+}
+
 // Fill in event based on its read type.
 static bool fill(In::Evt& ev, input_event& e) {
     switch (e.type) {
@@ -162,12 +174,7 @@ static bool fill(In::Evt& ev, input_event& e) {
         key(ev, e);
         return true;
     case EV_SYN: // Synthetic events.
-        switch (e.code) {
-        case SYN_REPORT:
-            break;
-        case SYN_DROPPED: // Oh snap!
-            break; // TODO: Throw away all frames!
-        }
+        syn(ev, e);
         return false;
     case EV_ABS: // Absolute motion.
         //abs(ev, e);
@@ -187,27 +194,35 @@ static void evtrd(In::Evt& ev, const int fd) {
     ssize_t ret;
     do {
         ret = ::read(fd, &e, sizeof e);
+        if (ret == -1) // error.
+            throw errno; // todo.
+        if (ret == 0) // finished.
+            break;
         if (fill(ev, e))
             break;
-    } while (ret != 0 && ret != -1);
-    if (ret == -1)
-        throw errno; // todo.
+    } while (ret > 0);
 }
 
 // Read generic mouse file.
 static void mrd(In::Evt& ev, const int fd) {
     // Read using generic mouse device file.
-    char e[4], x, y;
+    char e[3], x, y;
     int left, mid, right, wheel;
-    while (::read(fd, &e, sizeof e)) {
+    const auto ret = ::read(fd, &e, sizeof e);
+    if (ret == -1)
+        throw errno; // todo.
+    if (ret == 0)
+        return;
+    if (ret == sizeof e) {
+        ev.type.m = In::MType::Left;
         ev.val.min.left  = e[0] & 1;        // 1 bit is left mouse button pressed?
         ev.val.min.right = (e[0] >> 1) & 1; // 2 bit is right mouse button pressed?
         ev.val.min.mid   = (e[0] >> 2) & 1; // 3 bit is middle mouse button pressed?
         ev.val.min.x     = e[1];            // x.
         ev.val.min.y     = e[2];            // y.
-        ev.val.min.wheel = e[3];            // mouse wheel change (bao: does not work!).
-        //printf("x=%d, y=%d, left=%d, middle=%d, right=%d, wheel=%d\n", x, y, left, mid, right, wheel);
+        return;
     }
+    throw ("Error reading /dev/input/mouse0");
 }
 
 // Read mouse input from mouse device file
@@ -215,11 +230,13 @@ In::Evt In::read() {
     Evt ev;
     zero(ev);
     ev.d = In::Dev::Mouse;
+    goto skip;
     // Is using event-drive mouse device file?
     if (evt) {
         evtrd(ev, fd);
         return ev;
     }
+skip:
     mrd(ev, fd);
     return ev;
 }

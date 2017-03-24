@@ -39,23 +39,25 @@ public:
     struct Evt {
         // Input device.
         Dev d;                         // Tells what kind of input device that threw this event.
+
         // Input type.
         union {
             MType m;                   // Mouse type.
             TPadType t;                // Touchpad type.
         } type;                        // Type of input value.
+
         // Input value.
         union {                        // Input value.
             struct {                   
-                int  x, y;                   // x and y cartesian movement.
+                int  x, y;             // x and y cartesian movement.
                 // Pressed or released mouse buttons.
-                bool left, mid, right,       // Left, middle and right mouse buttons.
-                     side, extra,            // Side and extra mouse buttons.
-                     forward, back,          // Forward and back mouse buttons.
-                     task;                   // Task mouse button.
-                int  wheel;                  // Wheel scroll.
-            } min;                           // Mouse input.
-        } val;                               // The value given by the input device.
+                bool left, mid, right, // Left, middle and right mouse buttons.
+                     side, extra,      // Side and extra mouse buttons.
+                     forward, back,    // Forward and back mouse buttons.
+                     task;             // Task mouse button.
+                int  wheel;            // Wheel scroll.
+            } min;                     // Mouse input.
+        } val;                         // The value given by the input device.
     };
 
     // Mouse-wheel scroll.
