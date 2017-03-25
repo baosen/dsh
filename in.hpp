@@ -1,11 +1,9 @@
 #pragma once
 #include <string>
+#include <queue>
 
 // Device input.
 class In {
-    std::string path; // file path to device file.
-    int         fd;   // mouse input device file descriptor.
-    bool        evt;  // is using event file.
 public:
     // Mouse event type made by the user.
     enum class MType {
@@ -72,14 +70,26 @@ public:
         PRS  // Pressed.
     };
 
+    bool oldl, // Old left button value.
+         oldr, // Old right button value.
+         oldm; // Old middle button value.
+
     // Claims the mouse.    
     In();
     // Releases the mouse.    
     ~In();
 
     // Waits for mouse event and reads it.
-    Evt read();
+    std::deque<In::Evt> read();
 
     // Returns the name of the mouse device.
     std::string name();
+
+private:
+    std::string path; // file path to device file.
+    int         fd;   // mouse input device file descriptor.
+    bool        evt;  // is using event file.
+
+    void evmk(std::deque<In::Evt>& d, char e[3]);
+    void mrd(std::deque<In::Evt>& d, const int fd);
 };

@@ -16,13 +16,14 @@ namespace {
     // What about touch pads?
 }
 
-static uint nevtfiles() {
+// Return number of device files.
+static uint nfiles() {
     return 3;
 }
 
 // Discover generic "hacked" mouse.
 static int discgen() {
-    int fd, n = nevtfiles();
+    int fd, n = nfiles();
     stringstream s;
     for (int i = 0; i < n; ++i) {
         s << "/dev/input/mouse" << i;
@@ -35,7 +36,7 @@ static int discgen() {
 
 // Discover mouse event file.
 static int discevt() {
-    int fd, n = nevtfiles();
+    int fd, n = nfiles();
     stringstream s;
     for (int i = 0; i < n; ++i) {
         s << "/dev/input/event" << i;
@@ -47,7 +48,7 @@ static int discevt() {
 }
 
 // Open input device file.
-In::In() {
+In::In() : oldl(false), oldr(false), oldm(false) {
     stringstream ss;
     // Event-driven input using event* device file.
     goto skip;
@@ -115,15 +116,19 @@ static void key(In::Evt& ev, input_event& e) {
         break;
     case BTN_EXTRA:   // Extra mouse button?
         ev.type.m = In::MType::Extra;
+        ev.val.min.extra = e.value;
         break;
     case BTN_FORWARD: // Forward button.
         ev.type.m = In::MType::Forward;
+        ev.val.min.forward = e.value;
         break;
     case BTN_BACK:    // Back button (to go backwards in browser?).
         ev.type.m = In::MType::Back;
+        ev.val.min.back = e.value;
         break;
     case BTN_TASK:    // Task button.
         ev.type.m = In::MType::Task;
+        ev.val.min.task = e.value;
         break;
     default:
         break;
@@ -165,78 +170,104 @@ static void syn(In::Evt& ev, input_event& e) {
 }
 
 // Fill in event based on its read type.
-static bool fill(In::Evt& ev, input_event& e) {
+static bool fill(deque<In::Evt>& d, input_event& e) {
+    In::Evt ev;
+    zero(ev);
+    ev.d = In::Dev::Mouse;
     switch (e.type) {
     case EV_REL: // Relative motion.
         rel(ev, e);
+        d.push_back(ev);
         return true;
     case EV_KEY: // Mouse button press and release.
         key(ev, e);
+        d.push_back(ev);
         return true;
     case EV_SYN: // Synthetic events.
         syn(ev, e);
         return false;
     case EV_ABS: // Absolute motion.
-        //abs(ev, e);
         return false;
     case EV_MSC: // Miscellanous?
         return false;
     default:
         //cout << "Unknown type:" << hex << setw(2) << e.type << endl;
-        break;
+        throw err("Unknown type!");
     }
-    throw err("Unknown type!");
 }
 
 // Read mouse event device file.
-static void evtrd(In::Evt& ev, const int fd) {
+static void evtrd(deque<In::Evt>& d, const int fd) {
     input_event e;
     ssize_t ret;
     do {
         ret = ::read(fd, &e, sizeof e);
-        if (ret == -1) // error.
+        if (ret == -1)   // error.
             throw errno; // todo.
-        if (ret == 0) // finished.
+        if (ret == 0)    // finished reading.
             break;
-        if (fill(ev, e))
+        if (fill(d, e))
             break;
     } while (ret > 0);
 }
 
+void In::evmk(deque<In::Evt>& d, char e[3]) {
+    // Create event object.
+    In::Evt ev;
+    zero(ev);
+    ev.d = In::Dev::Mouse;
+
+    int l, m, r, wh;
+    l = (e[0] & 1); // 1 bit is left mouse button pressed?
+    if (oldl != l) {
+        ev.type.m = In::MType::Left;
+        oldl = ev.val.min.left = l; 
+        d.push_back(ev);
+    }
+    r = ((e[0] >> 1) & 1);
+    if (oldr != r) {
+        ev.type.m = In::MType::Right;
+        oldr = ev.val.min.right = r; // 2 bit is right mouse button pressed?
+        d.push_back(ev);
+    }
+    m = ((e[0] >> 2) & 1); // 3 bit is middle mouse button pressed?
+    if (oldm != m) {
+        ev.type.m = In::MType::Mid;
+        oldm = ev.val.min.mid = m;
+        d.push_back(ev);
+    }
+    // TODO: Mouse movement.
+    ev.val.min.x = e[1]; // x.
+    ev.val.min.y = e[2]; // y.
+}
+
 // Read generic mouse file.
-static void mrd(In::Evt& ev, const int fd) {
+void In::mrd(deque<In::Evt>& d, const int fd) {
     // Read using generic mouse device file.
-    char e[3], x, y;
-    int left, mid, right, wheel;
+    char e[3];
     const auto ret = ::read(fd, &e, sizeof e);
     if (ret == -1)
         throw errno; // todo.
     if (ret == 0)
         return;
     if (ret == sizeof e) {
-        ev.type.m = In::MType::Left;
-        ev.val.min.left  = e[0] & 1;        // 1 bit is left mouse button pressed?
-        ev.val.min.right = (e[0] >> 1) & 1; // 2 bit is right mouse button pressed?
-        ev.val.min.mid   = (e[0] >> 2) & 1; // 3 bit is middle mouse button pressed?
-        ev.val.min.x     = e[1];            // x.
-        ev.val.min.y     = e[2];            // y.
+        evmk(d, e);
         return;
     }
     throw ("Error reading /dev/input/mouse0");
 }
 
 // Read mouse input from mouse device file
-In::Evt In::read() {
-    Evt ev;
-    zero(ev);
-    ev.d = In::Dev::Mouse;
+deque<In::Evt> In::read() {
+    deque<In::Evt> d;
     goto skip;
     // Is using event-drive mouse device file?
     if (evt) {
-        evtrd(ev, fd);
-        return ev;
+        evtrd(d, fd);
+        goto exit;
     }
 skip:
-    mrd(ev, fd);
-    return ev;
+    mrd(d, fd);
+exit:
+    return d;
 }
