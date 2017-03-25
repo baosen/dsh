@@ -222,10 +222,10 @@ void In::evmk(deque<In::Evt>& d, char e[3]) {
         oldl = ev.val.min.left = l; 
         d.push_back(ev);
     }
-    r = ((e[0] >> 1) & 1);
+    r = ((e[0] >> 1) & 1); // 2 bit is right mouse button pressed?
     if (oldr != r) {
         ev.type.m = In::MType::Right;
-        oldr = ev.val.min.right = r; // 2 bit is right mouse button pressed?
+        oldr = ev.val.min.right = r;
         d.push_back(ev);
     }
     m = ((e[0] >> 2) & 1); // 3 bit is middle mouse button pressed?
