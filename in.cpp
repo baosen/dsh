@@ -208,6 +208,7 @@ static void evtrd(deque<In::Evt>& d, const int fd) {
     } while (ret > 0);
 }
 
+// Make event.
 void In::evmk(deque<In::Evt>& d, char e[3]) {
     // Create event object.
     In::Evt ev;
