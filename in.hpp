@@ -82,9 +82,6 @@ public:
     // Waits for mouse event and reads it.
     std::deque<In::Evt> read();
 
-    // Returns the name of the mouse device.
-    std::string name();
-
 private:
     std::string path; // file path to device file.
     int         fd;   // mouse input device file descriptor.

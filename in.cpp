@@ -78,19 +78,6 @@ err:
     die("I die a happy death.");
 }
 
-// Get the name of the mouse device.
-string In::name() {
-    char buf[256] = {0};
-    if (evt) {
-        int err;
-        if ((err = ioctl(fd, EVIOCGNAME(sizeof(buf)), buf)) >= 0)
-            return string(buf);
-        else
-            throw err;
-    }
-    return mp;
-}
-
 // Close mouse input device file.
 In::~In() {
     stringstream ss;
