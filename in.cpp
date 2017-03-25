@@ -52,7 +52,6 @@ In::In() : oldl(false), oldr(false), oldm(false) {
     if ((fd = ::open(evtp, O_RDONLY)) != -1) {
         path = evtp;
         evt = true;
-        //cout << "Event mouse" << endl;
         return;
     }
     ss << "Cannot open " << evtp << ": " << strerror(errno);
@@ -149,19 +148,15 @@ static void rel(In::Evt& ev, input_event& e) {
     }
 }
 
-// Absolute value to announce touch pad movement speed?
-//static void abs(In::Evt& ev, input_event& e) {
-//}
-
 // Handle synthetic events.
-static bool syn(In::Evt& ev, const __s32 code) {
+static bool syn(deque<In::Evt>& d, In::Evt& ev, const __s32 code) {
     switch (code) {
     case SYN_REPORT:
         return true;
     case SYN_DROPPED: // Oh snap!
-        break;
+        break; // TODO: Throw away all frames between the reports.
     }
-    return false; // TODO: Throw away all frames between the reports.
+    return false;
 }
 
 // Fill in event based on its read type.
@@ -179,11 +174,12 @@ static bool fill(deque<In::Evt>& d, input_event& e) {
         d.push_back(ev);
         return false;
     case EV_ABS: // Absolute motion.
+        // Absolute value to announce touch pad movement speed?
         return false;
     case EV_MSC: // Miscellanous?
         return false;
     case EV_SYN: // Synthetic events.
-        return syn(ev, e.code);
+        return syn(d, ev, e.code);
     default:
         //cout << "Unknown type:" << hex << setw(2) << e.type << endl;
         throw err("Unknown type!");
