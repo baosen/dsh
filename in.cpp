@@ -150,20 +150,18 @@ static void rel(In::Evt& ev, input_event& e) {
 }
 
 // Absolute value to announce touch pad movement speed?
-static void abs(In::Evt& ev, input_event& e) {
-    //cout << "EV_ABS: " << e.value << endl;
-}
+//static void abs(In::Evt& ev, input_event& e) {
+//}
 
 // Handle synthetic events.
-static void syn(In::Evt& ev, input_event& e) {
-    switch (e.code) {
+static bool syn(In::Evt& ev, const __s32 code) {
+    switch (code) {
     case SYN_REPORT:
-        //cout << "Report!" << endl;
-        break;
+        return true;
     case SYN_DROPPED: // Oh snap!
-        //cout << "Dropped!" << endl;
-        break; // TODO: Throw away all frames between the reports.
+        break;
     }
+    return false; // TODO: Throw away all frames between the reports.
 }
 
 // Fill in event based on its read type.
@@ -175,18 +173,17 @@ static bool fill(deque<In::Evt>& d, input_event& e) {
     case EV_REL: // Relative motion.
         rel(ev, e);
         d.push_back(ev);
-        return true;
+        return false;
     case EV_KEY: // Mouse button press and release.
         key(ev, e);
         d.push_back(ev);
-        return true;
+        return false;
     case EV_ABS: // Absolute motion.
         return false;
     case EV_MSC: // Miscellanous?
         return false;
     case EV_SYN: // Synthetic events.
-        syn(ev, e);
-        return false;
+        return syn(ev, e.code);
     default:
         //cout << "Unknown type:" << hex << setw(2) << e.type << endl;
         throw err("Unknown type!");
