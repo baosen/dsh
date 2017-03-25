@@ -10,10 +10,8 @@
 using namespace std;
 
 namespace {
-    const char GENERIC[] = "Generic mouse";     // Name of /dev/input/mouse* to return.
-    const char evtp[]    = "/dev/input/event0"; // File path to the event-driven mouse device file.
-    const char mp[]      = "/dev/input/mouse0"; // File path to the "hacky" generic mouse input device file.
-    // What about touch pads?
+    const char evtp[] = "/dev/input/event0"; // File path to the event-driven mouse device file.
+    const char mp[]   = "/dev/input/mouse0"; // File path to the "hacky" generic mouse input device file.
 }
 
 // Return number of device files.
@@ -65,7 +63,6 @@ skip:
     if ((fd = ::open(mp, O_RDONLY)) != -1) {
         path = mp; 
         evt = false;
-        //cout << GENERIC << endl;
         return;
     }
     ss.str("");
@@ -83,7 +80,7 @@ string In::name() {
         else
             throw err;
     }
-    return GENERIC;
+    return mp;
 }
 
 // Close mouse input device file.
@@ -217,6 +214,7 @@ void In::evmk(deque<In::Evt>& d, char e[3]) {
     zero(ev);
     ev.d = In::Dev::Mouse;
 
+    // Add button events.
     int l, m, r, wh;
     l = (e[0] & 1); // 1 bit is left mouse button pressed?
     if (oldl != l) {
@@ -236,9 +234,14 @@ void In::evmk(deque<In::Evt>& d, char e[3]) {
         oldm = ev.val.min.mid = m;
         d.push_back(ev);
     }
-    // TODO: Mouse movement.
+    // Add mouse movement events.
+    // BEWARE! X and Y is flipped here!
+    ev.type.m = In::MType::X;
     ev.val.min.x = e[1]; // x.
+    d.push_back(ev);
+    ev.type.m = In::MType::Y;
     ev.val.min.y = e[2]; // y.
+    d.push_back(ev);
 }
 
 // Read generic mouse file.
