@@ -234,13 +234,14 @@ void In::evmk(deque<In::Evt>& d, char e[3]) {
         oldm = ev.val.min.mid = m;
         d.push_back(ev);
     }
-    // Add mouse movement events.
-    // BEWARE! X and Y is flipped here!
+    // Add mouse movement events. 
+    // Add X movement.
     ev.type.m = In::MType::X;
     ev.val.min.x = e[1]; // x.
     d.push_back(ev);
+    // Add Y movement. Y is flipped here!
     ev.type.m = In::MType::Y;
-    ev.val.min.y = e[2]; // y.
+    ev.val.min.y = e[2]*-1; // y.
     d.push_back(ev);
 }
 
