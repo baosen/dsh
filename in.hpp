@@ -74,9 +74,9 @@ public:
          oldr, // Old right button value.
          oldm; // Old middle button value.
 
-    // Claims the mouse.    
-    In();
-    // Releases the mouse.    
+    // Claims the input device.    
+    In(const char *path);
+    // Releases the input device.    
     ~In();
 
     // Waits for mouse event and reads it.

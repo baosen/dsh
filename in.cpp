@@ -29,7 +29,7 @@ static int discgen() {
             return fd;
         s.str("");
     }
-    throw err("No generic mouse found!");
+    throw err("No generic device found!");
 }
 
 // Discover mouse event file.
@@ -42,29 +42,40 @@ static int discevt() {
             return fd;
         s.str("");
     }
-    throw err("No event mouse found!");
+    throw err("No event device found!");
 }
 
 // Open input device file.
-In::In() : oldl(false), oldr(false), oldm(false) {
+In::In(const char *path) : oldl(false), oldr(false), oldm(false) {
     stringstream ss;
     // Event-driven input using event* device file.
-    if ((fd = ::open(evtp, O_RDONLY)) != -1) {
-        path = evtp;
-        evt = true;
-        return;
+    if (strstr(path, "event")) {
+        if ((fd = ::open(path, O_RDONLY)) != -1) {
+            path = evtp;
+            evt = true;
+            return;
+        } else {
+            goto fail;
+        }
+    } else if (strstr(path, "mouse")) {
+        // Generic input using mouse* device file.
+        if ((fd = ::open(mp, O_RDONLY)) != -1) {
+            path = mp; 
+            evt = false;
+            return;
+        } else {
+            goto fail;
+        }
+        goto err;
+    } else {
+        error("Unsupported input device file.");
+        goto err;
     }
-    ss << "Cannot open " << evtp << ": " << strerror(errno);
+fail:
+    ss << "Cannot open " << path << ": " << strerror(errno);
     error(ss.str());
-    // Generic input using mouse* device file.
-    if ((fd = ::open(mp, O_RDONLY)) != -1) {
-        path = mp; 
-        evt = false;
-        return;
-    }
-    ss.str("");
-    ss << "Cannot open " << mp << ": " << strerror(errno);
-    die(ss.str().c_str());
+err:
+    die("I die a happy death.");
 }
 
 // Get the name of the mouse device.
