@@ -49,7 +49,6 @@ static int discevt() {
 In::In() : oldl(false), oldr(false), oldm(false) {
     stringstream ss;
     // Event-driven input using event* device file.
-    goto skip;
     if ((fd = ::open(evtp, O_RDONLY)) != -1) {
         path = evtp;
         evt = true;
@@ -58,7 +57,6 @@ In::In() : oldl(false), oldr(false), oldm(false) {
     }
     ss << "Cannot open " << evtp << ": " << strerror(errno);
     error(ss.str());
-skip:
     // Generic input using mouse* device file.
     if ((fd = ::open(mp, O_RDONLY)) != -1) {
         path = mp; 
@@ -160,8 +158,10 @@ static void abs(In::Evt& ev, input_event& e) {
 static void syn(In::Evt& ev, input_event& e) {
     switch (e.code) {
     case SYN_REPORT:
+        //cout << "Report!" << endl;
         break;
     case SYN_DROPPED: // Oh snap!
+        //cout << "Dropped!" << endl;
         break; // TODO: Throw away all frames between the reports.
     }
 }
@@ -180,12 +180,12 @@ static bool fill(deque<In::Evt>& d, input_event& e) {
         key(ev, e);
         d.push_back(ev);
         return true;
-    case EV_SYN: // Synthetic events.
-        syn(ev, e);
-        return false;
     case EV_ABS: // Absolute motion.
         return false;
     case EV_MSC: // Miscellanous?
+        return false;
+    case EV_SYN: // Synthetic events.
+        syn(ev, e);
         return false;
     default:
         //cout << "Unknown type:" << hex << setw(2) << e.type << endl;
@@ -264,13 +264,11 @@ void In::mrd(deque<In::Evt>& d, const int fd) {
 // Read mouse input from mouse device file
 deque<In::Evt> In::read() {
     deque<In::Evt> d;
-    goto skip;
     // Is using event-drive mouse device file?
     if (evt) {
         evtrd(d, fd);
         goto exit;
     }
-skip:
     mrd(d, fd);
 exit:
     return d;
