@@ -83,7 +83,7 @@ public:
     std::deque<In::Evt> read();
 
 private:
-    std::string path; // file path to device file.
+    std::string path; // file path to input device.
     int         fd;   // mouse input device file descriptor.
     bool        evt;  // is using event file.
 

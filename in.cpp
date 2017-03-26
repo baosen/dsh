@@ -9,64 +9,23 @@
 #include "in.hpp"
 using namespace std;
 
-namespace {
-    const char evtp[] = "/dev/input/event0"; // File path to the event-driven mouse device file.
-    const char mp[]   = "/dev/input/mouse0"; // File path to the "hacky" generic mouse input device file.
-}
-
-// Return number of device files.
-static uint nfiles() {
-    return 3;
-}
-
-// Discover generic "hacked" mouse.
-static int discgen() {
-    int fd, n = nfiles();
-    stringstream s;
-    for (int i = 0; i < n; ++i) {
-        s << "/dev/input/mouse" << i;
-        if ((fd = ::open(s.str().c_str(), O_RDONLY) != -1))
-            return fd;
-        s.str("");
-    }
-    throw err("No generic device found!");
-}
-
-// Discover mouse event file.
-static int discevt() {
-    int fd, n = nfiles();
-    stringstream s;
-    for (int i = 0; i < n; ++i) {
-        s << "/dev/input/event" << i;
-        if ((fd = ::open(s.str().c_str(), O_RDONLY) != -1))
-            return fd;
-        s.str("");
-    }
-    throw err("No event device found!");
-}
-
 // Open input device file.
 In::In(const char *path) : oldl(false), oldr(false), oldm(false) {
     stringstream ss;
     // Event-driven input using event* device file.
     if (strstr(path, "event")) {
         if ((fd = ::open(path, O_RDONLY)) != -1) {
-            path = evtp;
             evt = true;
-            return;
-        } else {
-            goto fail;
-        }
+            goto success;
+        } 
+        goto fail;
     } else if (strstr(path, "mouse")) {
         // Generic input using mouse* device file.
-        if ((fd = ::open(mp, O_RDONLY)) != -1) {
-            path = mp; 
+        if ((fd = ::open(path, O_RDONLY)) != -1) {
             evt = false;
-            return;
-        } else {
-            goto fail;
-        }
-        goto err;
+            goto success;
+        } 
+        goto fail;
     } else {
         error("Unsupported input device file.");
         goto err;
@@ -75,7 +34,9 @@ fail:
     ss << "Cannot open " << path << ": " << strerror(errno);
     error(ss.str());
 err:
-    die("I die a happy death.");
+    throw err("Failed to open input device!");
+success:
+    this->path = path;
 }
 
 // Close mouse input device file.
