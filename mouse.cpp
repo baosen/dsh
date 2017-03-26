@@ -1,10 +1,14 @@
-#include <linux/input.h>
 #include <iostream>
+#include <vector>
+#include <dirent.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <linux/input.h>
+#include "err.hpp"
 #include "mouse.hpp"
 using namespace std;
 
-constexpr bool 
-bitset(char n, ushort p) {
+constexpr bool bitset(char n, ushort p) {
     return !!(n & (1u << p));
 }
 
@@ -28,16 +32,39 @@ bool mouse(char b[EV_MAX]) {
     return key && rel;
 }
 
-Mouse::Mouse() {
+// Discover mice connected to the system.
+vector<Mouse> mfind() {
+    vector<Mouse> m;
     // Iterate through devices.
-    In i("/dev/input/event0");
+    DIR           *dir; // directory.
+    struct dirent *e;   // directory entry.
+    // Open directory.
+    if (!(dir = opendir("/dev/input/")))
+        throw err("Cannot open /dev/input/!");
+    // Read directory.
+    if (!(e = readdir(dir)))
+        throw err("Cannot read input directory.");
+    do {
+        // Is entry a directory?
+        if (e->d_type == DT_DIR)
+            continue;
+        // It is a file.
+        else {
+            // Check if it is a mouse.
+            In i(e->d_name);
+            char b[EV_MAX];
+            i.evbits(b);
+            if (mouse(b))
+                m.push_back(Mouse(i));
+            else
+                continue;
+        }
+    } while ((e = readdir(dir)));
+    if (closedir(dir) == -1)
+        throw errno;
+    return m;
+}
 
-    // Check if it is a mouse.
-    char b[EV_MAX];
-    i.evbits(b);
-    if (mouse(b))
-        cout << "yes!" << endl;
-    else
-        cout << "no..." << endl;
-    // Find a device that has mouse capabilities.
+Mouse::Mouse(In& i) {
+    // Check if input device given has mouse capabilities.
 }

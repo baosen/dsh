@@ -2,6 +2,6 @@
 
 class Mouse {
 public:
-    Mouse();
+    Mouse(In& i);
 private:
 };
