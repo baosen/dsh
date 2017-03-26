@@ -8,7 +8,7 @@
 using namespace std;
 
 // List files in directory.
-vector<string> listdir(const char *name) 
+vector<string> lsdir(const char *name) 
 {
     vector<string> dirs;
     DIR           *dir; // directory.

@@ -137,7 +137,7 @@ static bool fill(deque<In::Evt>& d, input_event& e) {
         return false;
     case EV_MSC: // Miscellanous?
         return false;
-    case EV_SYN: // Synthetic events.
+    case EV_SYN: // Synchronization events.
         return syn(d, ev, e.code);
     default:
         //cout << "Unknown type:" << hex << setw(2) << e.type << endl;
@@ -158,6 +158,12 @@ static void evtrd(deque<In::Evt>& d, const int fd) {
         if (fill(d, e))
             break;
     } while (ret > 0);
+}
+
+void In::evbits(char b[EV_MAX]) {
+    int n;
+    if ((n = ioctl(fd, EVIOCGBIT(0, EV_MAX), b)) < 0)
+        throw err("Could not get event types.");
 }
 
 // Make event.

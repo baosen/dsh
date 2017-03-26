@@ -82,6 +82,9 @@ public:
     // Waits for mouse event and reads it.
     std::deque<In::Evt> read();
 
+    // Get event bits.
+    void evbits(char*);
+
 private:
     std::string path; // file path to input device.
     int         fd;   // mouse input device file descriptor.

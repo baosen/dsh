@@ -1,3 +1,3 @@
 #include <string>
 #include <vector>
-std::vector<std::string> listdir(const char *name);
+std::vector<std::string> lsdir(const char *name);
