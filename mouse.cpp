@@ -8,7 +8,7 @@
 #include "mouse.hpp"
 using namespace std;
 
-constexpr bool bitset(char n, ushort p) {
+constexpr bool bitset(const char n, const ushort p) {
     return !!(n & (1u << p));
 }
 
