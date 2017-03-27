@@ -32,39 +32,6 @@ bool mouse(char b[EV_MAX]) {
     return key && rel;
 }
 
-// Discover mice connected to the system.
-vector<Mouse> mfind() {
-    vector<Mouse> m;
-    // Iterate through devices.
-    DIR           *dir; // directory.
-    struct dirent *e;   // directory entry.
-    // Open directory.
-    if (!(dir = opendir("/dev/input/")))
-        throw err("Cannot open /dev/input/!");
-    // Read directory.
-    if (!(e = readdir(dir)))
-        throw err("Cannot read input directory.");
-    do {
-        // Is entry a directory?
-        if (e->d_type == DT_DIR)
-            continue;
-        // It is a file.
-        else {
-            // Check if it is a mouse.
-            In i(e->d_name);
-            char b[EV_MAX];
-            i.evbits(b);
-            if (mouse(b))
-                m.push_back(Mouse(i));
-            else
-                continue;
-        }
-    } while ((e = readdir(dir)));
-    if (closedir(dir) == -1)
-        throw errno;
-    return m;
-}
-
 Mouse::Mouse(In& i) {
     // Check if input device given has mouse capabilities.
 }

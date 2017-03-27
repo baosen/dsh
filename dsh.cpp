@@ -14,10 +14,15 @@ namespace {
         w1.fill(GREEN);
         w2.fill(GREEN);
     }
+
+    void getin() {
+        // TODO: Get input from user.
+    }
 }
 
 int main() {
     try {
+        getin();
         draw();
         return 0;
     } catch (const int c) {
