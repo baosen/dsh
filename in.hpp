@@ -80,7 +80,7 @@ public:
     ~In();
 
     // Waits for mouse event and reads it.
-    std::deque<In::Evt> read();
+    std::deque<In::Evt> rd();
 
     // Get event bits.
     void evbits(char*);

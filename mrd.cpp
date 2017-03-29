@@ -45,7 +45,7 @@ namespace {
 int main() {
     In i(evtp);
     for (;;) {
-        auto d = i.read();
+        auto d = i.rd();
         for (const auto& e : d) {
             switch (e.d) {
             case In::Dev::Mouse: {

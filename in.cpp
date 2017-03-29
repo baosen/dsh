@@ -221,7 +221,7 @@ void In::mrd(deque<In::Evt>& d, const int fd) {
 }
 
 // Read mouse input from mouse device file
-deque<In::Evt> In::read() {
+deque<In::Evt> In::rd() {
     deque<In::Evt> d;
     // Is using event-drive mouse device file?
     if (evt) {
