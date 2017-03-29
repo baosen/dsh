@@ -3,7 +3,7 @@
 #include <queue>
 
 // Device input.
-class In {
+class Ms {
 public:
     // Mouse event type made by the user.
     enum class MType {
@@ -75,9 +75,9 @@ public:
          oldm; // Old middle button value.
 
     // Claims the input device.    
-    In(const char *path);
+    Ms(const char *path);
     // Releases the input device.    
-    ~In();
+    ~Ms();
 
     // Waits for mouse event and reads it.
     std::deque<In::Evt> rd();
