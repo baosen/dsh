@@ -1,8 +1,9 @@
 #pragma once
 #include <string>
 #include <queue>
+#include "types.hpp"
 
-// Device input.
+// "hacky" mouse device input file.
 class Ms {
 public:
     // Mouse event type made by the user.
@@ -74,17 +75,17 @@ public:
          oldr, // Old right button value.
          oldm; // Old middle button value.
 
-    // Claims the input device.    
-    Ms(const char *path);
-    // Releases the input device.    
+    // Claims the ith mouse input device.    
+    Ms(const uint i);
+    // Releases the mouse input device.    
     ~Ms();
 
     // Waits for mouse event and reads it.
     std::deque<In::Evt> rd();
 private:
-    std::string path; // file path to input device.
-    int         fd;   // mouse input device file descriptor.
-    bool        evt;  // is using event file.
+    int  fd;   // mouse input device file descriptor.
+    bool evt;  // is using event file.
 
-    void evmk(std::deque<In::Evt>& d, char e[3]);
+    // Make mouse event.
+    void mk(std::deque<In::Evt>& d, char e[3]);
 };

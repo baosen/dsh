@@ -9,16 +9,14 @@
 #include "in.hpp"
 using namespace std;
 
-// Open input device file.
-Ms::Ms(const char *path) : oldl(false), oldr(false), oldm(false) {
+// Open mouse input device file.
+Ms::Ms(const uint i) {
     stringstream ss;
     // Generic input using mouse* device file.
-    if (strstr(path, "mouse")) {
-        if ((fd = ::open(path, O_RDONLY)) != -1) {
-            this->path = path;
-            return;
-        } 
-    } 
+    ss << "/dev/input/mouse" << i;
+    const auto path = ss.str().c_str();
+    if ((fd = ::open(path, O_RDONLY)) != -1)
+        return;
     ss << "Cannot open " << path << ": " << strerror(errno);
     error(ss.str());
     throw err("Failed to open input device!");
@@ -28,7 +26,7 @@ Ms::Ms(const char *path) : oldl(false), oldr(false), oldm(false) {
 Ms::~Ms() {
     stringstream ss;
     if (::close(fd) == -1) {
-        ss << "Cannot close " << path << ": " << strerror(errno);
+        ss << "Cannot close mouse input device file: " << strerror(errno);
         die(ss.str().c_str());
     }
 }
@@ -43,7 +41,7 @@ void Ms::rd(deque<In::Evt>& d, const int fd) {
     if (ret == 0)
         return;
     if (ret == sizeof e) {
-        evmk(d, e);
+        mk(d, e);
         return;
     }
     throw ("Error reading /dev/input/mouse0");

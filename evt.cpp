@@ -97,42 +97,6 @@ static bool fill(deque<In::Evt>& d, input_event& e) {
     }
 }
 
-// Make event.
-void Evt::evmk(deque<Evt::Evt>& d, char e[3]) {
-    // Create event object.
-    In::Evt ev;
-    zero(ev);
-    ev.d = In::Dev::Mouse;
-
-    // Add button events.
-    int l, m, r, wh;
-    l = (e[0] & 1); // 1 bit is left mouse button pressed?
-    if (oldl != l) {
-        ev.type.m = In::MType::Left;
-        oldl = ev.val.min.left = l; 
-        d.push_back(ev);
-    }
-    r = ((e[0] >> 1) & 1); // 2 bit is right mouse button pressed?
-    if (oldr != r) {
-        ev.type.m = In::MType::Right;
-        oldr = ev.val.min.right = r;
-        d.push_back(ev);
-    }
-    m = ((e[0] >> 2) & 1); // 3 bit is middle mouse button pressed?
-    if (oldm != m) {
-        d.push_back(ev);
-    }
-    // Add mouse movement events. 
-    // Add X movement.
-    ev.type.m = In::MType::X;
-    ev.val.min.x = e[1]; // x.
-    d.push_back(ev);
-    // Add Y movement. Y is flipped here!
-    ev.type.m = In::MType::Y;
-    ev.val.min.y = e[2]*-1; // y.
-    d.push_back(ev);
-}
-
 deque<Evt::Evt> Evt::rd() {
     deque<Evt::Evt> d;
 }
