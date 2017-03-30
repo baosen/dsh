@@ -33,14 +33,8 @@ Ms::~Ms() {
     }
 }
 
-void In::evbits(char b[EV_MAX]) {
-    int n;
-    if ((n = ioctl(fd, EVIOCGBIT(0, EV_MAX), b)) < 0)
-        throw err("Could not get event types.");
-}
-
-// Read generic mouse file.
-void In::mrd(deque<In::Evt>& d, const int fd) {
+// Read mouse input from mouse device file.
+void Ms::rd(deque<In::Evt>& d, const int fd) {
     // Read using generic mouse device file.
     char e[3];
     const auto ret = ::read(fd, &e, sizeof e);
@@ -53,12 +47,4 @@ void In::mrd(deque<In::Evt>& d, const int fd) {
         return;
     }
     throw ("Error reading /dev/input/mouse0");
-}
-
-// Read mouse input from mouse device file
-deque<In::Evt> In::rd() {
-    // Is using event-drive mouse device file?
-    mrd(d, fd);
-exit:
-    return d;
 }

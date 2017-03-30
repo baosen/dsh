@@ -27,6 +27,9 @@ public:
         } while (ret > 0);
     }
 
+    // Get event bits.
+    void evbits(char*);
+
     ~Evt() {
         stringstream ss;
         if (::close(fd) == -1) {

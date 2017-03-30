@@ -1,3 +1,5 @@
+#include "evt.hpp"
+
 // Mouse button press or release.
 static void key(In::Evt& ev, input_event& e) {
     switch (e.code) {
@@ -118,8 +120,6 @@ void Evt::evmk(deque<Evt::Evt>& d, char e[3]) {
     }
     m = ((e[0] >> 2) & 1); // 3 bit is middle mouse button pressed?
     if (oldm != m) {
-        ev.type.m = In::MType::Mid;
-        oldm = ev.val.min.mid = m;
         d.push_back(ev);
     }
     // Add mouse movement events. 
@@ -136,3 +136,12 @@ void Evt::evmk(deque<Evt::Evt>& d, char e[3]) {
 deque<Evt::Evt> Evt::rd() {
     deque<Evt::Evt> d;
 }
+
+void Evt::evbits(char b[EV_MAX]) {
+    int n;
+    if ((n = ioctl(fd, EVIOCGBIT(0, EV_MAX), b)) < 0)
+        throw err("Could not get event types.");
+}
+
+// Mouse button press or release.
+static void key(In::Evt& ev, input_event& e) {
