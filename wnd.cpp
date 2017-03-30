@@ -27,3 +27,7 @@ void Wnd::save() {
 void Wnd::fill(const Col& c) {
     cur.fill(c);
 }
+
+// Click on window at position p.
+virtual void Wnd::click(const Pos& p) {
+}
