@@ -14,7 +14,7 @@ constexpr bool bset(const char n, const ushort i) {
 }
 
 // Check if it is a mouse.
-bool mouse(char b[EV_MAX]) {
+static bool mouse(char b[EV_MAX]) {
     bool key = false, rel = false;
     for (ushort i = 0; i < EV_MAX; i++) {
         if (bset(b[0], i)) {
@@ -34,8 +34,12 @@ bool mouse(char b[EV_MAX]) {
 }
 
 // Find a mouse and open it.
-Mouse::Mouse(In& i) : oldl(false), oldr(false), oldm(false) {
+Mouse::Mouse(Evt& e) : oldl(false), oldr(false), oldm(false) {
     // Check if input device given has mouse capabilities.
+    char b[EV_MAX];
+    e.evbits(b);
+    if (!mouse(b))
+        throw err("No mouse capabilities in this event device.");
 }
 
 // Make mouse event.
