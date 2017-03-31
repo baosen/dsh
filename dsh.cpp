@@ -166,6 +166,7 @@ int main() {
         Ms m(0);
         forever {
             const auto e = m.rd();
+            // TODO: Get all windows in front.
             wnd.click(topos(e));
             draw();
         }

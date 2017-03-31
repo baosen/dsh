@@ -29,5 +29,8 @@ void Wnd::fill(const Col& c) {
 }
 
 // Click on window at position p.
-virtual void Wnd::click(const Pos& p) {
+void Wnd::click(const Pos& p) {
+    // Is outside window rectangle?
+    if (p.x < cur.p.x || p.y < cur.p.y)
+        return;
 }

@@ -11,4 +11,5 @@ public:
 private:
     uint x, y;
     friend class Rect;
+    friend class Wnd;
 };

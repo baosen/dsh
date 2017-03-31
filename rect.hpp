@@ -4,9 +4,12 @@
 #include "col.hpp"
 #include "fb.hpp"
 
+// Rectangle in framebuffer.
 class Rect {
     Pos p; // Position.
     Res r; // Resolution.
+
+    friend class Wnd;
 public:
     Rect();
     Rect(const Pos& p, const Res& r);
