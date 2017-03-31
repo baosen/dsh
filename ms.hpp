@@ -14,6 +14,5 @@ public:
     // Waits for mouse event and reads it.
     std::deque<In::Evt> rd();
 private:
-    int  fd;   // mouse input device file descriptor.
-    bool evt;  // is using event file.
+    int fd;   // mouse input device file descriptor.
 };

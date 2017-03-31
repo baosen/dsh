@@ -4,20 +4,8 @@ public:
     // Open event device file.
     Evt::Evt(uint i);
 
-    // Read from mouse event device file.
-    void rd(deque<In::Evt>& d, const int fd) {
-        input_event e;
-        ssize_t ret;
-        do {
-            ret = ::read(fd, &e, sizeof e);
-            if (ret == -1)   // error.
-                throw errno; // todo.
-            if (ret == 0)    // finished reading.
-                break;
-            if (fill(d, e))
-                break;
-        } while (ret > 0);
-    }
+    // Read from event file.
+    deque<Evt::Evt> Evt::rd();
 
     // Get event bits.
     void evbits(char*);
@@ -25,4 +13,5 @@ public:
     // Close event device file.
     ~Evt();
 private:
+    int fd; // event device file descriptor.
 };

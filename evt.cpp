@@ -124,6 +124,18 @@ void Evt::evbits(char b[EV_MAX]) {
         throw err("Could not get event types.");
 }
 
+// Read from event file.
 deque<Evt::Evt> Evt::rd() {
     deque<Evt::Evt> d;
+    input_event e;
+    ssize_t ret;
+    do {
+        ret = ::read(fd, &e, sizeof e);
+        if (ret == -1)   // error.
+            throw errno; // todo.
+        if (ret == 0)    // finished reading.
+            break;
+        if (fill(d, e))
+            break;
+    } while (ret > 0);
 }
