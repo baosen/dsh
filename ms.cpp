@@ -32,17 +32,20 @@ Ms::~Ms() {
 }
 
 // Read mouse input from mouse device file.
-void Ms::rd(deque<In::Evt>& d, const int fd) {
+Mouse::Evt Ms::rd() {
     // Read using generic mouse device file.
     char e[3];
     const auto ret = ::read(fd, &e, sizeof e);
     if (ret == -1)
         throw errno; // todo.
-    if (ret == 0)
-        return;
     if (ret == sizeof e) {
-        mk(d, e);
-        return;
+        Mouse::Evt e;
+        e.x     = e[1];              // x.
+        e.y     = e[2];              // y.
+        e.left  = (e[0] & 1);        // 1 bit is left mouse button pressed?
+        e.right = ((e[0] >> 1) & 1); // 2 bit is right mouse button pressed?
+        e.mid   = ((e[0] >> 2) & 1); // 3 bit is middle mouse button pressed?
+        return e;
     }
     throw ("Error reading /dev/input/mouse0");
 }

@@ -3,12 +3,6 @@
 // Mouse input device.
 class Mouse {
 public:
-    // Input event.
-    struct Evt {
-        int  x, y;             // x and y cartesian movement.
-        bool left, right, mid; // Left, middle and right pressed or released mouse buttons.
-    };
-
     // Mouse-wheel scroll.
     enum Scr {
         UP   = 1,  // Scroll upwards.
@@ -23,9 +17,6 @@ public:
 
     // Open event device file for mouse.
     Mouse(Evt&);
-
-    // Read mouse event.
-    Mouse::Evt rd();
 private:
     bool oldl, // Old left button value.
          oldr, // Old right button value.
