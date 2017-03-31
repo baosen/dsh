@@ -18,7 +18,7 @@ public:
     ~Ms();
 
     // Waits for mouse event and reads it.
-    Mouse::Evt rd();
+    Evt rd();
 private:
     int fd;   // mouse input device file descriptor.
 };

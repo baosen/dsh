@@ -1,8 +1,10 @@
+#include <iostream>
 #include "types.hpp"
 #include "fb.hpp"
 #include "col.hpp"
 #include "wnd.hpp"
 #include "log.hpp"
+#include "ms.hpp"
 using namespace std;
 
 namespace {
@@ -18,6 +20,7 @@ namespace {
     }
 }
 
+/*
 // Mouse button press or release.
 static void key(In::Evt& ev, input_event& e) {
     switch (e.code) {
@@ -155,9 +158,10 @@ int main2() {
     }
     return 0;
 }
+*/
 
 // Convert "hacky" mouse event to position.
-static Pos topos(const Mouse::Evt& e) {
+static Pos topos(const Ms::Evt& e) {
     return Pos(e.x, e.y);
 }
 
@@ -166,9 +170,10 @@ int main() {
         Ms m(0);
         forever {
             const auto e = m.rd();
+            cout << "x: " << e.x << " y: " << e.y << endl;
             // TODO: Get all windows in front.
-            wnd.click(topos(e));
-            draw();
+            //wnd.click(topos(e));
+            //draw();
         }
         return 0;
     } catch (const int c) {
