@@ -118,8 +118,7 @@ static bool fill(deque<In::Evt>& d, input_event& e) {
     }
 }
 
-
-int main() {
+int main2() {
     Ms m(0);
     forever {
         const auto q = m.rd();
