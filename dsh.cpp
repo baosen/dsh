@@ -1,4 +1,3 @@
-#include <iostream>
 #include "types.hpp"
 #include "fb.hpp"
 #include "col.hpp"
@@ -159,7 +158,7 @@ int main2() {
 
 // Convert "hacky" mouse event to position.
 static Pos topos(const Mouse::Evt& e) {
-    // TODO: Hello!
+    return Pos(e.x, e.y);
 }
 
 int main() {
