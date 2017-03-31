@@ -5,13 +5,9 @@ class Mouse {
 public:
     // Input event.
     struct Evt {
-        __u16 type;
-        struct {                   
-            int  x, y;             // x and y cartesian movement.
-            bool left, mid, right, // Left, middle and right pressed or released mouse buttons.
-            int  wheel;            // Wheel scroll.
-        } min;                     // Mouse input.
-        __s32 val;
+        int  x, y;             // x and y cartesian movement.
+        bool left, mid, right, // Left, middle and right pressed or released mouse buttons.
+        int  wheel;            // Wheel scroll.
     };
 
     // Mouse-wheel scroll.
@@ -30,7 +26,7 @@ public:
     Mouse(Evt&);
 
     // Read mouse event.
-    deque<Mouse::Evt> Mouse::rd();
+    Mouse::Evt rd();
 private:
     bool oldl, // Old left button value.
          oldr, // Old right button value.

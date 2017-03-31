@@ -75,8 +75,7 @@ void Mouse::mk(deque<Evt::Evt>& d) {
 }
 
 // Read mouse input.
-deque<Mouse::Evt> Mouse::rd() {
-    deque<Evt::Evt> e;
+Mouse::Evt Mouse::rd() {
     mk(d);
     return d;
 }
