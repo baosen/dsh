@@ -1,3 +1,5 @@
+#include <linux/input.h>
+
 // Event-driven input using event* device file.
 class Evt {
 public:
@@ -5,7 +7,7 @@ public:
     Evt::Evt(uint i);
 
     // Read from event file.
-    deque<Evt::Evt> Evt::rd();
+    input_event Evt::rd();
 
     // Get event bits.
     void evbits(char*);
