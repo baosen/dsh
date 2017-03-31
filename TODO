@@ -6,3 +6,6 @@ Hotkeys:
 
 lsh
 - programs for laptops.
+
+Misc
+- Run dsh in its own account in user-space.
