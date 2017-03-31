@@ -157,9 +157,17 @@ int main2() {
     return 0;
 }
 
+static Pos topos(const Mouse::Evt& e) {
+}
+
 int main() {
     try {
-        draw();
+        Ms m(0);
+        forever {
+            const auto e = m.rd();
+            wnd.click(topos(e));
+            draw();
+        }
         return 0;
     } catch (const int c) {
         die(c);
