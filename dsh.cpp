@@ -157,7 +157,9 @@ int main2() {
     return 0;
 }
 
+// Convert "hacky" mouse event to position.
 static Pos topos(const Mouse::Evt& e) {
+    // TODO: Hello!
 }
 
 int main() {
