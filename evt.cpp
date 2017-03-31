@@ -30,11 +30,8 @@ void Evt::evbits(char b[EV_MAX]) {
 // Read from event file.
 input_event Evt::rd() {
     input_event e;
-    ssize_t ret;
-    do {
-        ret = ::read(fd, &e, sizeof e);
-        if (ret == -1)   // error.
-            throw errno; // todo.
-        return e;
-    } while (ret > 0);
+    ssize_t ret = ::read(fd, &e, sizeof e);
+    if (ret < 0)   // error.
+        throw errno; // todo.
+    return e;
 }
