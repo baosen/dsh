@@ -14,7 +14,7 @@ Ms::Ms(const uint i) {
     stringstream ss;
     // Generic input using mouse* device file.
     ss << "/dev/input/mouse" << i;
-    if ((fd = ::open(ss.str().c_str() , O_RDONLY)) != -1)
+    if ((fd = ::open(ss.str().c_str(), O_RDONLY)) != -1)
         return;
     string s(ss.str());
     ss.str("");
