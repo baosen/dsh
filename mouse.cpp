@@ -45,9 +45,8 @@ Mouse::Mouse(Evt& e) : oldl(false), oldr(false), oldm(false) {
 // Make mouse event.
 void Mouse::mk(deque<Evt::Evt>& d) {
     // Create event object.
-    In::Evt ev;
+    Evt ev;
     zero(ev);
-    ev.d = In::Dev::Mouse;
     // Add button events.
     int l, m, r, wh;
     l = (e[0] & 1); // 1 bit is left mouse button pressed?
