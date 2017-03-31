@@ -76,6 +76,11 @@ void Mouse::mk(deque<Evt::Evt>& d) {
 
 // Read mouse input.
 Mouse::Evt Mouse::rd() {
-    mk(d);
-    return d;
+    Mouse::Evt e;
+    e.x     = e[1];              // x.
+    e.y     = e[2];              // y.
+    e.left  = (e[0] & 1);        // 1 bit is left mouse button pressed?
+    e.right = ((e[0] >> 1) & 1); // 2 bit is right mouse button pressed?
+    e.mid   = ((e[0] >> 2) & 1); // 3 bit is middle mouse button pressed?
+    return e;
 }

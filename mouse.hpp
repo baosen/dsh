@@ -6,8 +6,7 @@ public:
     // Input event.
     struct Evt {
         int  x, y;             // x and y cartesian movement.
-        bool left, mid, right, // Left, middle and right pressed or released mouse buttons.
-        int  wheel;            // Wheel scroll.
+        bool left, right, mid; // Left, middle and right pressed or released mouse buttons.
     };
 
     // Mouse-wheel scroll.
