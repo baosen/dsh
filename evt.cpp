@@ -1,4 +1,11 @@
+#include <sstream>
+#include <cstring>
+#include <fcntl.h>
+#include <unistd.h>
+#include "log.hpp"
 #include "evt.hpp"
+#include "err.hpp"
+using namespace std;
 
 // Open event device file.
 Evt::Evt(uint i) {
@@ -6,9 +13,9 @@ Evt::Evt(uint i) {
     ss << "/dev/input/event" << i;
     if ((fd = ::open(ss.str().c_str(), O_RDONLY)) != -1)
         return;
-    ss << "Cannot open event device file: " << strerror(errno);
-    error(ss.str());
-    throw err("Failed to open input device!");
+    string s(ss.str());
+    ss << "Cannot open event device file " << s << ": " << strerror(errno);
+    throw err(ss.str());
 }
 
 // Close event device file.
@@ -30,7 +37,7 @@ void Evt::evbits(char b[EV_MAX]) {
 // Read from event file.
 input_event Evt::rd() {
     input_event e;
-    ssize_t ret = ::read(fd, &e, sizeof e);
+    const ssize_t ret = ::read(fd, &e, sizeof e);
     if (ret < 0)   // error.
         throw errno; // todo.
     return e;
