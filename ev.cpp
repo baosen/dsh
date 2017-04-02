@@ -3,12 +3,12 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include "log.hpp"
-#include "evt.hpp"
+#include "ev.hpp"
 #include "err.hpp"
 using namespace std;
 
 // Open event device file.
-Evt::Evt(uint i) {
+Ev::Ev(uint i) {
     stringstream ss;
     ss << "/dev/input/event" << i;
     if ((fd = ::open(ss.str().c_str(), O_RDONLY)) != -1)
@@ -20,7 +20,7 @@ Evt::Evt(uint i) {
 }
 
 // Close event device file.
-Evt::~Evt() {
+Ev::~Ev() {
     stringstream ss;
     if (::close(fd) == -1) {
         ss << "Cannot close event device file: " << strerror(errno);
@@ -29,14 +29,14 @@ Evt::~Evt() {
 }
 
 // Get event bits.
-void Evt::evbits(char b[EV_MAX]) {
+void Ev::evbits(char b[EV_MAX]) {
     int n;
     if ((n = ioctl(fd, EVIOCGBIT(0, EV_MAX), b)) < 0)
         throw err("Could not get event types.");
 }
 
 // Read from event file.
-input_event Evt::rd() {
+input_event Ev::rd() {
     input_event e;
     const ssize_t ret = ::read(fd, &e, sizeof e);
     if (ret < 0)   // error.

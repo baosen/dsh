@@ -29,14 +29,14 @@ M::~M() {
 }
 
 // Read mouse input from mouse device file.
-M::Evt M::rd() {
+M::Ev M::rd() {
     // Read using generic mouse device file.
     char e[3];
     const auto ret = ::read(fd, &e, sizeof e);
     if (ret == -1)
         throw errno; // todo.
     if (ret == sizeof e) {
-        M::Evt ev;
+        M::Ev ev;
         ev.x     = e[1];              // x.
         ev.y     = e[2];              // y.
         ev.left  = (e[0] & 1);        // 1 bit is left mouse button pressed?

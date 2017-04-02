@@ -23,7 +23,7 @@ namespace {
 
 /*
 // Mouse button press or release.
-static void key(In::Evt& ev, input_event& e) {
+static void key(In::Ev& ev, input_event& e) {
     switch (e.code) {
     case BTN_LEFT:    // Left mouse button.
         ev.type.m = In::MType::Left;
@@ -63,7 +63,7 @@ static void key(In::Evt& ev, input_event& e) {
 }
 
 // Mouse movement.
-static void rel(In::Evt& ev, input_event& e) {
+static void rel(In::Ev& ev, input_event& e) {
     // Mouse movements follows top-left coordinate system, where origo is at the top left of the screen and the positive y-axis points downwards.
     switch (e.code) {
     case 0: // x-axis, - left, + right.
@@ -82,7 +82,7 @@ static void rel(In::Evt& ev, input_event& e) {
 }
 
 // Handle synthetic events.
-static bool syn(deque<In::Evt>& d, In::Evt& ev, const __s32 code) {
+static bool syn(deque<In::Ev>& d, In::Ev& ev, const __s32 code) {
     switch (code) {
     case SYN_REPORT:
         return true;
@@ -93,8 +93,8 @@ static bool syn(deque<In::Evt>& d, In::Evt& ev, const __s32 code) {
 }
 
 // Fill in event based on its read type.
-static bool fill(deque<In::Evt>& d, input_event& e) {
-    In::Evt ev;
+static bool fill(deque<In::Ev>& d, input_event& e) {
+    In::Ev ev;
     zero(ev);
     ev.d = In::Dev::Mouse;
     switch (e.type) {
@@ -162,14 +162,14 @@ int main2() {
 */
 
 // Convert "hacky" mouse event to position.
-static Pos topos(const M::Evt& e) {
+static Pos topos(const M::Ev& e) {
     return Pos(e.x, e.y);
 }
 
 int main() {
     try {
         M m(0);
-        Evt ev(0);
+        Ev ev(0);
         Evm evm;
 
         forever {

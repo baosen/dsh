@@ -7,5 +7,5 @@ public:
     Evm();
     void rd();
 private:
-    Evt ev;
+    Ev ev;
 };

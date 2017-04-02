@@ -19,7 +19,7 @@ public:
     };
 
     // Mouse input event.
-    struct Evt {
+    struct Ev {
         int  x, y;             // x and y cartesian movement.
         bool left, right, mid; // Left, middle and right pressed or released mouse buttons.
     };
@@ -30,7 +30,7 @@ public:
     ~M();
 
     // Waits for mouse event and reads it.
-    Evt rd();
+    Ev rd();
 private:
     int fd;   // mouse input device file descriptor.
 };
