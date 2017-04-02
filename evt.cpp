@@ -14,6 +14,7 @@ Evt::Evt(uint i) {
     if ((fd = ::open(ss.str().c_str(), O_RDONLY)) != -1)
         return;
     string s(ss.str());
+    ss.str("");
     ss << "Cannot open event device file " << s << ": " << strerror(errno);
     throw err(ss.str());
 }

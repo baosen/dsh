@@ -1,13 +1,14 @@
 #include <linux/input.h>
+#include "types.hpp"
 
 // Event-driven input using event* device file.
 class Evt {
 public:
     // Open event device file.
-    Evt::Evt(uint i);
+    Evt(uint i);
 
     // Read from event file.
-    input_event Evt::rd();
+    input_event rd();
 
     // Get event bits.
     void evbits(char*);

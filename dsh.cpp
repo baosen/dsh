@@ -5,6 +5,7 @@
 #include "wnd.hpp"
 #include "log.hpp"
 #include "mfile.hpp"
+#include "evt.hpp"
 using namespace std;
 
 namespace {
@@ -167,10 +168,13 @@ static Pos topos(const Mfile::Evt& e) {
 
 int main() {
     try {
-        Mfile m(0);
+        //Mfile m(0);
+        Evt ev(0);
         forever {
-            const auto e = m.rd();
-            cout << "x: " << e.x << " y: " << e.y << endl;
+            //const auto e = m.rd();
+            const auto e = ev.rd();
+            //cout << "x: " << e.x << " y: " << e.y << endl;
+            cout << "hei!" << endl;
             // TODO: Get all windows in front.
             //wnd.click(topos(e));
             //draw();
