@@ -1,75 +1,51 @@
 #include <iostream>
-#include <vector>
-#include <dirent.h>
-#include <sys/types.h>
+#include <iomanip>
+#include <sstream>
 #include <unistd.h>
+#include <fcntl.h>
 #include <linux/input.h>
-#include "err.hpp"
+#include "zero.hpp"
+#include "log.hpp"
 #include "mouse.hpp"
 using namespace std;
 
-// Is bit set?
-constexpr bool bset(const char n, const ushort i) {
-    return !!(n & (1u << i));
+// Open mouse input device file.
+Mouse::Mouse(const uint i) {
+    stringstream ss;
+    // Generic input using mouse* device file.
+    ss << "/dev/input/mouse" << i;
+    if ((fd = ::open(ss.str().c_str(), O_RDONLY)) != -1)
+        return;
+    string s(ss.str());
+    ss.str("");
+    ss << "Cannot open " << s << ": " << strerror(errno);
+    throw err(ss.str());
 }
 
-// Check if it is a mouse.
-static bool mouse(char b[EV_MAX]) {
-    bool key = false, rel = false;
-    for (ushort i = 0; i < EV_MAX; i++) {
-        if (bset(b[0], i)) {
-            switch (i) {
-            case EV_KEY:
-                key = true;
-                break;
-            case EV_REL:
-                rel = true;
-                break;
-            default:
-                break;
-            }
-        }
+// Close mouse input device file.
+Mouse::~Mouse() {
+    stringstream ss;
+    if (::close(fd) == -1) {
+        ss << "Cannot close mouse input device file: " << strerror(errno);
+        die(ss.str().c_str());
     }
-    return key && rel;
 }
 
-// Find a mouse and open it.
-Mouse::Mouse(Evt& e) : oldl(false), oldr(false), oldm(false) {
-    // Check if input device given has mouse capabilities.
-    char b[EV_MAX];
-    e.evbits(b);
-    if (!mouse(b))
-        throw err("No mouse capabilities in this event device.");
-}
-
-// Make mouse event.
-void Mouse::mk(deque<Evt::Evt>& d) {
-    // Create event object.
-    Evt ev;
-    zero(ev);
-    // Add button events.
-    int l, m, r, wh;
-    l = (e[0] & 1); // 1 bit is left mouse button pressed?
-    if (oldl != l) {
-        ev.type.m = In::MType::Left;
-        oldl = ev.val.min.left = l; 
-        d.push_back(ev);
+// Read mouse input from mouse device file.
+Mouse::Evt Mouse::rd() {
+    // Read using generic mouse device file.
+    char e[3];
+    const auto ret = ::read(fd, &e, sizeof e);
+    if (ret == -1)
+        throw errno; // todo.
+    if (ret == sizeof e) {
+        Mouse::Evt ev;
+        ev.x     = e[1];              // x.
+        ev.y     = e[2];              // y.
+        ev.left  = (e[0] & 1);        // 1 bit is left mouse button pressed?
+        ev.right = ((e[0] >> 1) & 1); // 2 bit is right mouse button pressed?
+        ev.mid   = ((e[0] >> 2) & 1); // 3 bit is middle mouse button pressed?
+        return ev;
     }
-    r = ((e[0] >> 1) & 1); // 2 bit is right mouse button pressed?
-    if (oldr != r) {
-        ev.type.m = In::MType::Right;
-        oldr = ev.val.min.right = r;
-        d.push_back(ev);
-    }
-    m = ((e[0] >> 2) & 1); // 3 bit is middle mouse button pressed?
-    if (oldm != m)
-        d.push_back(ev);
-    // Add X movement.
-    ev.type.m = In::MType::X;
-    ev.val.min.x = e[1]; // x.
-    d.push_back(ev);
-    // Add Y movement. Y is flipped here!
-    ev.type.m = In::MType::Y;
-    ev.val.min.y = e[2]*-1; // y.
-    d.push_back(ev);
+    throw ("Error reading /dev/input/mouse0");
 }

@@ -1,24 +1,24 @@
-#include <linux/input.h>
+#pragma once
+#include <string>
+#include <queue>
+#include "types.hpp"
 
-// Mouse input device.
+// "Hacky" mouse device input file.
 class Mouse {
 public:
-    // Mouse-wheel scroll.
-    enum Scr {
-        UP   = 1,  // Scroll upwards.
-        DOWN = -1, // Scroll downwards.
+    // Input event.
+    struct Evt {
+        int  x, y;             // x and y cartesian movement.
+        bool left, right, mid; // Left, middle and right pressed or released mouse buttons.
     };
 
-    // Button state
-    enum Btn {
-        RLS, // Released.
-        PRS  // Pressed.
-    };
+    // Claims the ith mouse input device.    
+    Mouse(const uint i);
+    // Releases the mouse input device.    
+    ~Mouse();
 
-    // Open event device file for mouse.
-    Mouse(Evt&);
+    // Waits for mouse event and reads it.
+    Evt rd();
 private:
-    bool oldl, // Old left button value.
-         oldr, // Old right button value.
-         oldm; // Old middle button value.
+    int fd;   // mouse input device file descriptor.
 };

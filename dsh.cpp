@@ -4,7 +4,7 @@
 #include "col.hpp"
 #include "wnd.hpp"
 #include "log.hpp"
-#include "mfile.hpp"
+#include "mouse.hpp"
 #include "evt.hpp"
 using namespace std;
 
@@ -162,13 +162,13 @@ int main2() {
 */
 
 // Convert "hacky" mouse event to position.
-static Pos topos(const Mfile::Evt& e) {
+static Pos topos(const Mouse::Evt& e) {
     return Pos(e.x, e.y);
 }
 
 int main() {
     try {
-        //Mfile m(0);
+        Mouse m(0);
         Evt ev(0);
         forever {
             //const auto e = m.rd();
