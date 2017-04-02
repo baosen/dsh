@@ -6,11 +6,11 @@
 #include <linux/input.h>
 #include "zero.hpp"
 #include "log.hpp"
-#include "ms.hpp"
+#include "mfile.hpp"
 using namespace std;
 
 // Open mouse input device file.
-Ms::Ms(const uint i) {
+Mfile::Mfile(const uint i) {
     stringstream ss;
     // Generic input using mouse* device file.
     ss << "/dev/input/mouse" << i;
@@ -23,7 +23,7 @@ Ms::Ms(const uint i) {
 }
 
 // Close mouse input device file.
-Ms::~Ms() {
+Mfile::~Mfile() {
     stringstream ss;
     if (::close(fd) == -1) {
         ss << "Cannot close mouse input device file: " << strerror(errno);
@@ -32,14 +32,14 @@ Ms::~Ms() {
 }
 
 // Read mouse input from mouse device file.
-Ms::Evt Ms::rd() {
+Mfile::Evt Mfile::rd() {
     // Read using generic mouse device file.
     char e[3];
     const auto ret = ::read(fd, &e, sizeof e);
     if (ret == -1)
         throw errno; // todo.
     if (ret == sizeof e) {
-        Ms::Evt ev;
+        Mfile::Evt ev;
         ev.x     = e[1];              // x.
         ev.y     = e[2];              // y.
         ev.left  = (e[0] & 1);        // 1 bit is left mouse button pressed?

@@ -3,8 +3,8 @@
 #include <queue>
 #include "types.hpp"
 
-// "hacky" mouse device input file.
-class Ms {
+// "Hacky" mouse device input file.
+class Mfile {
 public:
     // Input event.
     struct Evt {
@@ -13,9 +13,9 @@ public:
     };
 
     // Claims the ith mouse input device.    
-    Ms(const uint i);
+    Mfile(const uint i);
     // Releases the mouse input device.    
-    ~Ms();
+    ~Mfile();
 
     // Waits for mouse event and reads it.
     Evt rd();
