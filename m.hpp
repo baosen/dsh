@@ -4,18 +4,30 @@
 #include "types.hpp"
 
 // "Hacky" mouse device input file.
-class Mouse {
+class M {
 public:
-    // Input event.
+    // Mouse-wheel scroll.
+    enum Scr {
+        UP   = 1,  // Scroll upwards.
+        DOWN = -1, // Scroll downwards.
+    };
+
+    // Button state
+    enum Btn {
+        RLS, // Released.
+        PRS  // Pressed.
+    };
+
+    // Mouse input event.
     struct Evt {
         int  x, y;             // x and y cartesian movement.
         bool left, right, mid; // Left, middle and right pressed or released mouse buttons.
     };
 
     // Claims the ith mouse input device.    
-    Mouse(const uint i);
+    M(const uint i);
     // Releases the mouse input device.    
-    ~Mouse();
+    ~M();
 
     // Waits for mouse event and reads it.
     Evt rd();
