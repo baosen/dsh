@@ -5,7 +5,7 @@
 #include "wnd.hpp"
 #include "log.hpp"
 #include "m.hpp"
-#include "evt.hpp"
+#include "evm.hpp"
 using namespace std;
 
 namespace {
@@ -173,8 +173,8 @@ int main() {
         Evm evm;
 
         forever {
-            //const auto e = m.rd();
-            const auto e = ev.rd();
+            //const auto em = m.rd();
+            const auto ee = ev.rd();
             //cout << "x: " << e.x << " y: " << e.y << endl;
             cout << "hei!" << endl;
             // TODO: Get all windows in front.
