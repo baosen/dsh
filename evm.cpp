@@ -14,7 +14,7 @@ static constexpr bool bset(const char n, const ushort i) {
 }
 
 // Check if it is a mouse.
-static bool mouse(char b[EV_MAX]) {
+static bool ism(char b[EV_MAX]) {
     bool key = false, rel = false;
     for (ushort i = 0; i < EV_MAX; i++) {
         if (bset(b[0], i)) {
@@ -38,7 +38,7 @@ Evm::Evm() : ev(0) {
     // Check if input device given has mouse capabilities.
     char b[EV_MAX];
     ev.evbits(b);
-    if (!mouse(b))
+    if (!ism(b))
         throw err("No mouse capabilities in this event device.");
 }
 
