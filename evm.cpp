@@ -4,12 +4,12 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <linux/input.h>
+#include "evm.hpp"
 #include "err.hpp"
-#include "mouse.hpp"
 using namespace std;
 
 // Is bit set?
-constexpr bool bset(const char n, const ushort i) {
+static constexpr bool bset(const char n, const ushort i) {
     return !!(n & (1u << i));
 }
 
@@ -34,10 +34,13 @@ static bool mouse(char b[EV_MAX]) {
 }
 
 // Find a mouse and open it.
-Evm::Evm(Evt& e) : oldl(false), oldr(false), oldm(false) {
+Evm::Evm() : ev(0) {
     // Check if input device given has mouse capabilities.
     char b[EV_MAX];
-    e.evbits(b);
+    ev.evbits(b);
     if (!mouse(b))
         throw err("No mouse capabilities in this event device.");
+}
+
+void Evm::rd() {
 }

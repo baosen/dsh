@@ -1,8 +1,11 @@
-#include <linux/input.h>
+#include "evt.hpp"
 
 // Mouse input device.
 class Evm {
 public:
     // Open event device file for mouse.
     Evm();
+    void rd();
+private:
+    Evt ev;
 };
