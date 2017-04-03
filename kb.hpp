@@ -4,8 +4,9 @@ class Kb {
 public:
     Kb();
     ~Kb();
-    int getkbcode();
+    int get();
 private:
-   input_event read();
+   input_event rd();
+
    int fd;
 };

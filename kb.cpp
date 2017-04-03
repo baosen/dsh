@@ -1,6 +1,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <cstring>
+#include <sstream>
 #include <iostream>
 #include "types.hpp"
 #include "kb.hpp"
@@ -9,7 +10,7 @@ using namespace std;
 namespace {
     // Maximum number of keyboard codes.
     const int NCODES = 255;
-    const char *path = "/dev/input/event0";
+    const char *path = "/dev/input/event1";
     const char *const state[3] = {
         "Released:",
         "Pressed:",
@@ -42,40 +43,36 @@ namespace {
 // Opens the keyboard file descriptor.
 Kb::Kb() {
     fd = ::open(path, O_RDONLY);
-    if (fd == -1) {
-        cerr << "Cannot open " << path << ": " << strerror(errno) << endl;
-        exit(1);
+    if (fd < 0) {
+        stringstream ss;
+        ss << "Cannot open " << path << ": " << strerror(errno) << endl;
+        throw err(ss.str());
     }
 }
 
 Kb::~Kb() {
-    if (::close(fd) == -1) {
-        cerr << "Cannot close " << path << ": " << strerror(errno) << endl;
-        exit(1);
+    if (::close(fd) < 0) {
+        stringstream ss;
+        ss << "Cannot close " << path << ": " << strerror(errno) << endl;
+        exit(errno); // TODO! What to do when you fail to handle destructor?
     }
 }
 
 // Reads the keyboard event that is returned by the operating system when the user interacts with the keyboard.
-input_event Kb::read() {
+input_event Kb::rd() {
     input_event e;
-    forever {
-        const ssize_t n = ::read(fd, &e, sizeof e);
-        // Check if it is a keyboard interrupt.
-        if (n == (ssize_t)(-1) && errno == EINTR)
-            break;
-        // Check if it is a key event, which should not happen at all.
-        else if (e.type == EV_KEY) {
-            errno = EIO;
-            break;
-        }
+    if (::read(fd, &e, sizeof e) < 0) {
+        stringstream ss;
+        ss << "Failed to read keyboard: " << strerror(errno) << endl;
+        throw err(ss.str());
     }
     return e;
 }
 
 // Get the pressed keyboard codes from the keyboard queue.
-int Kb::getkbcode() {
+int Kb::get() {
     // Reads the keyboard event from the keyboard.
-    const auto e = read();
+    const auto e = rd();
     // Print keyboard code if e is a key change.
     if (e.type == EV_KEY && 0 <= e.value && e.value <= 2)
         printf("%s 0x%04x (%d)\n", state[e.value], (int)(e.code), (int)(e.code));
