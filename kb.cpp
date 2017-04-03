@@ -9,13 +9,7 @@ using namespace std;
 
 namespace {
     // Maximum number of keyboard codes.
-    const int NCODES = 255;
-    const char *path = "/dev/input/event1";
-    const char *const state[3] = {
-        "Released:",
-        "Pressed:",
-        "Repeated:"
-    };
+    //const int NCODES = 255;
 
     // A conversion lookup-table converting a USB keyboard code to an ASCII character.
     //const char kbascii[NCODES] {
@@ -37,8 +31,10 @@ namespace {
     //};
 
     // Is Caps Lock on?
-    bool caps = false; 
+    //bool caps = false; 
 }
+
+static const char *path = "/dev/input/event1";
 
 // Opens the keyboard file descriptor.
 Kb::Kb() {
@@ -71,6 +67,13 @@ input_event Kb::rd() {
 
 // Get the pressed keyboard codes from the keyboard queue.
 int Kb::get() {
+    // Button state.
+    static const char *const state[3] = {
+        "Released:",
+        "Pressed:",
+        "Repeated:"
+    };
+
     // Reads the keyboard event from the keyboard.
     const auto e = rd();
     // Print keyboard code if e is a key change.
