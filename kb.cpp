@@ -46,6 +46,7 @@ Kb::Kb() {
     }
 }
 
+// Close the keyboard file descriptor.
 Kb::~Kb() {
     if (::close(fd) < 0) {
         stringstream ss;
