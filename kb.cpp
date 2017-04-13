@@ -4,6 +4,7 @@
 #include <sstream>
 #include <iostream>
 #include "types.hpp"
+#include "dbg.hpp"
 #include "kb.hpp"
 using namespace std;
 
@@ -74,12 +75,14 @@ int Kb::get() {
         "Pressed:",
         "Repeated:"
     };
-
     // Reads the keyboard event from the keyboard.
-    const auto e = rd();
+    input_event e;
+    do {
+        e = rd();
+        // Check if key change, and continue if not.
+    } while (e.type != EV_KEY || e.value < 0 || e.value > 2);
     // Print keyboard code if e is a key change.
-    if (e.type == EV_KEY && 0 <= e.value && e.value <= 2)
-        printf("%s 0x%04x (%d)\n", state[e.value], (int)(e.code), (int)(e.code));
+    DBGPRINTF("%s 0x%04x (%d)\n", state[e.value], (int)(e.code), (int)(e.code));
     // Returns the keyboard code read.
     return e.code;
 }
