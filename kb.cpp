@@ -57,7 +57,7 @@ int Kb::get() {
         // Check if key change, and continue if not.
     } while (e.type != EV_KEY || e.value < 0 || e.value > 2);
     // Print keyboard code if e is a key change.
-    DBGPRINTF("%s 0x%04x (%d)\n", state[e.value], (int)(e.code), (int)(e.code));
+    DBG("%s 0x%04x (%d)\n", state[e.value], (int)(e.code), (int)(e.code));
     // Returns the USB keyboard code read.
     return e.code;
 }
