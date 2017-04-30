@@ -6,7 +6,7 @@
 #include "m.hpp"
 using namespace std;
 
-// Open mouse input device file.
+// Open the "hacky" mouse input device file.
 M::M(const uint i) {
     stringstream ss;
     // Generic input using mouse* device file.
