@@ -10,7 +10,7 @@ using namespace std;
 
 // Is bit set?
 static constexpr bool bset(const char n, const ushort i) {
-    return !!(n & (1u << i));
+    return !!(n & (1 << i));
 }
 
 // Check if it is a mouse.
