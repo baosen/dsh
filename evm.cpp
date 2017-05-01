@@ -33,7 +33,7 @@ static bool ism(char b[EV_MAX]) {
     return key && rel;
 }
 
-// Find a mouse and open it.
+// Find a "event" mouse and open it.
 Evm::Evm() : ev(0) {
     // Check if input device given has mouse capabilities.
     char b[EV_MAX];

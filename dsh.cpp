@@ -168,10 +168,12 @@ static Pos topos(const M::Ev& e) {
 
 int main() {
     try {
-        M m(0);
-        Ev ev(0);
+        // Open devices.
+        M   m(0);
+        Ev  ev(0);
         Evm evm;
 
+        // Forever operate windows.
         forever {
             //const auto em = m.rd();
             const auto ee = ev.rd();

@@ -3,7 +3,7 @@
 
 template<T>
 void erase(std::list<T>& l, T val) {
-    l.erase(remove(begin(l), end(l), val), end(l);
+    l.erase(remove(begin(l), end(l), val), end(l));
 }
 
 template<class T>
