@@ -1,7 +1,3 @@
-#include <iostream>
-#include "types.hpp"
-#include "fb.hpp"
-#include "col.hpp"
 #include "wnd.hpp"
 #include "log.hpp"
 #include "m.hpp"
@@ -166,6 +162,7 @@ static Pos topos(const M::Ev& e) {
     return Pos(e.x, e.y);
 }
 
+// Server.
 int main() {
     try {
         // Open devices.
@@ -177,8 +174,6 @@ int main() {
         forever {
             //const auto em = m.rd();
             const auto ee = ev.rd();
-            //cout << "x: " << e.x << " y: " << e.y << endl;
-            cout << "hei!" << endl;
             // TODO: Get all windows in front.
             //wnd.click(topos(e));
             //draw();
