@@ -1,3 +1,5 @@
+// dsh: Shell for desktops.
+
 #include "wnd.hpp"
 #include "log.hpp"
 #include "m.hpp"
@@ -163,7 +165,11 @@ static Pos topos(const M::Ev& e) {
 }
 
 // Server.
-int main() {
+int main(const int argc, const char *argv[]) {
+    if (argc < 2) {
+        puts("TODO: error");
+        exit(EXIT_FAILURE);
+    }
     try {
         // Open devices.
         M   m(0);
