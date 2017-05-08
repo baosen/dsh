@@ -1,5 +1,4 @@
 // dsh: Shell for desktops.
-
 #include "wnd.hpp"
 #include "log.hpp"
 #include "m.hpp"
@@ -164,39 +163,62 @@ static Pos topos(const M::Ev& e) {
     return Pos(e.x, e.y);
 }
 
+namespace evm {
+    Evm e; // Event mouse device.
+
+    // Open mouse event device.
+    static bool init() {
+        return e.open(0);
+    }
+}
+
+namespace m {
+    M m; // "Hacky" mouse.
+
+    static bool init() {
+        return m.open(0);
+    }
+
+    // Returns user movement.
+    static Pos pos() {
+        return Pos(0, 0);
+    }
+}
+
+// Init mouse.
+bool (*minit[])() = {
+    &evm::init,
+    &m::init,
+};
+
+// Get mouse position.
+static Pos (*mpos[])() = {
+    &m::pos
+};
+
 // Server.
 int main(const int argc, const char *argv[]) {
+    // If argument provided.
     if (argc < 2) {
-        puts("TODO: error");
+        puts("Error.");
         exit(EXIT_FAILURE);
     }
     try {
-        Evm  evm; // Event mouse device.
-        bool ism = false;
-        M    m;   // "Hacky" mouse.
-
-        // Open mouse event device.
-        if (!evm.open()) {
-            // If failed, open "hacky" mouse device.
-            if (m.open())
-                ism = true;
-            else {
-                error("Failed to find mouse!");
-                return EXIT_FAILURE;
-            }
-        }
+        // Find and initialize an available mouse.
+        for (const auto& init : minit)
+            if (init())
+                break;
+        //error("Failed to find mouse!");
+        //return EXIT_FAILURE;
 
         // Listen and respond to window commands.
         forever {
-            if (ism)
-                const auto e = m.rd();
-            else
-                const auto e = evm.rd();
-            // TODO: Get all windows in front.
-            //wnd.click(topos(e));
-            //draw();
+            //if (ism)
+            //    const auto e = m.rd();
+            //else
+            //    const auto e = evm.rd();
         }
-        return 0;
+        return EXIT_SUCCESS;
     } catch (const int c) {
         die(c);
     } catch (const err& e) {

@@ -6,26 +6,37 @@
 #include "m.hpp"
 using namespace std;
 
+M::M() : fd(0) {}
+
 // Open the "hacky" mouse input device file.
 M::M(const uint i) {
-    stringstream ss;
-    // Generic input using mouse* device file.
-    ss << "/dev/input/mouse" << i;
-    if ((fd = ::open(ss.str().c_str(), O_RDONLY)) != -1)
+    if (open(i))
         return;
+    // Generic input using mouse* device file.
+    stringstream ss;
+    ss << "/dev/input/mouse" << i;
     string s(ss.str());
-    ss.str("");
     ss << "Cannot open " << s << ": " << strerror(errno);
     throw err(ss.str());
 }
 
 // Close mouse input device file.
 M::~M() {
+    // If empty "hacky" mouse.
+    if (fd == 0)
+        return;
     stringstream ss;
     if (::close(fd) == -1) {
         ss << "Cannot close mouse input device file: " << strerror(errno);
         die(ss.str().c_str());
     }
+}
+
+bool M::open(const uint i) {
+    // Generic input using mouse* device file.
+    stringstream ss;
+    ss << "/dev/input/mouse" << i;
+    return (fd = ::open(ss.str().c_str(), O_RDONLY)) != -1;
 }
 
 // Read mouse input from mouse device file.

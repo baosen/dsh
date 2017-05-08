@@ -24,10 +24,15 @@ public:
         bool left, right, mid; // Left, middle and right pressed or released mouse buttons.
     };
 
+    // Create a empty "hacky" mouse.
+    M();
     // Claims the ith mouse input device.    
     M(const uint i);
     // Releases the mouse input device.    
     ~M();
+
+    // Open.
+    bool open(const uint i);
 
     // Waits for mouse event and reads it.
     Ev rd();

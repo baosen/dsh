@@ -33,8 +33,12 @@ static bool ism(char b[EV_MAX]) {
     return key && rel;
 }
 
-// Find a "event" mouse and open it.
+// Open event mouse device.
 Evm::Evm() : ev(0) {
+}
+
+// Find a "event" mouse and open it.
+Evm::Evm(const uint i) : ev(i) {
     // Check if input device given has mouse capabilities.
     char b[EV_MAX];
     ev.evbits(b);
@@ -42,5 +46,11 @@ Evm::Evm() : ev(0) {
         throw err("No mouse capabilities in this event device.");
 }
 
-void Evm::rd() {
+// Open event mouse.
+bool Evm::open(const uint i) {
+    return false;
+}
+
+int Evm::rd() {
+    return 0;
 }
