@@ -171,15 +171,27 @@ int main(const int argc, const char *argv[]) {
         exit(EXIT_FAILURE);
     }
     try {
-        // Open devices.
-        M   m(0);
-        Ev  ev(0);
-        Evm evm;
+        Evm  evm; // Event mouse device.
+        bool ism = false;
+        M    m;   // "Hacky" mouse.
 
-        // Forever operate windows.
+        // Open mouse event device.
+        if (!evm.open()) {
+            // If failed, open "hacky" mouse device.
+            if (m.open())
+                ism = true;
+            else {
+                error("Failed to find mouse!");
+                return EXIT_FAILURE;
+            }
+        }
+
+        // Listen and respond to window commands.
         forever {
-            //const auto em = m.rd();
-            const auto ee = ev.rd();
+            if (ism)
+                const auto e = m.rd();
+            else
+                const auto e = evm.rd();
             // TODO: Get all windows in front.
             //wnd.click(topos(e));
             //draw();

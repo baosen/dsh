@@ -1,6 +1,6 @@
 #include "ev.hpp"
 
-// Mouse input device.
+// Mouse input from mouse event device.
 class Evm {
 public:
     // Open event device file for mouse.
