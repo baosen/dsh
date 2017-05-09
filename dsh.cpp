@@ -2,7 +2,9 @@
 #include "wnd.hpp"
 #include "log.hpp"
 #include "m.hpp"
+#include "kbsys.hpp"
 #include "evm.hpp"
+#include "msys.hpp"
 using namespace std;
 
 namespace {
@@ -163,39 +165,6 @@ static Pos topos(const M::Ev& e) {
     return Pos(e.x, e.y);
 }
 
-namespace evm {
-    Evm e; // Event mouse device.
-
-    // Open mouse event device.
-    static bool init() {
-        return e.open(0);
-    }
-}
-
-namespace m {
-    M m; // "Hacky" mouse.
-
-    static bool init() {
-        return m.open(0);
-    }
-
-    // Returns user movement.
-    static Pos pos() {
-        return Pos(0, 0);
-    }
-}
-
-// Init mouse.
-bool (*minit[])() = {
-    &evm::init,
-    &m::init,
-};
-
-// Get mouse position.
-static Pos (*mpos[])() = {
-    &m::pos
-};
-
 // Server.
 int main(const int argc, const char *argv[]) {
     // If argument provided.
@@ -204,19 +173,13 @@ int main(const int argc, const char *argv[]) {
         exit(EXIT_FAILURE);
     }
     try {
-        // Find and initialize an available mouse.
-        for (const auto& init : minit)
-            if (init())
-                break;
-        //error("Failed to find mouse!");
-        //return EXIT_FAILURE;
-
+        // Setup mouse.
+        initm();
+        // Setup keyboard.
+        initkb();
         // Listen and respond to window commands.
         forever {
-            //if (ism)
-            //    const auto e = m.rd();
-            //else
-            //    const auto e = evm.rd();
+            const auto pos = mcurpos();
         }
         return EXIT_SUCCESS;
     } catch (const int c) {
@@ -224,5 +187,5 @@ int main(const int argc, const char *argv[]) {
     } catch (const err& e) {
         error(e);
     }
-    return 1;
+    return EXIT_FAILURE;
 }

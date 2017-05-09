@@ -10,22 +10,28 @@ using namespace std;
 static const char *path = "/dev/input/event1";
 
 // Opens the keyboard file descriptor.
-Kb::Kb() {
+Kb::Kb() : fd(-1) {}
+
+// Close the keyboard file descriptor.
+Kb::~Kb() {
+    if (fd == -1)
+        return;
+    if (::close(fd) < 0) {
+        stringstream ss;
+        ss << "Cannot close " << path << ": " << strerror(errno) << endl;
+        exit(errno); // TODO! What to do when you fail to handle destructor?
+    }
+}
+
+// Open keyboard from file path.
+void Kb::open() {
     fd = ::open(path, O_RDONLY);
     if (fd < 0) {
         stringstream ss;
         ss << "Cannot open " << path << ": " << strerror(errno) << endl;
         throw err(ss.str());
     }
-}
-
-// Close the keyboard file descriptor.
-Kb::~Kb() {
-    if (::close(fd) < 0) {
-        stringstream ss;
-        ss << "Cannot close " << path << ": " << strerror(errno) << endl;
-        exit(errno); // TODO! What to do when you fail to handle destructor?
-    }
+    // TODO: Check if it is a keyboard.
 }
 
 // Reads the keyboard event that is returned by the operating system when the user interacts with the keyboard.

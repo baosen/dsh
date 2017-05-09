@@ -6,7 +6,8 @@
 #include "m.hpp"
 using namespace std;
 
-M::M() : fd(0) {}
+// Open an empty "hacky" mouse.
+M::M() : fd(-1) {}
 
 // Open the "hacky" mouse input device file.
 M::M(const uint i) {
@@ -23,7 +24,7 @@ M::M(const uint i) {
 // Close mouse input device file.
 M::~M() {
     // If empty "hacky" mouse.
-    if (fd == 0)
+    if (fd == -1)
         return;
     stringstream ss;
     if (::close(fd) == -1) {
@@ -32,6 +33,7 @@ M::~M() {
     }
 }
 
+// Open "hacky" mouse.
 bool M::open(const uint i) {
     // Generic input using mouse* device file.
     stringstream ss;

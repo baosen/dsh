@@ -6,7 +6,8 @@ class Kb {
 public:
     Kb();
     ~Kb();
-    int get();
+    void open();
+    int  get();
 private:
    input_event rd();
    int fd;

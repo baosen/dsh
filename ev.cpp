@@ -8,7 +8,7 @@
 using namespace std;
 
 // Open event device file.
-Ev::Ev(uint i) {
+Ev::Ev(const uint i) {
     stringstream ss;
     ss << "/dev/input/event" << i;
     if ((fd = ::open(ss.str().c_str(), O_RDONLY)) != -1)

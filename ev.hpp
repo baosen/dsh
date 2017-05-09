@@ -5,7 +5,7 @@
 class Ev {
 public:
     // Open event device file.
-    Ev(uint i);
+    Ev(const uint i);
 
     // Read from event file.
     input_event rd();
