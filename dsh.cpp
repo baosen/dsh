@@ -5,6 +5,7 @@
 #include "kbsys.hpp"
 #include "evm.hpp"
 #include "msys.hpp"
+#include "net.hpp"
 using namespace std;
 
 namespace {
@@ -165,6 +166,16 @@ static Pos topos(const M::Ev& e) {
     return Pos(e.x, e.y);
 }
 
+// Initialize window system.
+static void init() {
+    // Setup mouse.
+    initm();
+    // Setup keyboard.
+    initkb();
+    // Setup network.
+    initnet();
+}
+
 // Server.
 int main(const int argc, const char *argv[]) {
     // If argument provided.
@@ -173,10 +184,8 @@ int main(const int argc, const char *argv[]) {
         exit(EXIT_FAILURE);
     }
     try {
-        // Setup mouse.
-        initm();
-        // Setup keyboard.
-        initkb();
+        // Initialize window system.
+        init();
         // Listen and respond to window commands.
         forever {
             const auto pos = mcurpos();
