@@ -7,6 +7,9 @@
 #include "err.hpp"
 using namespace std;
 
+// Create empty event input device file.
+Ev::Ev() : fd(-2) {}
+
 // Open event device file.
 Ev::Ev(const uint i) {
     stringstream ss;
@@ -21,6 +24,8 @@ Ev::Ev(const uint i) {
 
 // Close event device file.
 Ev::~Ev() {
+    if (fd == -2)
+        return;
     stringstream ss;
     if (::close(fd) == -1) {
         ss << "Cannot close event device file: " << strerror(errno);

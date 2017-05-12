@@ -1,4 +1,5 @@
 // dsh: Shell for desktops.
+#include <cstring>
 #include "wnd.hpp"
 #include "log.hpp"
 #include "m.hpp"
@@ -12,8 +13,6 @@ namespace {
     Col GREEN = Col(0, 255, 0);
     Wnd w1(Rect(Pos(0, 0), Res(100, 100)));
     Wnd w2(Rect(Pos(100, 100), Res(100, 100)));
-
-    const char evtp[] = "/dev/input/event0"; // File path to the event-driven mouse device file.
 
     void draw() {
         w1.fill(GREEN);
@@ -166,6 +165,11 @@ static Pos topos(const M::Ev& e) {
     return Pos(e.x, e.y);
 }
 
+namespace {
+    // Enable network capabilities.
+    bool enable_net = false;
+}
+
 // Initialize window system.
 static void init() {
     // Setup mouse.
@@ -173,16 +177,17 @@ static void init() {
     // Setup keyboard.
     initkb();
     // Setup network.
-    initnet();
+    if (enable_net) {
+        //initnet();
+    }
 }
 
 // Server.
 int main(const int argc, const char *argv[]) {
     // If argument provided.
-    if (argc < 2) {
-        puts("Error.");
-        exit(EXIT_FAILURE);
-    }
+    for (int i = 1; i < argc; ++i)
+        if (!strcmp(argv[i], "-net"))
+            enable_net = true;
     try {
         // Initialize window system.
         init();

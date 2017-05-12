@@ -10,11 +10,11 @@ using namespace std;
 static const char *path = "/dev/input/event1";
 
 // Opens the keyboard file descriptor.
-Kb::Kb() : fd(-1) {}
+Kb::Kb() : fd(-2) {}
 
 // Close the keyboard file descriptor.
 Kb::~Kb() {
-    if (fd == -1)
+    if (fd == -2)
         return;
     if (::close(fd) < 0) {
         stringstream ss;

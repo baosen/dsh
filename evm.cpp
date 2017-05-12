@@ -34,8 +34,7 @@ static bool ism(char b[EV_MAX]) {
 }
 
 // Open event mouse device.
-Evm::Evm() : ev(0) {
-}
+Evm::Evm() {}
 
 // Find a "event" mouse and open it.
 Evm::Evm(const uint i) : ev(i) {

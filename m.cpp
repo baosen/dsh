@@ -7,7 +7,7 @@
 using namespace std;
 
 // Open an empty "hacky" mouse.
-M::M() : fd(-1) {}
+M::M() : fd(-2) {}
 
 // Open the "hacky" mouse input device file.
 M::M(const uint i) {
@@ -24,7 +24,7 @@ M::M(const uint i) {
 // Close mouse input device file.
 M::~M() {
     // If empty "hacky" mouse.
-    if (fd == -1)
+    if (fd == -2)
         return;
     stringstream ss;
     if (::close(fd) == -1) {
