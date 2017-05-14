@@ -4,7 +4,7 @@
 #include "col.hpp"
 #include "fb.hpp"
 
-// Rectangle in framebuffer.
+// Rectangle image in framebuffer.
 class Rect {
     Pos p; // Position.
     Res r; // Resolution.
@@ -21,4 +21,7 @@ public:
     uint   i()    const;
     // Returns the rectangle area size.
     size_t size() const;
+
+    // Resize rectangle image.
+    void resize(const uint w, const uint h);
 };

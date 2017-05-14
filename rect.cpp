@@ -31,3 +31,8 @@ void Rect::fill(const Col& c) const {
 size_t Rect::size() const {
     return r.h*r.w;
 }
+
+// Resize rectangle image.
+void Rect::resize(const uint w, const uint h) {
+    throw err("TODO: Not implemented yet...");
+}

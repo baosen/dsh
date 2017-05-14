@@ -31,6 +31,6 @@ private:
     // Save old position.
     void save();
 
-    Rect cur, // Current window.
-         old; // Old window.
+    Rect cur, // The image to draw on for the current window.
+         old; // Saved image of an old window.
 };
