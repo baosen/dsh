@@ -8,8 +8,7 @@ public:
         max,   // User wants to maximize window.
         min,   // User wants to minimize window.
         click, // User clicks somewhere on the window.
-        fill,  // User wants to fill window with a color.
-        text,  // User wants to texture a window. Sends a raw or compressed texture. User chooses driver.
+        copy,  // User wants to copy an existing rectangular image to a window. Sends a raw or compressed rectangle image. User chooses driver.
     };
     
     // Create null window.
@@ -24,9 +23,6 @@ public:
 
     // Click on window at position p.
     virtual void click(const Pos& p);
-
-    // Fill entire window with colour c.
-    void fill(const Col& c);
 private:
     // Save old position.
     void save();

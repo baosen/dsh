@@ -13,11 +13,6 @@ namespace {
     Col GREEN = Col(0, 255, 0);
     Wnd w1(Rect(Pos(0, 0), Res(100, 100)));
     Wnd w2(Rect(Pos(100, 100), Res(100, 100)));
-
-    void draw() {
-        w1.fill(GREEN);
-        w2.fill(GREEN);
-    }
 }
 
 /*

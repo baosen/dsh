@@ -23,11 +23,6 @@ void Wnd::save() {
     old = cur;
 }
 
-// Fill entire window with colour c.
-void Wnd::fill(const Col& c) {
-    cur.fill(c);
-}
-
 // Click on window at position p.
 void Wnd::click(const Pos& p) {
     // Is outside window rectangle?
