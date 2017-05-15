@@ -9,3 +9,6 @@ lsh
 
 Misc
 - Run dsh in its own account in user-space.
+
+Seats.
+- Multiple user and seats for a single computer.
