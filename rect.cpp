@@ -22,17 +22,19 @@ void Rect::fill(const Col& c) const {
     const auto pix = c.val(v.red.offset, v.green.offset, v.blue.offset);
     const auto s = p.x + (p.y * v.xres);
 
-    // Fill!
+    // Fill the rectangle in Linux framebuffer.
     for (size_t y = 0; y < r.h; ++y)
         for (size_t x = 0; x < r.w; ++x)
             fb.get32(s+x+(y*v.xres)) = pix;
 }
 
+// Get the size of the rectangle.
 size_t Rect::size() const {
     return r.h*r.w;
 }
 
 // Resize rectangle image.
 void Rect::resize(const uint w, const uint h) {
-    throw err("TODO: Not implemented yet...");
+    r.w = w;
+    r.h = h;
 }
