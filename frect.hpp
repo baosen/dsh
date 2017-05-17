@@ -5,6 +5,9 @@
 // The rectangle is stored as a file in the file system.
 class Frect : public Rect {
 public:
-    Frect();
+    Frect(const char *name);
     ~Frect();
+private:
+    int fd;           // File descriptor.
+    std::string name; // Name of the file for storing the rectangular image.
 };
