@@ -13,5 +13,5 @@ private:
 };
 
 namespace dsh {
-    void setcwd(const char* dir);
+    void setcwd(const string& dir);
 }

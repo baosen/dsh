@@ -187,22 +187,26 @@ static void init() {
 
 // Server.
 int main(const int argc, const char *argv[]) {
-    string dir;
-    // If argument provided.
-    for (int i = 1; i < argc; ++i) {
-        const auto s = argv[i];
-        if (!strcmp(s, "-net"))
-            neten = true;
-        if (!strcmp(s, "-dir"))
-            cin >> dir;
-        if (!strcmp(s, "-m")) // Set "hacky" mouse.
-            if (sscanf(s, "%d", &mousenum) < 0)
-                die("Invalid parameter.");
-        if (!strcmp(s, "-e")) // Set event device. Automatically detects type.
-            if (sscanf(s, "%d", &evm) < 0)
-                die("Invalid parameter.");
-    }
     try {
+        string dir;
+        // If argument provided.
+        for (int i = 1; i < argc; ++i) {
+            const auto s = argv[i];
+            if (!strcmp(s, "-net"))
+                neten = true;
+            if (!strcmp(s, "-dir")) {
+                cin >> dir;
+                dsh::setcwd(dir);
+            }
+            if (!strcmp(s, "-m")) // Set "hacky" mouse.
+                cin >> mousenum;
+                //if (sscanf(s, "%d", &mousenum) < 0)
+                //    die("Invalid parameter.");
+            if (!strcmp(s, "-e")) // Set event device. Automatically detects type.
+                cin >> evm;
+                //if (sscanf(s, "%d", &evm) < 0)
+                //    die("Invalid parameter.");
+        }
         // Initialize window system.
         init();
         // Listen and respond to window commands.

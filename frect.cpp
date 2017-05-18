@@ -12,7 +12,7 @@ namespace {
 }
 
 // Set current working directory for file rectangles.
-void dsh::setcwd(const char* dir) {
+void dsh::setcwd(const string& dir) {
     wd = string(dir);
 }
 
