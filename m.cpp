@@ -57,5 +57,5 @@ M::Ev M::rd() {
         ev.mid   = ((e[0] >> 2) & 1); // 3 bit is middle mouse button pressed?
         return ev;
     }
-    throw ("Error reading /dev/input/mouse0");
+    throw err("Error reading /dev/input/mouse0");
 }
