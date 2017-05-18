@@ -10,11 +10,9 @@ namespace {
     string wd; // Current working directory for file rectangles.
 }
 
-namespace dsh {
-    // Set current working directory for file rectangles.
-    void setcwd(const char* dir) {
-        wd = string(dir);
-    }
+// Set current working directory for file rectangles.
+void dsh::setcwd(const char* dir) {
+    wd = string(dir);
 }
 
 // Creates an empty rectangle in a file on the file system.

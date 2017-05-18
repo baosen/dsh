@@ -7,13 +7,15 @@
 #include "kbsys.hpp"
 #include "evm.hpp"
 #include "msys.hpp"
+#include "wsys.hpp"
 #include "net.hpp"
+#include "frect.hpp"
 using namespace std;
 
 namespace {
-    Col GREEN = Col(0, 255, 0);
-    Wnd w1(Rect(Pos(0, 0), Res(100, 100)));
-    Wnd w2(Rect(Pos(100, 100), Res(100, 100)));
+    //Col GREEN = Col(0, 255, 0);
+    //Wnd w1(Rect(Pos(0, 0), Res(100, 100)));
+    //Wnd w2(Rect(Pos(100, 100), Res(100, 100)));
 }
 
 /*
@@ -169,12 +171,14 @@ namespace {
         evm      = -1;
 }
 
-// Initialize window system.
+// Initialize shell.
 static void init() {
     // Setup mouse.
     initm();
     // Setup keyboard.
     initkb();
+    // Setup window.
+    initw();
     // Setup network.
     if (neten) {
         //initnet();
@@ -183,11 +187,14 @@ static void init() {
 
 // Server.
 int main(const int argc, const char *argv[]) {
+    string dir;
     // If argument provided.
     for (int i = 1; i < argc; ++i) {
         const auto s = argv[i];
         if (!strcmp(s, "-net"))
             neten = true;
+        if (!strcmp(s, "-dir"))
+            cin >> dir;
         if (!strcmp(s, "-m")) // Set "hacky" mouse.
             if (sscanf(s, "%d", &mousenum) < 0)
                 die("Invalid parameter.");

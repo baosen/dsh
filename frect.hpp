@@ -11,3 +11,7 @@ private:
     int fd;           // File descriptor.
     std::string name; // Name of the file for storing the rectangular image.
 };
+
+namespace dsh {
+    void setcwd(const char* dir);
+}
