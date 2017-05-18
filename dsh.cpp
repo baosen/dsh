@@ -189,10 +189,10 @@ int main(const int argc, const char *argv[]) {
         if (!strcmp(s, "-net"))
             neten = true;
         if (!strcmp(s, "-m")) // Set "hacky" mouse.
-            if (sscanf(s, "%d", &mousenum) < 0);
+            if (sscanf(s, "%d", &mousenum) < 0)
                 die("Invalid parameter.");
         if (!strcmp(s, "-e")) // Set event device. Automatically detects type.
-            if (sscanf(s, "%d", &evm) < 0);
+            if (sscanf(s, "%d", &evm) < 0)
                 die("Invalid parameter.");
     }
     try {

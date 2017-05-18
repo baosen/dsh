@@ -1,19 +1,19 @@
-#include "rect.hpp"
+#include "fbrect.hpp"
 #include "fb.hpp"
 
 // Create an empty rectangle in the framebuffer.
-Rect::Rect() {}
+Fbrect::Fbrect() {}
 
 // Create a rectangle in the framebuffer.
-Rect::Rect(const Pos& p, const Res& r) : p(p), r(r) {}
+Fbrect::Fbrect(const Pos& p, const Res& r) : p(p), r(r) {}
 
 // Computes the index of its position in the framebuffer.
-uint Rect::i() const {
+uint Fbrect::i() const {
     return p.i(r.w);
 }
 
 // Fill rectangle in framebuffer with the colour c.
-void Rect::fill(const Col& c) const {
+void Fbrect::fill(const Col& c) const {
     // Open framebuffer.
     Fb fb;
 
@@ -29,12 +29,12 @@ void Rect::fill(const Col& c) const {
 }
 
 // Get the size of the rectangle.
-size_t Rect::size() const {
+size_t Fbrect::size() const {
     return r.h*r.w;
 }
 
 // Resize rectangle image.
-void Rect::resize(const uint w, const uint h) {
+void Fbrect::resize(const uint w, const uint h) {
     r.w = w;
     r.h = h;
 }

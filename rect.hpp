@@ -4,24 +4,17 @@
 #include "col.hpp"
 #include "fb.hpp"
 
-// Rectangle image in framebuffer.
+// Rectangle interface.
 class Rect {
-    Pos p; // Position.
-    Res r; // Resolution.
-
-    friend class Wnd;
 public:
-    Rect();
-    Rect(const Pos& p, const Res& r);
-
     // Fill rectangle with colour.
-    void fill(const Col& c) const;
+    virtual void   fill(const Col& c) const = 0;
 
-    // Returns the index to its position in the framebuffer.
-    uint   i()    const;
+    // Returns the index to its position in the rectangle.
+    virtual uint   i()    const = 0;
     // Returns the rectangle area size.
-    size_t size() const;
+    virtual size_t size() const = 0;
 
     // Resize rectangle image.
-    void resize(const uint w, const uint h);
+    virtual void resize(const uint w, const uint h) = 0;
 };

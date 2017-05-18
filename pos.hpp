@@ -1,6 +1,7 @@
 #pragma once
 #include "types.hpp"
 
+// Position.
 class Pos {
 public:
     Pos();
@@ -10,6 +11,6 @@ public:
     const Pos& operator=(const Pos&);
 private:
     uint x, y;
-    friend class Rect;
+    friend class Fbrect;
     friend class Wnd;
 };

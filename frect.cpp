@@ -27,8 +27,10 @@ Frect::Frect(const char *name) {
 
 // Closes and removes the rectangle file.
 Frect::~Frect() {
+    // Close the file descriptor handle to the rectangular file.
     if (close(fd) == -1)
         throw err("Failed to close file.");
+    // Delete rectangular file.
     if (unlink((wd + this->name).c_str()) == -1)
         throw err("Faield to unlink file.");
 }
