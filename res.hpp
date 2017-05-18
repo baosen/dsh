@@ -1,8 +1,6 @@
 #pragma once
 #include "types.hpp"
 
-class Rect;
-
 class Res {
 public:
     Res();

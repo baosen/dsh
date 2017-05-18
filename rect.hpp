@@ -1,12 +1,11 @@
 #pragma once
-#include "pos.hpp"
-#include "res.hpp"
 #include "col.hpp"
-#include "fb.hpp"
+#include "types.hpp"
 
 // Rectangle interface.
 class Rect {
 public:
+    virtual ~Rect() {}
     // Fill rectangle with colour.
     virtual void   fill(const Col& c) const = 0;
 
