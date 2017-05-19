@@ -5,7 +5,6 @@
 // Rectangle interface.
 class Rect {
 public:
-    virtual ~Rect() {}
     // Fill rectangle with colour.
     virtual void   fill(const Col& c) const = 0;
 
@@ -16,4 +15,6 @@ public:
 
     // Resize rectangle image.
     virtual void resize(const uint w, const uint h) = 0;
+
+    virtual ~Rect() {}
 };

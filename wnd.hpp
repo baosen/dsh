@@ -1,4 +1,6 @@
+#include <memory>
 #include "frect.hpp"
+#include "pos.hpp"
 
 class Wnd {
 public:
@@ -13,7 +15,7 @@ public:
     // Create null window.
     Wnd();
     // Create and place the window.
-    Wnd(const Rect&);
+    Wnd(const Pos& p);
 
     // Maximize the window.
     void max();
@@ -26,6 +28,6 @@ private:
     // Save old position.
     void save();
 
-    Frect cur, // The image to draw on for the current window.
-          old; // Saved image of an old window.
+    std::shared_ptr<Rect> cur, // The image to draw on for the current window.
+                          old; // Saved image of an old window.
 };

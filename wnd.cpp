@@ -1,10 +1,15 @@
+#include "frect.hpp"
 #include "fb.hpp"
 #include "wnd.hpp"
+using namespace std;
 
-// Create new window.
-Wnd::Wnd(const Rect& r) : cur(r) {}
+// Create a new window.
+Wnd::Wnd(const Pos& p) {
+    if (dsh::iscwdset())
+        cur = shared_ptr<Frect>(new Frect(p));
+}
 
-// Create empty window.
+// Create an empty window.
 Wnd::Wnd() {}
 
 // Maximize the window.
@@ -15,7 +20,7 @@ void Wnd::max() {
 // Minimize the window.
 void Wnd::min() {
     save();
-    cur = Rect();
+    //cur = Rect();
 }
 
 // Save old rectangle.
@@ -26,6 +31,6 @@ void Wnd::save() {
 // Click on window at position p.
 void Wnd::click(const Pos& p) {
     // Is outside window rectangle?
-    if (p.x < cur.p.x || p.y < cur.p.y)
-        return;
+    //if (p.x < cur.p.x || p.y < cur.p.y)
+        //return;
 }
