@@ -1,6 +1,7 @@
 // dsh: Shell for desktops.
 #include <cstring>
 #include <cstdio>
+#include <linux/limits.h>
 #include "wnd.hpp"
 #include "log.hpp"
 #include "m.hpp"
@@ -194,10 +195,11 @@ int main(const int argc, const char *argv[]) {
             if (!strcmp(s, "-net"))
                 neten = true;
             if (!strcmp(s, "-dir")) {
-                char arr[256] = {0};
-                if (sscanf(s+5, "%s", arr) < 0)
+                char *path = nullptr;
+                if (sscanf(s+5, "%ms", &path) < 0) // m is part of POSIX 2008 (2013).
                     die("Invalid parameter.");
-                //dsh::setcwd(dir);
+                cout << path;
+                dsh::setcwd(path);
             }
             if (!strcmp(s, "-m")) // Set "hacky" mouse.
                 if (sscanf(s, "%d", &mousenum) < 0)

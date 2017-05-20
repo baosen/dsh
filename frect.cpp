@@ -13,7 +13,7 @@ namespace {
 
 // Set current working directory for file rectangles.
 void dsh::setcwd(const string& dir) {
-    wd = string(dir);
+    wd = dir;
 }
 
 // Check if current working directory is set.
