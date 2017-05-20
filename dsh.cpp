@@ -1,15 +1,9 @@
 // dsh: Shell for desktops.
-#include <cstdio>
 #include "parse.hpp"
 #include "init.hpp"
 #include "msys.hpp"
 #include "log.hpp"
-#include "wnd.hpp"
 #include "m.hpp"
-#include "evm.hpp"
-#include "net.hpp"
-#include "frect.hpp"
-using namespace std;
 
 namespace {
     //Col GREEN = Col(0, 255, 0);
