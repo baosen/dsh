@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "fio.hpp"
 #include "rect.hpp"
 #include "pos.hpp"
 
@@ -25,6 +26,6 @@ public:
 
     virtual ~Frect();
 private:
-    int fd;           // File descriptor.
-    std::string name; // Name of the file for storing the rectangular image.
+    int         fd; // File descriptor.
+    std::string name;
 };

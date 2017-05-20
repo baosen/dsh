@@ -1,4 +1,5 @@
 #include <memory>
+#include <string>
 #include "frect.hpp"
 #include "pos.hpp"
 
@@ -16,6 +17,8 @@ public:
     Wnd();
     // Create and place the window.
     Wnd(const Pos& p);
+    // Create window file.
+    Wnd(const string& name_);
 
     // Maximize the window.
     void max();
@@ -24,10 +27,16 @@ public:
 
     // Click on window at position p.
     virtual void click(const Pos& p);
+
+    // Destroy the window.
+    ~Wnd();
 private:
     // Save old position.
     void save();
 
     std::shared_ptr<Rect> cur, // The image to draw on for the current window.
                           old; // Saved image of an old window.
+
+    int fd;           // File descriptor.
+    std::string name; // Name of the file for storing the rectangular image.
 };

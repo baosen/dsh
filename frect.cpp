@@ -1,8 +1,4 @@
 #include <string>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <fcntl.h>
 #include "wd.hpp"
 #include "frect.hpp"
 #include "log.hpp"
@@ -10,11 +6,12 @@ using namespace std;
 
 // Creates an empty rectangle in a file specified in the file system.
 Frect::Frect(const string& name_) {
-    fd = ::open((dsh::wd+name_).c_str(), O_CREAT);
+    fd = ::open((dsh::wd+"/rect/"+name_).c_str(), O_CREAT);
     if (fd == -1)
         throw err("Invalid name.");
-    this->name = name; 
+    this->name = name_; 
 }
+
 // Accepts a pointer to a C string.
 Frect::Frect(const char *name) : Frect(string(name)) {}
 
@@ -31,9 +28,6 @@ Frect::~Frect() {
     // Close the file descriptor handle to the rectangular file.
     if (close(fd) == -1)
         error("Failed to close file.");
-    // Delete rectangular file.
-    if (unlink((dsh::wd + this->name).c_str()) == -1)
-        error("Faield to unlink file.");
 }
 
 // Fill rectangle with colour.

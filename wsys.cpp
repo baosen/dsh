@@ -4,7 +4,7 @@
 #include "rect.hpp"
 
 namespace {
-    Rect *r;
+    // Wnd
 }
 
 // Initialize and setup window system.
