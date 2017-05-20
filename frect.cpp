@@ -1,27 +1,28 @@
 #include <string>
+#include <sstream>
 #include "wd.hpp"
 #include "frect.hpp"
 #include "log.hpp"
 using namespace std;
 
-// Creates an empty rectangle in a file specified in the file system.
-Frect::Frect(const string& name_) {
-    fd = ::open((dsh::wd+"/rect/"+name_).c_str(), O_CREAT);
-    if (fd == -1)
-        throw err("Invalid name.");
-    this->name = name_; 
+// Creates an empty rectangle in a file specified before-hand.
+Frect::Frect() {
+    if (dsh::iscwdset()) {
+        static uint index = 0;
+        stringstream ss;
+        ss << "rect" << index;
+        fd = ::open(ss.str().c_str(), O_CREAT);
+        if (fd == -1)
+            throw err("Invalid name.");
+        this->name = ss.str(); 
+    }
+    throw err("Working directory is not set.");
 }
-
-// Accepts a pointer to a C string.
-Frect::Frect(const char *name) : Frect(string(name)) {}
 
 // Creates an empty rectangle positioned at p in a file specified before-hand.
-Frect::Frect(const Pos& p) : Frect(dsh::wd) {
+Frect::Frect(const Pos& p) : Frect() {
     throw err("TODO");
 }
-
-// Creates an empty rectangle in a file specified before-hand.
-Frect::Frect() : Frect(dsh::wd) {}
 
 // Closes and removes the rectangle file.
 Frect::~Frect() {

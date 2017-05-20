@@ -8,10 +8,8 @@
 // The rectangle is stored as a file in the file system.
 class Frect : public Rect {
 public:
-    Frect(const std::string& name);
-    Frect(const char *name);
-    Frect(const Pos& p);
     Frect();
+    Frect(const Pos& p);
 
     // Fill rectangle with colour.
     virtual void   fill(const Col& c) const;

@@ -1,3 +1,4 @@
+#include <sstream>
 #include "fio.hpp"
 #include "frect.hpp"
 #include "fb.hpp"
@@ -12,17 +13,19 @@ Wnd::Wnd(const Pos& p) {
 }
 
 // Create an empty window.
-Wnd::Wnd(const string& name_) {
+Wnd::Wnd() {
     if (dsh::iscwdset()) {
-        fd = ::open((dsh::wd+"/wnd/"+name_).c_str(), O_CREAT);
+        // Create wnd0, wnd1, wnd2 ... wndN files.
+        static uint index = 0;
+        stringstream ss;
+        ss << dsh::wd << "/wnd" << index;
+        fd = ::open(ss.str().c_str(), O_CREAT); 
         if (fd == -1)
             throw err("Invalid name.");
-        this->name = name; 
+        this->name = ss.str(); 
+        ++index;
     }
-}
-
-// Create null window.
-Wnd::Wnd() : fd(-2) {
+    throw err("Working directory is not set!");
 }
 
 // Destroy the window.
