@@ -1,6 +1,7 @@
 #include "frect.hpp"
 #include "fb.hpp"
 #include "wnd.hpp"
+#include "wd.hpp"
 using namespace std;
 
 // Create a new window.

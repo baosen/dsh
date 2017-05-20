@@ -3,27 +3,14 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include "wd.hpp"
 #include "frect.hpp"
 #include "log.hpp"
 using namespace std;
 
-namespace {
-    string wd; // Current working directory for file rectangles.
-}
-
-// Set current working directory for file rectangles.
-void dsh::setcwd(const string& dir) {
-    wd = dir;
-}
-
-// Check if current working directory is set.
-bool dsh::iscwdset() {
-    return !wd.size();
-}
-
 // Creates an empty rectangle in a file specified in the file system.
 Frect::Frect(const string& name_) {
-    fd = ::open((wd+name_).c_str(), O_CREAT);
+    fd = ::open((dsh::wd+name_).c_str(), O_CREAT);
     if (fd == -1)
         throw err("Invalid name.");
     this->name = name; 
@@ -32,11 +19,12 @@ Frect::Frect(const string& name_) {
 Frect::Frect(const char *name) : Frect(string(name)) {}
 
 // Creates an empty rectangle positioned at p in a file specified before-hand.
-Frect::Frect(const Pos& p) : Frect(wd) {
+Frect::Frect(const Pos& p) : Frect(dsh::wd) {
+    throw err("TODO");
 }
 
 // Creates an empty rectangle in a file specified before-hand.
-Frect::Frect() : Frect(wd) {}
+Frect::Frect() : Frect(dsh::wd) {}
 
 // Closes and removes the rectangle file.
 Frect::~Frect() {
@@ -44,7 +32,7 @@ Frect::~Frect() {
     if (close(fd) == -1)
         error("Failed to close file.");
     // Delete rectangular file.
-    if (unlink((wd + this->name).c_str()) == -1)
+    if (unlink((dsh::wd + this->name).c_str()) == -1)
         error("Faield to unlink file.");
 }
 

@@ -1,6 +1,7 @@
 // dsh: Shell for desktops.
 #include <cstring>
 #include <cstdio>
+#include "wd.hpp"
 #include "wnd.hpp"
 #include "log.hpp"
 #include "m.hpp"
@@ -192,7 +193,7 @@ int main(const int argc, const char *argv[]) {
                 char *path = nullptr;
                 if (sscanf(s+5, "%ms", &path) < 0) // m is part of POSIX 2008 (2013).
                     die("Invalid parameter.");
-                dsh::setcwd(path);
+                dsh::wd = path;
             }
             // Set which "hacky" mouse to use.
             if (!strcmp(s, "-m")) 
