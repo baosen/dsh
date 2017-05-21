@@ -1,14 +1,22 @@
 #include <cassert>
 #include "kb.hpp"
 
-// Test keyboard functions.
-static bool kbtest() {
-    Kb kb;
-    for (;;)
-        kb.get();
+namespace {
+    // Test keyboard functions.
+    bool kbtest() {
+        Kb kb;
+        for (;;)
+            kb.get();
+    }
+    
+    // Test mouse functions.
+    bool mtest() {
+        return false;
+    }
 }
 
 // Run test cases.
 void test() {
     assert(kbtest());
+    assert(mtest());
 }

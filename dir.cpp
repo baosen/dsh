@@ -10,9 +10,9 @@ using namespace std;
 // List files in directory.
 vector<string> lsdir(const char *name) 
 {
-    vector<string> dirs;
-    DIR           *dir; // directory.
-    struct dirent *e;   // directory entry.
+    vector<string> dirs; // directories.
+    DIR           *dir;  // directory.
+    struct dirent *e;    // directory entry.
     // Open directory.
     if (!(dir = opendir(name)))
         throw err("Invalid directory name.");
