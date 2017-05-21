@@ -8,12 +8,12 @@
 using namespace std;
 
 // Create a new window.
-Wnd::Wnd(const Pos& p) {
-    throw err("TODO!");
+Wnd::Wnd(const Pos& p) : Wnd() {
+    cur = shared_ptr<Frect>(new Frect());
 }
 
 // Create an empty window.
-Wnd::Wnd() {
+Wnd::Wnd() : cur(nullptr) {
     if (dsh::iscwdset()) {
         // Create wnd0, wnd1, wnd2 ... wndN files.
         static uint index = 0;
@@ -24,6 +24,7 @@ Wnd::Wnd() {
             throw err("Invalid name.");
         this->name = ss.str(); 
         ++index;
+        return;
     }
     throw err("Working directory is not set!");
 }
