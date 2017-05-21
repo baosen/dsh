@@ -1,6 +1,5 @@
 #include <sstream>
-#include <unistd.h>
-#include <fcntl.h>
+#include "fio.hpp"
 #include "zero.hpp"
 #include "log.hpp"
 #include "m.hpp"
