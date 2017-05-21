@@ -3,8 +3,9 @@ SRC    = dsh.cpp m.cpp wnd.cpp col.cpp pos.cpp fb.cpp scr.cpp log.cpp res.cpp ev
 DEFS   = DEBUG
 
 all:
-	g++ $(CFLAGS) -D$(DEFS) $(SRC)
+	@g++ $(CFLAGS) -D$(DEFS) $(SRC)
 
 clean:
+	a.out
 
 .PHONY: all clean
