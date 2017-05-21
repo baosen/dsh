@@ -1,7 +1,6 @@
-#include <unistd.h>
-#include <fcntl.h>
 #include <cstring>
 #include <sstream>
+#include "fio.hpp"
 #include "types.hpp"
 #include "dbg.hpp"
 #include "kb.hpp"
