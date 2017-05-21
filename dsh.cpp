@@ -4,6 +4,7 @@
 #include "msys.hpp"
 #include "log.hpp"
 #include "m.hpp"
+#include "run.hpp"
 
 #ifdef DEBUG
 #   include "wd.hpp"
@@ -175,6 +176,8 @@ int main(const int argc, const char *argv[]) {
         init();
         // Listen and respond to window commands.
         forever {
+            // First program ran used to load and execute other programs.
+            Run r;
             const auto pos = mcurpos();
         }
         return EXIT_SUCCESS;

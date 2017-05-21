@@ -24,16 +24,19 @@ public:
     void min();
 
     // Click on window at position p.
-    virtual void click(const Pos& p);
+    virtual void click(const Pos& p) = 0;
 
     // Destroy the window.
     ~Wnd();
+
+protected:
+    std::shared_ptr<Rect> cur; // The image to draw on for the current window.
+
 private:
     // Save old position.
     void save();
 
-    std::shared_ptr<Rect> cur, // The image to draw on for the current window.
-                          old; // Saved image of an old window.
+    std::shared_ptr<Rect> old; // Saved image of an old window.
 
     int fd;           // File descriptor.
     std::string name; // Name of the file for storing the rectangular image.

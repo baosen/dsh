@@ -1,5 +1,6 @@
 #include "pos.hpp"
 
+// Create blank position positioned at (0, 0).
 Pos::Pos() : x(0), y(0) {}
 
 Pos::Pos(const uint x, const uint y)

@@ -51,10 +51,3 @@ void Wnd::min() {
 void Wnd::save() {
     old = cur;
 }
-
-// Click on window at position p.
-void Wnd::click(const Pos& p) {
-    // Is outside window rectangle?
-    //if (p.x < cur.p.x || p.y < cur.p.y)
-        //return;
-}
