@@ -3,6 +3,7 @@
 #include "frect.hpp"
 #include "pos.hpp"
 
+// Window.
 class Wnd {
 public:
     // Protocol opcodes.
@@ -30,14 +31,15 @@ public:
     ~Wnd();
 
 protected:
-    std::shared_ptr<Rect> cur; // The image to draw on for the current window.
+    Pos cur, // Current position.
+        old; // Old position.
 
 private:
     // Save old position.
     void save();
 
-    std::shared_ptr<Rect> old; // Saved image of an old window.
+    std::shared_ptr<Rect> rect; // The rectangular image to draw on for the current window.
 
-    int fd;           // File descriptor.
-    std::string name; // Name of the file for storing the rectangular image.
+    int                   fd;   // File descriptor.
+    std::string           name; // Name of the file for storing the rectangular image.
 };

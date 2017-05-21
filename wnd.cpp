@@ -9,11 +9,11 @@ using namespace std;
 
 // Create a new window.
 Wnd::Wnd(const Pos& p) : Wnd() {
-    cur = shared_ptr<Frect>(new Frect());
+    rect = shared_ptr<Frect>(new Frect());
 }
 
 // Create an empty window.
-Wnd::Wnd() : cur(nullptr) {
+Wnd::Wnd() : rect(nullptr) {
     if (dsh::iscwdset()) {
         // Create wnd0, wnd1, wnd2 ... wndN files.
         static uint index = 0;
@@ -39,12 +39,13 @@ Wnd::~Wnd() {
 // Maximize the window.
 void Wnd::max() {
     save();
+    // TODO!
 }
 
 // Minimize the window.
 void Wnd::min() {
     save();
-    //cur = Rect();
+    // TODO!
 }
 
 // Save old rectangle.
