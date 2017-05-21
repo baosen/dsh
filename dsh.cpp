@@ -5,6 +5,10 @@
 #include "log.hpp"
 #include "m.hpp"
 
+#ifdef DEBUG
+#   include "wd.hpp"
+#endif
+
 namespace {
     //Col GREEN = Col(0, 255, 0);
     //Wnd w1(Rect(Pos(0, 0), Res(100, 100)));
@@ -162,9 +166,10 @@ int main(const int argc, const char *argv[]) {
         // Parse arguments.
         parse(argc, argv);
 
-        // DEBUG.
-        exit(EXIT_FAILURE); // DEBUG.
-        // DEBUG.
+#ifdef DEBUG
+        dsh::wd = "./dsh/";
+        exit(EXIT_FAILURE);
+#endif
 
         // Initialize window system.
         init();

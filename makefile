@@ -1,8 +1,9 @@
 CFLAGS = -std=c++17 -O3 -Wall -Wextra
-SRC    = btn.cpp col.cpp drm.cpp dsh.cpp fb.cpp ft.cpp kb.cpp log.cpp mouse.cpp open.cpp path.cpp pos.cpp rect.cpp res.cpp scr.cpp wnd.cpp
+SRC    = dsh.cpp m.cpp wnd.cpp col.cpp pos.cpp fb.cpp scr.cpp log.cpp res.cpp ev.cpp evm.cpp msys.cpp kbsys.cpp kb.cpp wsys.cpp frect.cpp wd.cpp parse.cpp init.cpp
+DEFS   = DEBUG
 
 all:
-	g++ $(CFLAGS) mrd.cpp in.cpp mouse.cpp log.cpp
+	g++ $(CFLAGS) -D$(DEFS) $(SRC)
 
 clean:
 

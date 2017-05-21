@@ -49,7 +49,7 @@ MPosFunc mcurpos = nullptr;
 // Initialize and setup mouse.
 void initm() {
     // Find and initialize an available mouse.
-    for (int i = 0; i < sizeof(minit); ++i) {
+    for (uint i = 0; i < sizeof(minit); ++i) {
         if (minit[i]()) {
             mcurpos = mpos[i];
             break;

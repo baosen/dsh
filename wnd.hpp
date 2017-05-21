@@ -17,8 +17,6 @@ public:
     Wnd();
     // Create and place the window.
     Wnd(const Pos& p);
-    // Create window file.
-    Wnd(const string& name_);
 
     // Maximize the window.
     void max();

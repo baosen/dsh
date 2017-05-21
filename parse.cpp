@@ -9,7 +9,7 @@ namespace {
 }
 
 // Parse the arguments provided by the user.
-static void parse(const int argc, const char *argv[]) {
+void parse(const int argc, const char *argv[]) {
     // If argument provided.
     for (int i = 1; i < argc; ++i) {
         const auto s = argv[i];
