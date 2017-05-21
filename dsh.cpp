@@ -174,11 +174,9 @@ int main(const int argc, const char *argv[]) {
 
         // Initialize window system.
         init();
-        // Listen and respond to window commands.
+        // Listen as a server and respond to window commands from clients.
         forever {
-            // First program ran used to load and execute other programs.
-            Run r;
-            const auto pos = mcurpos();
+            //const auto pos = mcurpos();
         }
         return EXIT_SUCCESS;
     } catch (const int c) {

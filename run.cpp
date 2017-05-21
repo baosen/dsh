@@ -6,3 +6,9 @@ void Run::click(const Pos& p) {
     if (p.x < cur.x || p.y < cur.y)
         return;
 }
+
+// run: Run program.
+int main() {
+    // First program ran used to load and execute other programs.
+    Run r;
+}
