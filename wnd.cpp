@@ -36,6 +36,10 @@ Wnd::~Wnd() {
         error("Failed to unlink file.");
 }
 
+// Drive the window and handle window events.
+void Wnd::run() {
+}
+
 // Maximize the window.
 void Wnd::max() {
     save();

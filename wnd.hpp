@@ -6,7 +6,7 @@
 // Window.
 class Wnd {
 public:
-    // Protocol opcodes.
+    // Window protocol opcodes.
     enum class Op : s8 {
         max,   // User wants to maximize window.
         min,   // User wants to minimize window.
@@ -19,6 +19,9 @@ public:
     // Create and place the window.
     Wnd(const Pos& p);
 
+    // Drive the window and handle window events.
+    void run();
+
     // Maximize the window.
     void max();
     // Minimize the window.
@@ -28,7 +31,7 @@ public:
     virtual void click(const Pos& p) = 0;
 
     // Destroy the window.
-    ~Wnd();
+    virtual ~Wnd();
 
 protected:
     Pos cur, // Current position.
