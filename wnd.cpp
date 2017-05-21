@@ -31,6 +31,10 @@ Wnd::Wnd() : rect(nullptr) {
 
 // Destroy the window.
 Wnd::~Wnd() {
+    // Close the file descriptor handle to the rectangular file.
+    if (close(fd) == -1)
+        error("Failed to close file.");
+        // TODO: Return now?
     // Delete window file.
     if (unlink((dsh::wd + this->name).c_str()) == -1)
         error("Failed to unlink file.");

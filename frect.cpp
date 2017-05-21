@@ -29,6 +29,7 @@ Frect::~Frect() {
     // Close the file descriptor handle to the rectangular file.
     if (close(fd) == -1)
         error("Failed to close file.");
+    // TODO: Delete file?
 }
 
 // Fill rectangle with colour.
