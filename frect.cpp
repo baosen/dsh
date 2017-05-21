@@ -10,7 +10,7 @@ Frect::Frect() {
     if (dsh::iscwdset()) {
         static uint index = 0;
         stringstream ss;
-        ss << "rect" << index;
+        ss << dsh::wd << "rect" << index;
         fd = ::open(ss.str().c_str(), O_CREAT);
         if (fd == -1)
             throw err("Invalid name.");
