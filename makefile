@@ -6,6 +6,6 @@ all:
 	@g++ $(CFLAGS) -D$(DEFS) $(SRC)
 
 clean:
-	a.out
+	@rm -rf a.out
 
 .PHONY: all clean
