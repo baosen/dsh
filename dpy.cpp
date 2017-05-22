@@ -5,9 +5,17 @@
 
 // Open a display directory specified by the given path.
 Dpy::Dpy(const char* path) {
-    fd = ::open(path, O_DIRECTORY); 
-    if (fd == -1)
+    fd = ::mkdir(path, 0600); 
+    switch (fd) {
+    case ENOSPC:
+        throw err("Not enough space available!");
+    case EROFS:
+        throw err("Path is read-only!");
+    case -1:
+    default:
         throw err("Failed to open display file!");
+        // TODO: Also throw errno.
+    }
 }
 
 // Disconnect from the display.
