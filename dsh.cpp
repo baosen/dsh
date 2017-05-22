@@ -10,12 +10,6 @@
 #   include "wd.hpp"
 #endif
 
-namespace {
-    //Col GREEN = Col(0, 255, 0);
-    //Wnd w1(Rect(Pos(0, 0), Res(100, 100)));
-    //Wnd w2(Rect(Pos(100, 100), Res(100, 100)));
-}
-
 /*
 // Mouse button press or release.
 static void key(In::Ev& ev, input_event& e) {
@@ -115,51 +109,7 @@ static bool fill(deque<In::Ev>& d, input_event& e) {
              }
     }
 }
-
-int main2() {
-    Ms m(0);
-    forever {
-        const auto q = m.rd();
-        for (const auto& e : q) {
-            switch (e.type.m) {
-            case In::MType::Left:
-                cout << (e.val.min.left ? "left pressed!" : "left released!") << endl;
-                break;
-            case In::MType::Right:
-                cout << (e.val.min.right ? "right pressed!" : "right released!") << endl;
-                break;
-            case In::MType::Mid:
-                cout << (e.val.min.mid ? "middle pressed!" : "middle released!") << endl;
-                break;
-            case In::MType::Wheel:
-                switch (e.val.min.wheel) {
-                case In::Scr::UP:   // Scroll upwards.
-                    cout << "Upward scroll!" << endl;
-                    break;
-                case In::Scr::DOWN: // Scroll downwards.
-                    cout << "Downward scroll!" << endl;
-                    break;
-                }  
-                break;
-            case In::MType::X:
-                cout << "x: " << e.val.min.x << endl;
-                break;
-            case In::MType::Y:
-                cout << "y: " << e.val.min.y << endl;
-                break;
-            default:
-                break;
-            }
-        }
-    }
-    return 0;
-}
 */
-
-// Convert "hacky" mouse event to position.
-static Pos topos(const M::Ev& e) {
-    return Pos(e.x, e.y);
-}
 
 // Server.
 int main(const int argc, const char *argv[]) {
