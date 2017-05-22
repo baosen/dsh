@@ -5,9 +5,9 @@
 class Dpy {
 public:
     // Open a display directory specified by the given path.
-    Dpy(const char* path);
+    Dpy(const std::string& path);
     // Close display.
     ~Dpy();
 private:
-    int fd;
+    std::string dirpath; // Path to directory.
 };

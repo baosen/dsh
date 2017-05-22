@@ -1,26 +1,18 @@
+#include <boost/filesystem.hpp>
 #include "err.hpp"
 #include "log.hpp"
 #include "fio.hpp"
 #include "dpy.hpp"
+using namespace std;
+using namespace boost::filesystem;
 
 // Open a display directory specified by the given path.
-Dpy::Dpy(const char* path) {
-    fd = ::mkdir(path, 0600); 
-    switch (fd) {
-    case ENOSPC:
-        throw err("Not enough space available!");
-    case EROFS:
-        throw err("Path is read-only!");
-    case -1:
-    default:
-        throw err("Failed to open display file!");
-        // TODO: Also throw errno.
-    }
+Dpy::Dpy(const string& path) {
+    create_directory(path);
+    dirpath = path;
 }
 
 // Disconnect from the display.
 Dpy::~Dpy() {
-    // Close the file descriptor handle to the rectangular file.
-    if (close(fd) == -1)
-        error("Failed to close file.");
+    remove_all(dirpath);
 }
