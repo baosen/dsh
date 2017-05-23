@@ -1,13 +1,7 @@
-dsh
-- programs for desktop.
-
 Hotkeys:
-- CTRL+R for open.
+- "Super"-key to open RUN-program.
 
-lsh
-- programs for laptops.
-
-Misc
+Arch:
 - Run dsh in its own account in user-space.
 
 Seats.
