@@ -1,5 +1,6 @@
 #include <cassert>
 #include "kb.hpp"
+#include "dpy.hpp"
 
 namespace {
     // Test keyboard functions.
@@ -13,10 +14,15 @@ namespace {
     bool mtest() {
         return false;
     }
+
+    void dpytest() {
+        Dpy d("./dsh/");
+    }
 }
 
 // Run test cases.
-void test() {
-    assert(kbtest());
-    assert(mtest());
+int main() {
+    dpytest();
+    //assert(kbtest());
+    //assert(mtest());
 }
