@@ -71,16 +71,21 @@ static int dpy_read(const char *path, char *buf, size_t size, off_t offset, stru
     return size;
 }
 
+// Control display.
+static int dpy_ioctl(const char *buf, int cmd, void *arg, struct fuse_file_info *fi, unsigned int flags, void *data)
+{
+}
+
 // File system operations.
 static struct fuse_operations ops = {
-    .init    = dpy_init,     // Initialize.
-    .getattr = dpy_getattr,  // Get attributes.
-    .open    = dpy_open,     // Open display to be worked upon.
-    .read    = dpy_read,     // Read display's contents.
-    .ioctl   = NULL,         // Do I/O control command.
+    .init    = dpy_init,    // Initialize.
+    .getattr = dpy_getattr, // Get attributes.
+    .open    = dpy_open,    // Open display to be worked upon.
+    .read    = dpy_read,    // Read display's contents.
+    .ioctl   = dpy_ioctl,   // Control display.
 };
 
-/* file-system driver for displays. */
+// File system driver for displays.
 int main(int argc, char *argv[])
 {
     // Initialize FUSE arguments.
