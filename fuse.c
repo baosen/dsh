@@ -12,7 +12,7 @@ static struct options {
     /* points to malloc'ed memory. FUSE will call free() on them after usage */
     const char *filename; 
     const char *contents;
-    /* To show usage. */
+    /* To print usage information. */
     int usage;
 } options;
 
@@ -26,11 +26,13 @@ static const struct fuse_opt option_spec[] = {
     FUSE_OPT_END
 };
 
+// Display init.
 static void *dpy_init(struct fuse_conn_info *conn)
 {
     return NULL;
 }
 
+// Get file attributes of display.
 static int dpy_getattr(const char *path, struct stat *stbuf)
 {
     int res = 0;
@@ -46,16 +48,17 @@ static int dpy_getattr(const char *path, struct stat *stbuf)
         res = -ENOENT;
     return res;
 }
-static int dpy_readdir(const char *path, void *buf, fuse_fill_dir_t filldir, off_t offset, struct fuse_file_info *fi)
+static int dpy_readdir(const char *path, void *buf, fuse_fill_dir_t fill, off_t offset, struct fuse_file_info *fi)
 {
-    if (strcmp(path, "/") != 0)
-        return -ENOENT;
-    filldir(buf, ".", NULL, 0);
-    filldir(buf, "..", NULL, 0);
-    filldir(buf, options.filename, NULL, 0);
+    if (!strcmp(path, "/"))
+        return -ENOENT; // No directory entry.
+    fill(buf, ".", NULL, 0);
+    fill(buf, "..", NULL, 0);
+    fill(buf, options.filename, NULL, 0);
     return 0;
 }
 
+// Open display.
 static int dpy_open(const char *path, struct fuse_file_info *fi)
 {
     if (strcmp(path+1, options.filename) != 0)
@@ -65,11 +68,11 @@ static int dpy_open(const char *path, struct fuse_file_info *fi)
     return 0;
 }
 
+// Read display's contents.
 static int dpy_read(const char *path, char *buf, size_t size, off_t offset, struct fuse_file_info *fi)
 {
     size_t len;
-    (void) fi;
-    if(strcmp(path+1, options.filename) != 0)
+    if (strcmp(path+1, options.filename) != 0)
         return -ENOENT;
     len = strlen(options.contents);
     if (offset < len) {
@@ -81,35 +84,36 @@ static int dpy_read(const char *path, char *buf, size_t size, off_t offset, stru
     return size;
 }
 
-/* file system operations */
+// File system operations.
 static struct fuse_operations ops = {
-    .init    = dpy_init,
-    .getattr = dpy_getattr,
-    .readdir = dpy_readdir,
-    .open    = dpy_open,
-    .read    = dpy_read,
+    .init    = dpy_init,     // Initialize.
+    .getattr = dpy_getattr,  // Get attributes.
+    .readdir = dpy_readdir,  // Read directory.
+    .open    = dpy_open,     // Open display to be worked upon.
+    .read    = dpy_read,     // Read display's contents.
 };
 
-/* print how to use display file. */
+// Print how to use display file.
 static void usage(const char *progname)
 {
-    printf("usage: %s [options] <mountpoint>\n\n", progname);
-    printf("File-system specific options:\n"
-           "    --name=<s>          Name of the \"display\" file\n"
-           "                        (default: \"display\")\n"
-           "    --contents=<s>      Contents \"display\" file\n"
-           "                        (default \"Hello, World!\\n\")\n"
-           "\n");
+    //printf("usage: %s [options] <mountpoint>\n\n", progname);
+    //printf("File-system specific options:\n"
+    //       "    --name=<s>          Name of the \"display\" file\n"
+    //       "                        (default: \"display\")\n"
+    //       "    --contents=<s>      Contents \"display\" file\n"
+    //       "                        (default \"Hello, World!\\n\")\n"
+    //       "\n");
 }
 
 /* file-system driver for displays. */
 int main(int argc, char *argv[])
 {
+    // Initialize FUSE arguments.
     struct fuse_args args = FUSE_ARGS_INIT(argc, argv);
 
     /* Set options */
-    options.filename = strdup("dpy");
-    options.contents = strdup("Hello World!\n");
+    options.filename = strdup("dpy0");
+    options.contents = strdup("Display 0\n");
 
     /* Parse options */
     if (fuse_opt_parse(&args, &options, option_spec, NULL) == -1)
