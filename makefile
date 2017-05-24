@@ -33,4 +33,4 @@ dshfs: dshfs.cpp
 run: run.cpp
 	@$(CXX) $(CXXFLAGS) $(SRC) $< -o $@
 
-.PHONY: all clean
+.PHONY: all test clean
