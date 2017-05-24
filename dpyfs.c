@@ -59,7 +59,7 @@ static int dpy_open(const char *path, struct fuse_file_info *fi)
 static int dpy_read(const char *path, char *buf, size_t size, off_t offset, struct fuse_file_info *fi)
 {
     size_t len;
-    if (strcmp(path+1, options.filename) != 0)
+    if (!strcmp(path+1, options.filename))
         return -ENOENT;
     len = strlen(options.contents);
     if (offset < len) {
@@ -71,9 +71,19 @@ static int dpy_read(const char *path, char *buf, size_t size, off_t offset, stru
     return size;
 }
 
+// Write to display. Returns exactly the number of bytes written except on error.
+static int dpy_write(const char *path, const char *buf, size_t size, off_t offset, struct fuse_file_info *fi) {
+    return 0;
+}
+
 // Control display.
-static int dpy_ioctl(const char *buf, int cmd, void *arg, struct fuse_file_info *fi, unsigned int flags, void *data)
+static int dpy_ioctl(const char *path, int cmd, void *arg, struct fuse_file_info *fi, unsigned int flags, void *data)
 {
+    switch (cmd) {
+    default:
+        break;
+    }
+    return -EINVAL;
 }
 
 // File system operations.
@@ -82,25 +92,15 @@ static struct fuse_operations ops = {
     .getattr = dpy_getattr, // Get attributes.
     .open    = dpy_open,    // Open display to be worked upon.
     .read    = dpy_read,    // Read display's contents.
+    .write   = dpy_write,   // Write to the display's contents.
     .ioctl   = dpy_ioctl,   // Control display.
 };
 
 // File system driver for displays.
 int main(int argc, char *argv[])
 {
-    // Initialize FUSE arguments.
-    struct fuse_args args = FUSE_ARGS_INIT(argc, argv);
-
-    /* Set options */
-    options.filename = strdup("dpy0");
-    options.contents = strdup("Display 0\n");
-
     // TODO: Mount at /dsh/.
 
-    /* Parse options */
-    if (fuse_opt_parse(&args, &options, option_spec, NULL) == -1)
-        return 1;
-
-    /* Drive user-space file system. */
-    return fuse_main(args.argc, args.argv, &ops, NULL);
+    // Drive user-space file system.
+    return fuse_main(argc, argv, &ops, NULL);
 }
