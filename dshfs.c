@@ -1,5 +1,6 @@
 #define FUSE_USE_VERSION 26
 #include <fuse.h>
+#include <stdio.h>
 #include <string.h>
 #include <errno.h>
 
@@ -12,7 +13,7 @@ static void *dsh_init(struct fuse_conn_info *conn)
     return NULL;
 }
 
-// Get file attributes of the display.
+// Get file attributes of the desktop shell.
 static int dsh_getattr(const char *path, struct stat *stbuf)
 {
     memset(stbuf, 0, sizeof(struct stat));
@@ -38,9 +39,10 @@ static int dsh_open(const char *path, struct fuse_file_info *fi)
     return 0;
 }
 
-// Read display's contents.
+// Read file contents.
 static int dsh_read(const char *path, char *buf, size_t size, off_t offset, struct fuse_file_info *fi)
 {
+    // TODO: Check what kind of file is read.
     size_t len;
     if (strcmp(path+1, filename))
         return -ENOENT;
@@ -63,6 +65,7 @@ static int dsh_write(const char *path, const char *buf, size_t size, off_t offse
 static int dsh_ioctl(const char *path, int cmd, void *arg, struct fuse_file_info *fi, unsigned int flags, void *data)
 {
     // TODO: Check path for what kind of file is opened.
+    puts(path);
     // Either:
     // -dpy*: display.
     // -wnd*: window.

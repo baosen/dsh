@@ -1,4 +1,5 @@
 #include <cassert>
+#include "fio.hpp"
 #include "kb.hpp"
 #include "dpy.hpp"
 
@@ -18,11 +19,17 @@ namespace {
     void dpytest() {
         Dpy d("./dsh/");
     }
+
+    void dshfstest() {
+        puts("testing");
+        const auto fd = open("./hai/hei", O_CREAT);
+    }
 }
 
 // Run test cases.
 int main() {
-    dpytest();
+    dshfstest();
+    //dpytest();
     //assert(kbtest());
     //assert(mtest());
 }
