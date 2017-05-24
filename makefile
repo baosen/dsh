@@ -10,15 +10,17 @@ SRC      = m.cpp wnd.cpp col.cpp pos.cpp fb.cpp scr.cpp log.cpp res.cpp ev.cpp e
 # Set preprocessing definitions.
 DEFS     = DEBUG
 # Set the produced executable binaries.
-BINS     = test dsh run dshfs
+BINS     = tests dsh run dshfs
 
 all: $(BINS)
 
+test: $(BINS)
+	./tests
 clean:
 	@rm -rf *.o $(BINS)
 
 # Compile tests.
-test: test.cpp
+tests: tests.cpp
 	@$(CXX) $(CXXFLAGS) $< kb.cpp dpy.cpp log.cpp -lboost_filesystem -lboost_system -o $@
 
 # Compile desktop shell server executable.
