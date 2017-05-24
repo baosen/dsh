@@ -9,23 +9,20 @@ static const char *contents = "Desktop shell.";
 
 // Do correct file operation according to the file type.
 template<class F, class W>
-void filedo(const char *path, F df, W wf) {
+int filedo(const char *path, F df, W wf) {
     // Check path for what kind of file is opened.
-    const char *s = nullptr;
-    for (const char *p = path; *p != '\0'; ++p)
+    const char *bs = nullptr;
+    for (const char *p = path; *p; ++p)
         if (*p == '/')
-            s = p; // Set position of backslash.
-    if ((s = strstr(s, "dpy")))      // Is a display?
+            bs = p; // Set position of backslash.
+    const char *s;
+    if ((s = strstr(bs, "dpy")))      // Is a display?
         df(s);
-    else if ((s = strstr(s, "wnd"))) // Is a window?
+    else if ((s = strstr(bs, "wnd"))) // Is a window?
         wf(s);
-    else {
-        // TODO: Unknown file.
-    }
-    // Either:
-    // dpy*: display.
-    // wnd*: window.
-    // rect*: rectangle.
+    else
+        return -EINVAL; // Unknown file.
+    return 0; // Ok!
 }
 
 // Initialize desktop shell file system.
@@ -107,11 +104,18 @@ static int dsh_ioctl(const char *path, int cmd, void *arg, struct fuse_file_info
 // Make inode.
 static int dsh_mknod(const char *path, mode_t mode, dev_t dev) 
 {
+    puts("mknod");
+    return 0;
 }
 
 // Create file.
 static int dsh_create(const char *path, mode_t mode, struct fuse_file_info *fi)
 {
+    return filedo(path, [](const char *p) {
+        puts("dpy");
+    }, [](const char *p) {
+        puts("wnd");
+    });
 }
 
 // File system driver for displays.

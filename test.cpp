@@ -20,8 +20,12 @@ namespace {
         Dpy d("./dsh/");
     }
 
+    // Test shell file system.
     void dshfstest() {
-        const auto fd = open("./hai/hei", O_CREAT);
+        // Create a display.
+        const auto dfd = open("./hai/dpy0", O_CREAT);
+        // Create a window.
+        const auto wfd = open("./hai/wnd0", O_CREAT);
     }
 }
 
