@@ -1,3 +1,4 @@
+# Set compiler flags.
 CFLAGS   = -std=c11 -O3 -Wall -Wextra
 CXXFLAGS = -std=c++17 -O3 -Wall -Wextra
 # Set GCC as the C compiler.
@@ -6,8 +7,10 @@ CC	     = gcc
 CXX      = g++
 # Set source dependencies for desktop shell.
 SRC      = m.cpp wnd.cpp col.cpp pos.cpp fb.cpp scr.cpp log.cpp res.cpp ev.cpp evm.cpp msys.cpp kbsys.cpp kb.cpp wsys.cpp frect.cpp wd.cpp parse.cpp init.cpp
+# Set preprocessing definitions.
 DEFS     = DEBUG
-BINS     = test dsh run
+# Set the produced executable binaries.
+BINS     = test dsh run dpyfs
 
 all: $(BINS)
 
