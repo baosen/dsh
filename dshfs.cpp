@@ -1,8 +1,40 @@
 #define FUSE_USE_VERSION 26
+#include <cassert>
+#include <string>
+#include <memory>
 #include <fuse.h>
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
+using namespace std;
+
+// File parent with childs.
+class File {
+public:
+    // Create file tree node.
+    File(const char* name) : name(name), childs(nullptr), n(0) {}
+
+    // Create file tree node with n childs.
+    File(const char* name, const uint n) : name(name), n(n) {
+        if (n)
+            childs = (File*)new char[n*sizeof(File)];
+        else
+            childs = nullptr;
+    }
+
+    // Destroy file and its childs.
+    ~File() {
+        // TODO: Free tree.
+    }
+
+    const char *name;   // Pointer to the name of the file as a C-string.
+    File       *childs; // Children nodes.
+    uint        n;      // Number of children.
+};
+
+namespace {
+    File *root;
+}
 
 static const char *filename = "dsh";
 static const char *contents = "Desktop shell.";
@@ -97,6 +129,9 @@ static int dsh_read(const char *path, char *buf, size_t size, off_t offset, stru
 // Write to display. Returns exactly the number of bytes written except on error.
 static int dsh_write(const char *path, const char *buf, size_t size, off_t offset, struct fuse_file_info *fi) noexcept
 {
+    filedo(path, [](const char *p) {
+    }, [](const char *p) {
+    });
     return 0;
 }
 
@@ -104,10 +139,9 @@ static int dsh_write(const char *path, const char *buf, size_t size, off_t offse
 static int dsh_ioctl(const char *path, int cmd, void *arg, struct fuse_file_info *fi, unsigned int flags, void *data) noexcept
 {
     filedo(path, [](const char *p) {
-        puts("hei!");
     }, [](const char *p) {
-        puts("hei!");
     });
+
     switch (cmd) {
     default:
         break;
@@ -119,9 +153,7 @@ static int dsh_ioctl(const char *path, int cmd, void *arg, struct fuse_file_info
 static int dsh_create(const char *path, mode_t mode, struct fuse_file_info *fi)
 {
     return filedo(path, [](const char *p) {
-        puts("dpy");
     }, [](const char *p) {
-        puts("wnd");
     });
 }
 
@@ -139,6 +171,14 @@ int main(int argc, char *argv[])
     ops.create  = dsh_create;  // Create file.
     ops.readdir = dsh_readdir; // Read directory.
 
+    // Initialize file tree.
+    // TODO: Wrap exception.
+    root = new File("/", 2);
+    new (root->childs) File(".");
+    new (root->childs+1) File("..");
+
     // Drive user-space file system.
-    return fuse_main(argc, argv, &ops, nullptr);
+    const auto ret = fuse_main(argc, argv, &ops, nullptr);
+    delete root;
+    return ret;
 }
