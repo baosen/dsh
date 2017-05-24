@@ -8,13 +8,13 @@ static const char *filename = "dsh";
 static const char *contents = "Desktop shell.";
 
 // Initialize desktop shell file system.
-static void *dsh_init(struct fuse_conn_info *conn)
+static void *dsh_init(struct fuse_conn_info *conn) noexcept
 {
     return NULL;
 }
 
 // Get file attributes of the desktop shell.
-static int dsh_getattr(const char *path, struct stat *stbuf)
+static int dsh_getattr(const char *path, struct stat *stbuf) noexcept
 {
     memset(stbuf, 0, sizeof(struct stat));
     if (strcmp(path, "/") == 0) {
@@ -30,7 +30,7 @@ static int dsh_getattr(const char *path, struct stat *stbuf)
 }
 
 // Open the desktop shell file system.
-static int dsh_open(const char *path, struct fuse_file_info *fi)
+static int dsh_open(const char *path, struct fuse_file_info *fi) noexcept
 {
     if (strcmp(path+1, filename))
         return -ENOENT;
@@ -40,7 +40,7 @@ static int dsh_open(const char *path, struct fuse_file_info *fi)
 }
 
 // Read file contents.
-static int dsh_read(const char *path, char *buf, size_t size, off_t offset, struct fuse_file_info *fi)
+static int dsh_read(const char *path, char *buf, size_t size, off_t offset, struct fuse_file_info *fi) noexcept
 {
     // TODO: Check what kind of file is read.
     size_t len;
@@ -57,12 +57,13 @@ static int dsh_read(const char *path, char *buf, size_t size, off_t offset, stru
 }
 
 // Write to display. Returns exactly the number of bytes written except on error.
-static int dsh_write(const char *path, const char *buf, size_t size, off_t offset, struct fuse_file_info *fi) {
+static int dsh_write(const char *path, const char *buf, size_t size, off_t offset, struct fuse_file_info *fi) noexcept
+{
     return 0;
 }
 
 // Control display.
-static int dsh_ioctl(const char *path, int cmd, void *arg, struct fuse_file_info *fi, unsigned int flags, void *data)
+static int dsh_ioctl(const char *path, int cmd, void *arg, struct fuse_file_info *fi, unsigned int flags, void *data) noexcept
 {
     // TODO: Check path for what kind of file is opened.
     puts(path);
