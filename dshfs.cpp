@@ -35,15 +35,29 @@ static void *dsh_init(struct fuse_conn_info *conn) noexcept
 static int dsh_getattr(const char *path, struct stat *stbuf) noexcept
 {
     memset(stbuf, 0, sizeof(struct stat));
-    if (strcmp(path, "/") == 0) {
-        stbuf->st_mode = S_IFDIR | 0755; // Permission bits.
+    if (!strcmp(path, "/")) {
+        stbuf->st_mode = S_IFDIR | 0755; // Directory.
         stbuf->st_nlink = 2;             // Number of hardlinks that points to this file that exists in the file system.
-    } else if (strcmp(path+1, filename) == 0) {
+    } else if (!strcmp(path+1, filename)) {
         stbuf->st_mode = S_IFREG | 0444;
         stbuf->st_nlink = 1;
         stbuf->st_size = strlen(contents);
-    } else
-        return -ENOENT;
+        stbuf->st_size = strlen(contents);
+    } else {
+        stbuf->st_mode = S_IFREG | 0444;
+        stbuf->st_nlink = 0;
+        stbuf->st_size = 0;
+        //return -ENOENT;
+    }
+    return 0;
+}
+
+// Read directory.
+static int dsh_readdir(const char *path, void *buf, fuse_fill_dir_t fill, off_t offset, struct fuse_file_info *fi) 
+{
+    fill(buf, ".", NULL, 0);  // Current directory.
+    fill(buf, "..", NULL, 0); // Parent directory.
+    // TODO: Build tree structure containing created files.
     return 0;
 }
 
@@ -101,13 +115,6 @@ static int dsh_ioctl(const char *path, int cmd, void *arg, struct fuse_file_info
     return -EINVAL;
 }
 
-// Make inode.
-static int dsh_mknod(const char *path, mode_t mode, dev_t dev) 
-{
-    puts("mknod");
-    return 0;
-}
-
 // Create file.
 static int dsh_create(const char *path, mode_t mode, struct fuse_file_info *fi)
 {
@@ -129,8 +136,8 @@ int main(int argc, char *argv[])
     ops.read    = dsh_read;    // Read display's contents.
     ops.write   = dsh_write;   // Write to the display's contents.
     ops.ioctl   = dsh_ioctl;   // Control display.
-    ops.mknod   = dsh_mknod;   // Make inode.
     ops.create  = dsh_create;  // Create file.
+    ops.readdir = dsh_readdir; // Read directory.
 
     // Drive user-space file system.
     return fuse_main(argc, argv, &ops, nullptr);
