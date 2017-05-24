@@ -7,6 +7,27 @@
 static const char *filename = "dsh";
 static const char *contents = "Desktop shell.";
 
+// Do correct file operation according to the file type.
+template<class F, class W>
+void filedo(const char *path, F df, W wf) {
+    // Check path for what kind of file is opened.
+    const char *s = nullptr;
+    for (const char *p = path; *p != '\0'; ++p)
+        if (*p == '/')
+            s = p; // Set position of backslash.
+    if ((s = strstr(s, "dpy")))      // Is a display?
+        df(s);
+    else if ((s = strstr(s, "wnd"))) // Is a window?
+        wf(s);
+    else {
+        // TODO: Unknown file.
+    }
+    // Either:
+    // dpy*: display.
+    // wnd*: window.
+    // rect*: rectangle.
+}
+
 // Initialize desktop shell file system.
 static void *dsh_init(struct fuse_conn_info *conn) noexcept
 {
@@ -32,6 +53,12 @@ static int dsh_getattr(const char *path, struct stat *stbuf) noexcept
 // Open the desktop shell file system.
 static int dsh_open(const char *path, struct fuse_file_info *fi) noexcept
 {
+    filedo(path, [](const char *p) {
+        puts("Display!");
+    }, [](const char *p) {
+        puts("Window!");
+    });
+
     if (strcmp(path+1, filename))
         return -ENOENT;
     if ((fi->flags & O_ACCMODE) != O_RDONLY)
@@ -62,20 +89,24 @@ static int dsh_write(const char *path, const char *buf, size_t size, off_t offse
     return 0;
 }
 
-// Control display.
+// Control files in shell file system.
 static int dsh_ioctl(const char *path, int cmd, void *arg, struct fuse_file_info *fi, unsigned int flags, void *data) noexcept
 {
-    // TODO: Check path for what kind of file is opened.
-    puts(path);
-    // Either:
-    // -dpy*: display.
-    // -wnd*: window.
-    // -rect*: rectangle.
+    filedo(path, [](const char *p) {
+        puts("hei!");
+    }, [](const char *p) {
+        puts("hei!");
+    });
     switch (cmd) {
     default:
         break;
     }
     return -EINVAL;
+}
+
+// Make inode.
+static int dsh_mknod(const char *path, mode_t mode, dev_t dev) 
+{
 }
 
 // File system driver for displays.
@@ -89,6 +120,7 @@ int main(int argc, char *argv[])
     ops.read    = dsh_read;    // Read display's contents.
     ops.write   = dsh_write;   // Write to the display's contents.
     ops.ioctl   = dsh_ioctl;   // Control display.
+    ops.mknod   = dsh_mknod;   // Make inode.
 
     // Drive user-space file system.
     return fuse_main(argc, argv, &ops, NULL);

@@ -21,7 +21,6 @@ namespace {
     }
 
     void dshfstest() {
-        puts("testing");
         const auto fd = open("./hai/hei", O_CREAT);
     }
 }
