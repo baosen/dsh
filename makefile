@@ -10,7 +10,7 @@ SRC      = m.cpp wnd.cpp col.cpp pos.cpp fb.cpp scr.cpp log.cpp res.cpp ev.cpp e
 # Set preprocessing definitions.
 DEFS     = DEBUG
 # Set the produced executable binaries.
-BINS     = test dsh run dpyfs
+BINS     = test dsh run dshfs
 
 all: $(BINS)
 
@@ -25,7 +25,7 @@ test: test.cpp
 dsh: dsh.cpp
 	@$(CXX) $(CXXFLAGS) -D$(DEFS) $(SRC) $< -o $@
 
-dpyfs: dpyfs.c
+dshfs: dshfs.c
 	@$(CC) $< `pkg-config fuse --cflags --libs` -o $@
 
 run: run.cpp
