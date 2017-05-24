@@ -109,6 +109,11 @@ static int dsh_mknod(const char *path, mode_t mode, dev_t dev)
 {
 }
 
+// Create file.
+static int dsh_create(const char *path, mode_t mode, struct fuse_file_info *fi)
+{
+}
+
 // File system driver for displays.
 int main(int argc, char *argv[])
 {
@@ -121,7 +126,8 @@ int main(int argc, char *argv[])
     ops.write   = dsh_write;   // Write to the display's contents.
     ops.ioctl   = dsh_ioctl;   // Control display.
     ops.mknod   = dsh_mknod;   // Make inode.
+    ops.create  = dsh_create;  // Create file.
 
     // Drive user-space file system.
-    return fuse_main(argc, argv, &ops, NULL);
+    return fuse_main(argc, argv, &ops, nullptr);
 }
