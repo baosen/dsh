@@ -77,20 +77,17 @@ static int dsh_ioctl(const char *path, int cmd, void *arg, struct fuse_file_info
     return -EINVAL;
 }
 
-// File system operations.
-static struct fuse_operations ops = {
-    .init    = dsh_init,    // Initialize.
-    .getattr = dsh_getattr, // Get attributes.
-    .open    = dsh_open,    // Open display to be worked upon.
-    .read    = dsh_read,    // Read display's contents.
-    .write   = dsh_write,   // Write to the display's contents.
-    .ioctl   = dsh_ioctl,   // Control display.
-};
-
 // File system driver for displays.
 int main(int argc, char *argv[])
 {
-    // TODO: Mount at /dsh/.
+    // File system operations.
+    static fuse_operations ops = {0};
+    ops.init    = dsh_init;    // Initialize.
+    ops.getattr = dsh_getattr; // Get attributes.
+    ops.open    = dsh_open;    // Open display to be worked upon.
+    ops.read    = dsh_read;    // Read display's contents.
+    ops.write   = dsh_write;   // Write to the display's contents.
+    ops.ioctl   = dsh_ioctl;   // Control display.
 
     // Drive user-space file system.
     return fuse_main(argc, argv, &ops, NULL);
