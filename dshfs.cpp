@@ -7,31 +7,32 @@
 #include <string.h>
 #include <errno.h>
 #include "zero.hpp"
+#include "types.hpp"
 using namespace std;
 
 // File parent with childs.
-class File {
-public:
+struct File {
     // Create file tree node.
     File(const char* name) : name(name), childs(nullptr), n(0) {}
 
     // Create file tree node with n childs.
     File(const char* name, const uint n) : name(name), n(n) {
         if (n)
-            childs = (File*)new char[n*sizeof(File)];
-        else
+            childs = rcast<File*>(new char[n*sizeof(File)]);
+        else // n == 0.
             childs = nullptr;
     }
 
     // Build default root tree.
     File() : File("/", 2) {
-        new (childs) File(".");
+        new (childs)   File(".");
         new (childs+1) File("..");
     }
 
     // Destroy file and its childs.
     ~File() {
-        // TODO: Free tree.
+        if (childs)
+            delete[] rcast<char*>(childs);
     }
 
     const char *name;   // Pointer to the name of the file as a C-string.
@@ -91,12 +92,26 @@ static int dsh_getattr(const char *path, struct stat *stbuf) noexcept
     return 0;
 }
 
+namespace {
+    void*           buffer;
+    fuse_fill_dir_t filler;
+}
+
+static void fillbuf(File* cur) 
+{
+    filler(buffer, cur->name, nullptr, 0);
+    for (uint i = 0; i < cur->n; ++i)
+        fillbuf(&cur->childs[i]);
+}
+
 // Read directory.
 static int dsh_readdir(const char *path, void *buf, fuse_fill_dir_t fill, off_t offset, struct fuse_file_info *fi) 
 {
-    fill(buf, ".", NULL, 0);  // Current directory.
-    fill(buf, "..", NULL, 0); // Parent directory.
-    // TODO: Build tree structure containing created files.
+    // Initialize.
+    buffer = buf;
+    filler = fill;
+    // Fill recursively.
+    fillbuf(root);
     return 0;
 }
 
@@ -179,11 +194,15 @@ int main(int argc, char *argv[])
     ops.readdir = dsh_readdir; // Read directory.
 
     // Initialize file tree.
-    // TODO: Wrap exception.
-    root = new File();
-
-    // Drive user-space file system.
-    const auto ret = fuse_main(argc, argv, &ops, nullptr);
-    delete root;
+    auto ret = EXIT_FAILURE;
+    try {
+        // Create file tree.
+        root = new File();
+        // Drive user-space file system.
+        const auto ret = fuse_main(argc, argv, &ops, nullptr);
+        delete root;
+    } catch (...) {
+        ret = EXIT_FAILURE;
+    }
     return ret;
 }
