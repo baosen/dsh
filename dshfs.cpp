@@ -10,6 +10,9 @@
 #include "types.hpp"
 using namespace std;
 
+class File;
+File* fnew(const uint n);
+
 // File parent with childs.
 struct File {
     // Create file tree node.
@@ -18,15 +21,9 @@ struct File {
     // Create file tree node with n childs.
     File(const char* name, const uint n) : name(name), n(n) {
         if (n)
-            childs = rcast<File*>(new char[n*sizeof(File)]);
+            childs = fnew(n);
         else // n == 0.
             childs = nullptr;
-    }
-
-    // Build default root tree.
-    File() : File("/", 2) {
-        new (childs)   File(".");
-        new (childs+1) File("..");
     }
 
     // Destroy file and its childs.
@@ -40,8 +37,13 @@ struct File {
     uint        n;      // Number of children.
 };
 
+File* fnew(const uint n) {
+    return rcast<File*>(new char[n*sizeof(File)]);
+}
+
 namespace {
-    File *root;
+    File *ents; // File entries.
+    uint nents; // Number of file entries.
 }
 
 static const char *filename = "dsh";
@@ -99,9 +101,8 @@ namespace {
 
 static void fillbuf(File* cur) 
 {
-    filler(buffer, cur->name, nullptr, 0);
-    for (uint i = 0; i < cur->n; ++i)
-        fillbuf(&cur->childs[i]);
+    for (uint i = 0; i < nents; ++i)
+        filler(buffer, ents[i].name, nullptr, 0);
 }
 
 // Read directory.
@@ -111,7 +112,7 @@ static int dsh_readdir(const char *path, void *buf, fuse_fill_dir_t fill, off_t 
     buffer = buf;
     filler = fill;
     // Fill recursively.
-    fillbuf(root);
+    fillbuf(ents);
     return 0;
 }
 
@@ -193,14 +194,16 @@ int main(int argc, char *argv[])
     ops.create  = dsh_create;  // Create file.
     ops.readdir = dsh_readdir; // Read directory.
 
-    // Initialize file tree.
     auto ret = EXIT_FAILURE;
     try {
         // Create file tree.
-        root = new File();
+        nents = 2;
+        ents  = fnew(2);
+        new (ents)   File(".");
+        new (ents+1) File("..");
         // Drive user-space file system.
         const auto ret = fuse_main(argc, argv, &ops, nullptr);
-        delete root;
+        delete[] rcast<char*>(ents);
     } catch (...) {
         return EXIT_FAILURE;
     }
