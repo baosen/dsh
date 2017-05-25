@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
+#include "zero.hpp"
 using namespace std;
 
 // File parent with childs.
@@ -20,6 +21,12 @@ public:
             childs = (File*)new char[n*sizeof(File)];
         else
             childs = nullptr;
+    }
+
+    // Build default root tree.
+    File() : File("/", 2) {
+        new (childs) File(".");
+        new (childs+1) File("..");
     }
 
     // Destroy file and its childs.
@@ -66,7 +73,7 @@ static void *dsh_init(struct fuse_conn_info *conn) noexcept
 // Get file attributes of the desktop shell.
 static int dsh_getattr(const char *path, struct stat *stbuf) noexcept
 {
-    memset(stbuf, 0, sizeof(struct stat));
+    zero(*stbuf);
     if (!strcmp(path, "/")) {
         stbuf->st_mode = S_IFDIR | 0755; // Directory.
         stbuf->st_nlink = 2;             // Number of hardlinks that points to this file that exists in the file system.
@@ -173,9 +180,7 @@ int main(int argc, char *argv[])
 
     // Initialize file tree.
     // TODO: Wrap exception.
-    root = new File("/", 2);
-    new (root->childs) File(".");
-    new (root->childs+1) File("..");
+    root = new File();
 
     // Drive user-space file system.
     const auto ret = fuse_main(argc, argv, &ops, nullptr);
