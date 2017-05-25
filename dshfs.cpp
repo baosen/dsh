@@ -202,7 +202,7 @@ int main(int argc, char *argv[])
         const auto ret = fuse_main(argc, argv, &ops, nullptr);
         delete root;
     } catch (...) {
-        ret = EXIT_FAILURE;
+        return EXIT_FAILURE;
     }
     return ret;
 }
