@@ -1,8 +1,5 @@
-# Set compiler flags.
-CFLAGS   = -std=c11 -O3 -Wall -Wextra
+# Set C++ compiler flags.
 CXXFLAGS = -std=c++17 -O3 -Wall -Wextra
-# Set GCC as the C compiler.
-CC	     = gcc
 # Set G++ as the C++ compiler.
 CXX      = g++
 # Set source dependencies for desktop shell.
@@ -10,7 +7,7 @@ SRC      = m.cpp wnd.cpp col.cpp pos.cpp fb.cpp scr.cpp log.cpp res.cpp ev.cpp e
 # Set preprocessing definitions.
 DEFS     = DEBUG
 # Set the produced executable binaries.
-BINS     = tests dsh run dshfs
+BINS     = tests dpytests dsh run dshfs
 
 all: $(BINS)
 
