@@ -1,6 +1,7 @@
 #define FUSE_USE_VERSION 26
 #include <cassert>
 #include <string>
+#include <cstring>
 #include <memory>
 #include <fuse.h>
 #include <stdio.h>
@@ -12,8 +13,13 @@
 using namespace std;
 
 namespace {
+    // File tree.
     File *ents; // File entries.
     uint nents; // Number of file entries.
+
+    // used by readdir().
+    void*           buffer; // current buffer to fill.
+    fuse_fill_dir_t filler; // function used to fill buffer.
 }
 
 static const char *filename = "dsh";
@@ -29,12 +35,11 @@ int filedo(const char *path, F df, W wf) {
             bs = p; // Set position of backslash.
     const char *s;
     if ((s = strstr(bs, "dpy")))      // Is a display?
-        df(s);
+        return df(s);
     else if ((s = strstr(bs, "wnd"))) // Is a window?
-        wf(s);
+        return wf(s);
     else
         return -EINVAL; // Unknown file.
-    return 0; // Ok!
 }
 
 // Initialize desktop shell file system.
@@ -63,11 +68,6 @@ static int dsh_getattr(const char *path, struct stat *buf) noexcept
     return 0;
 }
 
-namespace {
-    void*           buffer;
-    fuse_fill_dir_t filler;
-}
-
 // Fill buffer with file entries.
 static void fillbuf(File* cur) 
 {
@@ -86,20 +86,30 @@ static int dsh_readdir(const char *path, void *buf, fuse_fill_dir_t fill, off_t 
     return 0;
 }
 
+
+// Does the file exist in one of the entries?
+static bool exists(const char *name) 
+{
+    for (uint i = 0; i < nents; ++i)
+        if (!strcmp(name, ents[i].name))
+            return true;
+    return false;
+}
+
 // Open the desktop shell file system.
 static int dsh_open(const char *path, struct fuse_file_info *fi) noexcept
 {
-    filedo(path, [](const char *p) {
-        puts("Display!");
-    }, [](const char *p) {
-        puts("Window!");
+    return filedo(path, [&](const char *p) {
+        if (!exists(p))
+            return -ENOENT;
+        //if ((fi->flags & O_ACCMODE) != O_RDONLY)
+        //    return -EACCES;
+    }, [&](const char *p) {
+        if (!exists(p))
+            return -ENOENT; // No entry found.
+        //if ((fi->flags & O_ACCMODE) != O_RDONLY)
+        //    return -EACCES; // Access denied.
     });
-
-    if (strcmp(path+1, filename))
-        return -ENOENT;
-    if ((fi->flags & O_ACCMODE) != O_RDONLY)
-        return -EACCES;
-    return 0;
 }
 
 // Read file contents.
@@ -123,7 +133,9 @@ static int dsh_read(const char *path, char *buf, size_t size, off_t offset, stru
 static int dsh_write(const char *path, const char *buf, size_t size, off_t offset, struct fuse_file_info *fi) noexcept
 {
     filedo(path, [](const char *p) {
+        return 0;
     }, [](const char *p) {
+        return 0;
     });
     return 0;
 }
@@ -132,7 +144,9 @@ static int dsh_write(const char *path, const char *buf, size_t size, off_t offse
 static int dsh_ioctl(const char *path, int cmd, void *arg, struct fuse_file_info *fi, unsigned int flags, void *data) noexcept
 {
     filedo(path, [](const char *p) {
+        return 0;
     }, [](const char *p) {
+        return 0;
     });
 
     switch (cmd) {
@@ -146,14 +160,16 @@ static int dsh_ioctl(const char *path, int cmd, void *arg, struct fuse_file_info
 static int dsh_create(const char *path, mode_t mode, struct fuse_file_info *fi)
 {
     return filedo(path, [](const char *p) {
+        return 0;
     }, [](const char *p) {
+        return 0;
     });
 }
 
 // File system driver for displays.
 int main(int argc, char *argv[])
 {
-    // File system operations.
+    // Setup file system operations.
     static fuse_operations ops = {0};
     ops.init    = dsh_init;    // Initialize.
     ops.getattr = dsh_getattr; // Get attributes.
@@ -164,6 +180,7 @@ int main(int argc, char *argv[])
     ops.create  = dsh_create;  // Create file.
     ops.readdir = dsh_readdir; // Read directory.
 
+    // Start our engines!
     auto ret = EXIT_FAILURE;
     try {
         // Create file tree.

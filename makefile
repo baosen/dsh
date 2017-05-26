@@ -21,7 +21,11 @@ clean:
 
 # Compile tests.
 tests: tests.cpp
-	@$(CXX) $(CXXFLAGS) $< kb.cpp dpy.cpp log.cpp -lboost_filesystem -lboost_system -o $@
+	@$(CXX) $(CXXFLAGS) $< kb.cpp log.cpp -o $@
+
+# Compile display tests.
+dpytests: dpytests.cpp
+	@$(CXX) $(CXXFLAGS) $< dpy.cpp log.cpp -o $@
 
 # Compile desktop shell server executable.
 dsh: dsh.cpp

@@ -16,23 +16,21 @@ namespace {
         return false;
     }
 
-    void dpytest() {
-        Dpy d("./dsh/");
+    // Open a display in the file-system.
+    bool dpytest() {
+        try {
+            Dpy d("./dsh/");
+            return false;
+        } catch (...) {
+            return false;
+        }
     }
 
-    // Test shell file system.
-    void dshfstest() {
-        // Create a display.
-        const auto dfd = open("./hai/dpy0", O_CREAT);
-        // Create a window.
-        const auto wfd = open("./hai/wnd0", O_CREAT);
-    }
 }
 
 // Run test cases.
 int main() {
-    dshfstest();
-    //dpytest();
-    //assert(kbtest());
-    //assert(mtest());
+    assert(kbtest());
+    assert(mtest());
+    assert(dpytest());
 }
