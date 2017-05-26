@@ -1,14 +1,6 @@
 #define FUSE_USE_VERSION 26
-#include <cassert>
-#include <string>
-#include <cstring>
-#include <memory>
 #include <fuse.h>
-#include <stdio.h>
-#include <string.h>
-#include <errno.h>
 #include "zero.hpp"
-#include "types.hpp"
 #include "file.hpp"
 using namespace std;
 
