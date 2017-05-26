@@ -44,20 +44,20 @@ static void *dsh_init(struct fuse_conn_info *conn) noexcept
 }
 
 // Get file attributes of the desktop shell.
-static int dsh_getattr(const char *path, struct stat *stbuf) noexcept
+static int dsh_getattr(const char *path, struct stat *buf) noexcept
 {
-    zero(*stbuf);
+    zero(*buf);
     if (!strcmp(path, "/")) {
-        stbuf->st_mode = S_IFDIR | 0755; // Directory.
-        stbuf->st_nlink = 2;             // Number of hardlinks that points to this file that exists in the file system.
+        buf->st_mode = S_IFDIR | 0755; // Directory.
+        buf->st_nlink = 2;             // Number of hardlinks that points to this file that exists in the file system.
     } else if (!strcmp(path+1, filename)) {
-        stbuf->st_mode = S_IFREG | 0444;
-        stbuf->st_nlink = 1;
-        stbuf->st_size = strlen(contents);
+        buf->st_mode = S_IFREG | 0444;
+        buf->st_nlink = 1;
+        buf->st_size = strlen(contents);
     } else {
-        stbuf->st_mode = S_IFREG | 0444;
-        stbuf->st_nlink = 0;
-        stbuf->st_size = 0;
+        buf->st_mode = S_IFREG | 0444;
+        buf->st_nlink = 0;
+        buf->st_size = 0;
         //return -ENOENT;
     }
     return 0;
@@ -68,6 +68,7 @@ namespace {
     fuse_fill_dir_t filler;
 }
 
+// Fill buffer with file entries.
 static void fillbuf(File* cur) 
 {
     for (uint i = 0; i < nents; ++i)
