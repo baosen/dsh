@@ -8,38 +8,8 @@
 #include <errno.h>
 #include "zero.hpp"
 #include "types.hpp"
+#include "file.hpp"
 using namespace std;
-
-class File;
-File* fnew(const uint n);
-
-// File parent with childs.
-struct File {
-    // Create file tree node.
-    File(const char* name) : name(name), childs(nullptr), n(0) {}
-
-    // Create file tree node with n childs.
-    File(const char* name, const uint n) : name(name), n(n) {
-        if (n)
-            childs = fnew(n);
-        else // n == 0.
-            childs = nullptr;
-    }
-
-    // Destroy file and its childs.
-    ~File() {
-        if (childs)
-            delete[] rcast<char*>(childs);
-    }
-
-    const char *name;   // Pointer to the name of the file as a C-string.
-    File       *childs; // Children nodes.
-    uint        n;      // Number of children.
-};
-
-File* fnew(const uint n) {
-    return rcast<File*>(new char[n*sizeof(File)]);
-}
 
 namespace {
     File *ents; // File entries.
@@ -83,7 +53,6 @@ static int dsh_getattr(const char *path, struct stat *stbuf) noexcept
     } else if (!strcmp(path+1, filename)) {
         stbuf->st_mode = S_IFREG | 0444;
         stbuf->st_nlink = 1;
-        stbuf->st_size = strlen(contents);
         stbuf->st_size = strlen(contents);
     } else {
         stbuf->st_mode = S_IFREG | 0444;

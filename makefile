@@ -27,8 +27,8 @@ tests: tests.cpp
 dsh: dsh.cpp
 	@$(CXX) $(CXXFLAGS) -D$(DEFS) $(SRC) $< -o $@
 
-dshfs: dshfs.cpp
-	@$(CXX) $< `pkg-config fuse --cflags --libs` -o $@
+dshfs: dshfs.cpp file.cpp
+	@$(CXX) $^ `pkg-config fuse --cflags --libs` -o $@
 
 run: run.cpp
 	@$(CXX) $(CXXFLAGS) $(SRC) $< -o $@
