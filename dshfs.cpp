@@ -161,7 +161,6 @@ static int dsh_ioctl(const char *path, int cmd, void *arg, struct fuse_file_info
     return -ENOENT;
 }
 
-
 // Make file node. Gets called for creation of all non-directory, non-symbolic link nodes.
 int dsh_mknod(const char *path, mode_t mode, dev_t dev)
 {
