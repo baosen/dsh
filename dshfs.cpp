@@ -161,11 +161,10 @@ static int dsh_ioctl(const char *path, int cmd, void *arg, struct fuse_file_info
     return -ENOENT;
 }
 
-// Make file node. Gets called for creation of all non-directory, non-symbolic link nodes.
-int dsh_mknod(const char *path, mode_t mode, dev_t dev)
+// Make shell file node. Gets called for creation of all non-directory, non-symbolic link nodes.
+static int dsh_mknod(const char *path, mode_t mode, dev_t dev)
 {
-    puts("mknod");
-    return -EINVAL;
+    return dsh_create(path, mode, nullptr);
 }
 
 // File system driver for displays.
@@ -173,15 +172,18 @@ int main(int argc, char *argv[])
 {
     // Setup file system operations.
     static fuse_operations ops = {0};
-    ops.init    = dsh_init;    // Initialize.
-    ops.getattr = dsh_getattr; // Get attributes.
+    // Creation.
+    ops.init    = dsh_init;    // Initialize file system.
     ops.create  = dsh_create;  // Create file.
     ops.mknod   = dsh_mknod;   // Make file node.
+    // I/O.
+    ops.getattr = dsh_getattr; // Get attributes.
+    ops.readdir = dsh_readdir; // Read directory.
     ops.open    = dsh_open;    // Open display to be worked upon.
     ops.read    = dsh_read;    // Read display's contents.
     ops.write   = dsh_write;   // Write to the display's contents.
+    // Control.
     ops.ioctl   = dsh_ioctl;   // Control display.
-    ops.readdir = dsh_readdir; // Read directory.
 
     // Start our engines!
     try {
