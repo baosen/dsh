@@ -48,12 +48,15 @@ static int dsh_create(const char *path, mode_t mode, struct fuse_file_info *fi)
 // Get file attributes of a file in the shell file system.
 static int dsh_getattr(const char *path, struct stat *buf) noexcept
 {
+    // Prepare stat-buffer.
     zero(*buf);
+    // If caller wants to check the attributes of the backslash directory.
     if (!strcmp(path, "/")) {
         buf->st_mode = S_IFDIR | 0755; // Directory.
         buf->st_nlink = 0;             // Number of hardlinks that points to this file that exists in the file system.
         return 0;
     } 
+    // See if the entry exists.
     for (const auto& e : ents) {
         if (!strcmp(path+1, e.name.c_str())) {
             buf->st_mode  = S_IFREG | 0444; // mode bits.
@@ -103,13 +106,19 @@ static int dsh_open(const char *path, struct fuse_file_info *fi) noexcept
 // Read file contents.
 static int dsh_read(const char *path, char *buf, size_t size, off_t offset, struct fuse_file_info *fi) noexcept
 {
-    // TODO: Check what kind of file is read.
-    //size_t len;
-    for (const auto& e : ents)
-        if (!strcmp(path+1, e.name.c_str()))
-            return 0;
+    // Check if the path provided exist as a entry in the file entries.
+    for (const auto& e : ents) {
+        if (!strcmp(path+1, e.name.c_str())) {
+            return filedo(path, [](const char *p) { // Display.
+                return 0;
+            }, [](const char *p) { // Window.
+                return 0;
+            });
+        }
+    }
     return -ENOENT;
-    //len = strlen(contents);
+
+    //size_t len= strlen(contents);
     //if (offset < len) {
     //    if (offset + size > len)
     //        size = len - offset;
@@ -117,7 +126,6 @@ static int dsh_read(const char *path, char *buf, size_t size, off_t offset, stru
     //} else
     //    size = 0;
     //return size;
-    return 0;
 }
 
 // Write to display. Returns exactly the number of bytes written except on error.
