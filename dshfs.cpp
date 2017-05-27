@@ -25,7 +25,7 @@ int filedo(const char *path, F df, W wf) {
 // Initialize desktop shell file system.
 static void *dsh_init(struct fuse_conn_info *conn) noexcept
 {
-    return NULL;
+    return nullptr;
 }
 
 // Create shell file.
