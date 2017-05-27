@@ -5,20 +5,19 @@
 #include <linux/input.h>
 
 #define test_bit(n, p) !!(n & (1u << p))
+#define PATH_TO_EVENT_FILE "/dev/input/event0"
 
 int main() {
     int fd;
-    if ((fd = open("/dev/input/event0", O_RDONLY)) < 0) {
-        exit(1);
-    }
+    if ((fd = open(PATH_TO_EVENT_FILE, O_RDONLY)) < 0)
+        exit(EXIT_FAILURE);
+
     char b[256];
     int n;
-    if ((n = ioctl(fd, EVIOCGBIT(0, EV_MAX), b)) < 0) {
-        exit(1);
-    }
+    if ((n = ioctl(fd, EVIOCGBIT(0, EV_MAX), b)) < 0)
+        exit(EXIT_FAILURE);
 
     printf("Supported event types:\n");
-
     for (unsigned short i = 0; i < EV_MAX; i++) {
         if (test_bit(b[0], i)) {
             printf("\t0x%02x ", i);
@@ -58,5 +57,9 @@ int main() {
             }
         }
     }
-    close(fd);
+    if (close(fd) == -1) {
+        puts("Failed to close " PATH_TO_EVENT_FILE);
+        exit(EXIT_FAILURE);
+    }
+    return EXIT_SUCCESS;
 }
