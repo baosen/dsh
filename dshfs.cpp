@@ -1,6 +1,5 @@
 #define FUSE_USE_VERSION 26
 #include <list>
-#include <sstream>
 #include <fuse.h>
 #include "zero.hpp"
 #include "file.hpp"
@@ -110,33 +109,32 @@ static int dsh_read(const char *path, char *buf, size_t size, off_t offset, stru
     for (const auto& e : ents) {
         if (!strcmp(path+1, e.name.c_str())) {
             return filedo(path, [](const char *p) { // Display.
+                // TODO.
                 return 0;
             }, [](const char *p) { // Window.
+                // TODO.
                 return 0;
             });
         }
     }
     return -ENOENT;
-
-    //size_t len= strlen(contents);
-    //if (offset < len) {
-    //    if (offset + size > len)
-    //        size = len - offset;
-    //    memcpy(buf, contents + offset, size);
-    //} else
-    //    size = 0;
-    //return size;
 }
 
 // Write to display. Returns exactly the number of bytes written except on error.
 static int dsh_write(const char *path, const char *buf, size_t size, off_t offset, struct fuse_file_info *fi) noexcept
 {
-    filedo(path, [](const char *p) {
-        return 0;
-    }, [](const char *p) {
-        return 0;
-    });
-    return 0;
+    for (const auto& e : ents) {
+        if (!strcmp(path+1, e.name.c_str())) {
+            return filedo(path, [](const char *p) { // Display.
+                // TODO.
+                return 0;
+            }, [](const char *p) { // Window.
+                // TODO.
+                return 0;
+            });
+        }
+    }
+    return -ENOENT;
 }
 
 // Control files in shell file system.
