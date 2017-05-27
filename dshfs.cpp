@@ -28,7 +28,7 @@ static void *dsh_init(struct fuse_conn_info *conn) noexcept
     return NULL;
 }
 
-// Create file.
+// Create shell file.
 static int dsh_create(const char *path, mode_t mode, struct fuse_file_info *fi)
 {
     // Caller can only create files of type dpy* and wnd*.
