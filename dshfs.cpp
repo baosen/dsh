@@ -67,11 +67,12 @@ static int dsh_getattr(const char *path, struct stat *buf) noexcept
     return -ENOENT;
 }
 
-// Read directory.
+// Read directory tree.
 static int dsh_readdir(const char *path, void *buf, fuse_fill_dir_t fill, off_t offset, struct fuse_file_info *fi) 
 {
     // Fill recursively.
     for (const auto& e : ents)
+        // Build the file entries in the buffer.
         fill(buf, e.name.c_str(), nullptr, 0);
     return 0;
 }
@@ -140,29 +141,32 @@ static int dsh_write(const char *path, const char *buf, size_t size, off_t offse
 // Control files in shell file system.
 static int dsh_ioctl(const char *path, int cmd, void *arg, struct fuse_file_info *fi, unsigned int flags, void *data) noexcept
 {
-    filedo(path, [](const char *p) {
-        return 0;
-    }, [](const char *p) {
-        return 0;
-    });
-
-    switch (cmd) {
-    default:
-        break;
+    for (const auto& e : ents) {
+        if (!strcmp(path+1, e.name.c_str())) {
+            return filedo(path, [&](const char *p) {
+                switch (cmd) {
+                default:
+                    break;
+                }
+                return 0;
+            }, [&](const char *p) {
+                switch (cmd) {
+                default:
+                    break;
+                }
+                return 0;
+            });
+        }
     }
-    return -EINVAL;
+    return -ENOENT;
 }
 
-/** Create a file node
- *
- * There is no create() operation, mknod() will be called for
- * creation of all non-directory, non-symlink nodes.
- */
-// shouldn't that comment be "if" there is no.... ?
+
+// Make file node. Gets called for creation of all non-directory, non-symbolic link nodes.
 int dsh_mknod(const char *path, mode_t mode, dev_t dev)
 {
     puts("mknod");
-    return 0;
+    return -EINVAL;
 }
 
 // File system driver for displays.
