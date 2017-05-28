@@ -30,12 +30,12 @@ static bool control_display() {
     }
     // Test reset command.
     if (ioctl(fd, Dpycmd::reset) < 0) {
-        puts("Failed to control device!");
+        puts("Failed to control " WORKDIR "dpytest");
         printf("errno: %d\n", errno);
         return false;
     }
     if (close(fd) == -1) {
-        puts("Failed to close " WORKDIR " dpytest!");
+        puts("Failed to close " WORKDIR "dpytest!");
         return false;
     }
     return true;
