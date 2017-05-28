@@ -1,15 +1,39 @@
 #define FUSE_USE_VERSION 26
 #include <list>
+#include <iostream>
 #include <sstream>
+#include <memory>
 #include <fuse.h>
 #include "zero.hpp"
 #include "file.hpp"
 using namespace std;
 
+namespace dshfs {
+    // Machine/server display.
+    class Dpy {
+    public:
+        // Display commands/operations.
+        enum Cmd : u8 {
+            reset, // Reset the display.
+            res,   // Set screen resolution.
+            hz,    // Set screen hertz.
+        };
+
+        // Create display.
+        Dpy() {
+        }
+
+        // Destroy display.
+        ~Dpy() {
+        }
+    private:
+    };
+}
+
 namespace {
-    list<File> ents; // list of file entries.
-    list<File> dpyents; // list of display file entries.
-    uint idpy = 0;   // Current index of display.
+    list<File> ents;             // List of file entries.
+    uint idpy = 0;               // Current index of display.
+    unique_ptr<dshfs::Dpy> dpys; // Displays connected to the computer.
 }
 
 // Do correct file operation according to the file type.
@@ -107,52 +131,53 @@ static int dsh_open(const char *path, struct fuse_file_info *fi) noexcept {
 
 // Read file contents.
 static int dsh_read(const char *path, char *buf, size_t size, off_t offset, struct fuse_file_info *fi) noexcept {
-    // Check if the path provided exist as a entry in the file entries.
-    for (const auto& e : ents) {
-        if (!strcmp(path+1, e.name.c_str())) {
-            return filedo(path, [](const char *p) { // Display.
-                // TODO.
-                return 0;
-            }, [](const char *p) { // Window.
-                // TODO.
-                return 0;
-            });
-        }
-    }
-    return -ENOENT;
+    return doifentry(path, [&]() {
+        return filedo(path, [](const char *p) { // Display.
+            // TODO.
+            return 0;
+        }, [](const char *p) { // Window.
+            // TODO.
+            return 0;
+        });
+    });
 }
 
 // Write to display. Returns exactly the number of bytes written except on error.
 static int dsh_write(const char *path, const char *buf, size_t size, off_t offset, struct fuse_file_info *fi) noexcept {
-    for (const auto& e : ents) {
-        if (!strcmp(path+1, e.name.c_str())) {
-            return filedo(path, [](const char *p) { // Display.
-                // TODO.
-                return 0;
-            }, [](const char *p) { // Window.
-                // TODO.
-                return 0;
-            });
-        }
-    }
-    return -ENOENT;
+    return doifentry(path, [&]() {
+        return filedo(path, [](const char *p) { // Display.
+            // TODO.
+            return 0;
+        }, [](const char *p) { // Window.
+            // TODO.
+            return 0;
+        });
+    });
 }
 
 // Control files in shell file system.
 static int dsh_ioctl(const char *path, int cmd, void *arg, struct fuse_file_info *fi, unsigned int flags, void *data) noexcept {
+    using namespace dshfs;
+
     return doifentry(path, [&]() {
-        return filedo(path, [&](const char *p) {
+        return filedo(path, [&](const char *p) { // display.
             switch (cmd) {
+            case Dpy::Cmd::reset:
+                break;
+            case Dpy::Cmd::hz:
+                break;
+            case Dpy::Cmd::res:
+                break;
             default:
                 break;
-            }
-            return 0;
+            };
+            return -EINVAL;
         }, [&](const char *p) {
             switch (cmd) {
             default:
-                break;
+                return 0;
             }
-            return 0;
+            return -EINVAL;
         });
     });
 }
@@ -170,9 +195,10 @@ static void mkstdlinks() {
 
 // Setup and initialize displays, and make the files pointing to them.
 static void mkdpys() {
+    return;
     stringstream ss;
     ss << "dpy" << idpy;
-    dpyents.emplace_back(File(ss.str()));
+    ents.emplace_back(File(ss.str()));
 }
 
 // File system driver for displays.
@@ -196,7 +222,7 @@ int main(int argc, char *argv[]) {
     try {
         // Create standard "this" and "parent" links.
         mkstdlinks();
-        // TODO: Create displays.
+        // TODO: Connect to displays and make them as files.
         mkdpys();
 
         // Drive user-space file system.

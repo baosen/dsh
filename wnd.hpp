@@ -6,8 +6,8 @@
 // Window.
 class Wnd {
 public:
-    // Window protocol opcodes.
-    enum class Op : s8 {
+    // Window commands/opcodes.
+    enum class Cmd : s8 {
         max,   // User wants to maximize window.
         min,   // User wants to minimize window.
         click, // User clicks somewhere on the window.

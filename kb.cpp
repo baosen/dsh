@@ -46,7 +46,7 @@ input_event Kb::rd() {
 
 // Get the pressed keyboard codes from the keyboard queue.
 int Kb::get() {
-#if !defined(NDEBUG)
+#ifndef NDEBUG
     // Button state.
     static const char *const state[3] = {
         "Released:",
