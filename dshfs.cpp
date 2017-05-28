@@ -1,5 +1,6 @@
 #define FUSE_USE_VERSION 26
 #include <list>
+#include <sstream>
 #include <fuse.h>
 #include "zero.hpp"
 #include "file.hpp"
@@ -7,6 +8,8 @@ using namespace std;
 
 namespace {
     list<File> ents; // list of file entries.
+    list<File> dpyents; // list of display file entries.
+    uint idpy = 0;   // Current index of display.
 }
 
 // Do correct file operation according to the file type.
@@ -23,14 +26,12 @@ int filedo(const char *path, F df, W wf) {
 }
 
 // Initialize desktop shell file system.
-static void *dsh_init(struct fuse_conn_info *conn) noexcept
-{
+static void *dsh_init(struct fuse_conn_info *conn) noexcept {
     return nullptr;
 }
 
 // Create shell file.
-static int dsh_create(const char *path, mode_t mode, struct fuse_file_info *fi)
-{
+static int dsh_create(const char *path, mode_t mode, struct fuse_file_info *fi) {
     // Caller can only create files of type dpy* and wnd*.
     return filedo(path, [](const char *p) {
         // Create new display.
@@ -45,8 +46,7 @@ static int dsh_create(const char *path, mode_t mode, struct fuse_file_info *fi)
 }
 
 // Get file attributes of a file in the shell file system.
-static int dsh_getattr(const char *path, struct stat *buf) noexcept
-{
+static int dsh_getattr(const char *path, struct stat *buf) noexcept {
     // Prepare stat-buffer.
     zero(*buf);
     // If caller wants to check the attributes of the backslash directory.
@@ -68,8 +68,7 @@ static int dsh_getattr(const char *path, struct stat *buf) noexcept
 }
 
 // Read directory tree.
-static int dsh_readdir(const char *path, void *buf, fuse_fill_dir_t fill, off_t offset, struct fuse_file_info *fi) 
-{
+static int dsh_readdir(const char *path, void *buf, fuse_fill_dir_t fill, off_t offset, struct fuse_file_info *fi) {
     // Fill recursively.
     for (const auto& e : ents)
         // Build the file entries in the buffer.
@@ -78,8 +77,7 @@ static int dsh_readdir(const char *path, void *buf, fuse_fill_dir_t fill, off_t 
 }
 
 // Does the file exist in one of the entries?
-static bool exists(const char *name) 
-{
+static bool exists(const char *name) {
     for (const auto& e : ents)
         if (!strcmp(name, e.name.c_str()))
             return true;
@@ -87,8 +85,7 @@ static bool exists(const char *name)
 }
 
 // Open the desktop shell file system.
-static int dsh_open(const char *path, struct fuse_file_info *fi) noexcept
-{
+static int dsh_open(const char *path, struct fuse_file_info *fi) noexcept {
     return filedo(path, [&](const char *p) {
         if (!exists(p))
             return -ENOENT;
@@ -104,8 +101,7 @@ static int dsh_open(const char *path, struct fuse_file_info *fi) noexcept
 }
 
 // Read file contents.
-static int dsh_read(const char *path, char *buf, size_t size, off_t offset, struct fuse_file_info *fi) noexcept
-{
+static int dsh_read(const char *path, char *buf, size_t size, off_t offset, struct fuse_file_info *fi) noexcept {
     // Check if the path provided exist as a entry in the file entries.
     for (const auto& e : ents) {
         if (!strcmp(path+1, e.name.c_str())) {
@@ -122,8 +118,7 @@ static int dsh_read(const char *path, char *buf, size_t size, off_t offset, stru
 }
 
 // Write to display. Returns exactly the number of bytes written except on error.
-static int dsh_write(const char *path, const char *buf, size_t size, off_t offset, struct fuse_file_info *fi) noexcept
-{
+static int dsh_write(const char *path, const char *buf, size_t size, off_t offset, struct fuse_file_info *fi) noexcept {
     for (const auto& e : ents) {
         if (!strcmp(path+1, e.name.c_str())) {
             return filedo(path, [](const char *p) { // Display.
@@ -139,8 +134,7 @@ static int dsh_write(const char *path, const char *buf, size_t size, off_t offse
 }
 
 // Control files in shell file system.
-static int dsh_ioctl(const char *path, int cmd, void *arg, struct fuse_file_info *fi, unsigned int flags, void *data) noexcept
-{
+static int dsh_ioctl(const char *path, int cmd, void *arg, struct fuse_file_info *fi, unsigned int flags, void *data) noexcept {
     for (const auto& e : ents) {
         if (!strcmp(path+1, e.name.c_str())) {
             return filedo(path, [&](const char *p) {
@@ -162,14 +156,25 @@ static int dsh_ioctl(const char *path, int cmd, void *arg, struct fuse_file_info
 }
 
 // Make shell file node. Gets called for creation of all non-directory, non-symbolic link nodes.
-static int dsh_mknod(const char *path, mode_t mode, dev_t dev)
-{
+static int dsh_mknod(const char *path, mode_t mode, dev_t dev) {
     return dsh_create(path, mode, nullptr);
 }
 
+// Create standard "this" and "parent" links.
+static void mkstdlinks() {
+    ents.emplace_back(File("."));
+    ents.emplace_back(File(".."));
+}
+
+// Setup and initialize displays, and make the files pointing to them.
+static void mkdpys() {
+    stringstream ss;
+    ss << "dpy" << idpy;
+    dpyents.emplace_back(File(ss.str()));
+}
+
 // File system driver for displays.
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     // Setup file system operations.
     static fuse_operations ops = {0};
     // Creation.
@@ -187,9 +192,11 @@ int main(int argc, char *argv[])
 
     // Start our engines!
     try {
-        // Create file tree.
-        ents.emplace_back(File("."));
-        ents.emplace_back(File(".."));
+        // Create standard "this" and "parent" links.
+        mkstdlinks();
+        // TODO: Create displays.
+        mkdpys();
+
         // Drive user-space file system.
         return fuse_main(argc, argv, &ops, nullptr);
     } catch (...) {
