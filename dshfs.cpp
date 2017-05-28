@@ -14,7 +14,7 @@ namespace {
 
 // Do correct file operation according to the file type.
 template<class F, class W>
-int filedo(const char *path, F df, W wf) {
+auto filedo(const char *path, F df, W wf) {
     // Check path for what kind of file is opened.
     const char *bs = path+1, *s;
     if ((s = strstr(bs, "dpy")))      // Is a display?
@@ -23,6 +23,15 @@ int filedo(const char *path, F df, W wf) {
         return wf(s);
     else
         return -EINVAL; // Invalid file name.
+}
+
+// Call F() if there is an entry in the file system that is equal to path.
+template<class F> 
+auto doifentry(const char *path, F f) {
+    for (const auto& e : ents)
+        if (!strcmp(path+1, e.name.c_str()))
+            return f();
+    return -ENOENT;
 }
 
 // Initialize desktop shell file system.
@@ -55,16 +64,12 @@ static int dsh_getattr(const char *path, struct stat *buf) noexcept {
         buf->st_nlink = 0;             // Number of hardlinks that points to this file that exists in the file system.
         return 0;
     } 
-    // See if the entry exists.
-    for (const auto& e : ents) {
-        if (!strcmp(path+1, e.name.c_str())) {
-            buf->st_mode  = S_IFREG | 0444; // mode bits.
-            buf->st_nlink = 0;
-            buf->st_size  = 0;
-            return 0;
-        }
-    }
-    return -ENOENT;
+    return doifentry(path, [&]() {
+        buf->st_mode  = S_IFREG | 0444; // mode bits.
+        buf->st_nlink = 0;
+        buf->st_size  = 0;
+        return 0;
+    });
 }
 
 // Read directory tree.
@@ -135,24 +140,21 @@ static int dsh_write(const char *path, const char *buf, size_t size, off_t offse
 
 // Control files in shell file system.
 static int dsh_ioctl(const char *path, int cmd, void *arg, struct fuse_file_info *fi, unsigned int flags, void *data) noexcept {
-    for (const auto& e : ents) {
-        if (!strcmp(path+1, e.name.c_str())) {
-            return filedo(path, [&](const char *p) {
-                switch (cmd) {
-                default:
-                    break;
-                }
-                return 0;
-            }, [&](const char *p) {
-                switch (cmd) {
-                default:
-                    break;
-                }
-                return 0;
-            });
-        }
-    }
-    return -ENOENT;
+    return doifentry(path, [&]() {
+        return filedo(path, [&](const char *p) {
+            switch (cmd) {
+            default:
+                break;
+            }
+            return 0;
+        }, [&](const char *p) {
+            switch (cmd) {
+            default:
+                break;
+            }
+            return 0;
+        });
+    });
 }
 
 // Make shell file node. Gets called for creation of all non-directory, non-symbolic link nodes.
