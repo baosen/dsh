@@ -19,14 +19,16 @@ namespace {
 }
 
 // Do correct file operation according to the file type.
-template<class F, class W>
-auto filedo(const char *path, F df, W wf) {
+template<class F, class W, class K>
+auto filedo(const char *path, F df, W wf, K kf) {
     // Check path for what kind of file is opened.
     const char *bs = path+1, *s;
     if ((s = strstr(bs, "dpy")))      // Is a display?
         return df(s);
     else if ((s = strstr(bs, "wnd"))) // Is a window?
         return wf(s);
+    else if ((s = strstr(bs, "kb")))  // Is a keyboard?
+        return kf(s);
     else
         return -EINVAL; // Invalid file name.
 }
@@ -54,6 +56,10 @@ static int dsh_create(const char *path, mode_t mode, struct fuse_file_info *fi) 
         return 0;
     }, [](const char *p) {
         // Create new window.
+        ents.emplace_back(File(p));
+        return 0;
+    }, [](const char *p) {
+        // Create new keyboard.
         ents.emplace_back(File(p));
         return 0;
     });
@@ -107,6 +113,9 @@ static int dsh_open(const char *path, struct fuse_file_info *fi) noexcept {
             return -ENOENT; // No entry found.
         //if ((fi->flags & O_ACCMODE) != O_RDONLY)
         //    return -EACCES; // Access denied.
+    }, [](const char *p) {
+        if (!exists(p))
+            return -ENOENT;
     });
     return 0;
 }
@@ -118,6 +127,9 @@ static int dsh_read(const char *path, char *buf, size_t size, off_t offset, stru
             // TODO.
             return 0;
         }, [](const char *p) { // Window.
+            // TODO.
+            return 0;
+        }, [](const char *p) {
             // TODO.
             return 0;
         });
@@ -133,6 +145,9 @@ static int dsh_write(const char *path, const char *buf, size_t size, off_t offse
         }, [](const char *p) { // Window.
             // TODO.
             return 0;
+        }, [](const char *p) { // Keyboard.
+            // Keyboard is read-only.
+            return -EPERM; // Operation not permitted.
         });
     });
 }
@@ -176,6 +191,9 @@ static int dsh_ioctl(const char *path, int cmd, void *arg, struct fuse_file_info
             return dpycmd(cmd);
         }, [&](const char *p) { // window.
             return wndcmd(cmd);
+        }, [&](const char *p) {
+            // No commands for keyboards.
+            return -EINVAL;
         });
     });
 }
