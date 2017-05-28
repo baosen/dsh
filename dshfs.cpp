@@ -25,7 +25,7 @@ auto filedo(const char *path, F df, W wf) {
         return -EINVAL; // Invalid file name.
 }
 
-// Call F() if there is an entry in the file system that is equal to path.
+// Do action if the path specified is in the file system.
 template<class F> 
 auto doifentry(const char *path, F f) {
     for (const auto& e : ents)
