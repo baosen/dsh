@@ -6,14 +6,8 @@
 // Window.
 class Wnd {
 public:
-    // Window commands/opcodes.
-    enum class Cmd : s8 {
-        max,   // User wants to maximize window.
-        min,   // User wants to minimize window.
-        click, // User clicks somewhere on the window.
-        copy,  // User wants to copy an existing rectangular image to a window. Sends a raw or compressed rectangular image. User chooses driver.
-    };
-    
+    #include "wcmds.hpp"
+
     // Create null window.
     Wnd();
     // Create and place the window.

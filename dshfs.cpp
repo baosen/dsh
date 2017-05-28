@@ -1,3 +1,4 @@
+// Shell server-side file system.
 #define FUSE_USE_VERSION 26
 #include <list>
 #include <iostream>
@@ -6,34 +7,36 @@
 #include <fuse.h>
 #include "zero.hpp"
 #include "file.hpp"
+#include "dpycmds.hpp"
+#include "wcmds.hpp"
 using namespace std;
 
-namespace dshfs {
-    // Machine/server display.
-    class Dpy {
-    public:
-        // Display commands/operations.
-        enum Cmd : u8 {
-            reset, // Reset the display.
-            res,   // Set screen resolution.
-            hz,    // Set screen hertz.
-        };
+// Machine/server display.
+class Dpy {
+public:
+    // Create display.
+    Dpy() {
+    }
 
-        // Create display.
-        Dpy() {
-        }
+    // Destroy display.
+    ~Dpy() {
+    }
+private:
+};
 
-        // Destroy display.
-        ~Dpy() {
-        }
-    private:
-    };
-}
+class Wnd {
+public:
+    Wnd() {
+    }
+    ~Wnd() {
+    }
+private:
+};
 
 namespace {
     list<File> ents;             // List of file entries.
     uint idpy = 0;               // Current index of display.
-    unique_ptr<dshfs::Dpy> dpys; // Displays connected to the computer.
+    unique_ptr<Dpy> dpys; // Displays connected to the computer.
 }
 
 // Do correct file operation according to the file type.
@@ -155,29 +158,45 @@ static int dsh_write(const char *path, const char *buf, size_t size, off_t offse
     });
 }
 
+// Do display command.
+static int dpycmd(const int cmd) {
+    switch (cmd) {
+    case Dpycmd::reset:
+        return 0;
+    case Dpycmd::hz:
+        return 0;
+    case Dpycmd::res:
+        return 0;
+    default:
+        break;
+    };
+    return -EINVAL;
+}
+
+// Do window command.
+static int wndcmd(const int cmd) {
+    switch (cmd) {
+    case Wndcmd::max:   // User wants to maximize window.
+        return 0;
+    case Wndcmd::min:   // User wants to minimize window.
+        return 0;
+    case Wndcmd::click: // User clicks somewhere on the window.
+        return 0;
+    case Wndcmd::copy:  // User wants to copy an existing rectangular image to a window. Sends a raw or compressed rectangular image. User chooses driver.
+        return 0;
+    default:
+        break;
+    }
+    return -EINVAL;
+}
+
 // Control files in shell file system.
 static int dsh_ioctl(const char *path, int cmd, void *arg, struct fuse_file_info *fi, unsigned int flags, void *data) noexcept {
-    using namespace dshfs;
-
     return doifentry(path, [&]() {
         return filedo(path, [&](const char *p) { // display.
-            switch (cmd) {
-            case Dpy::Cmd::reset:
-                break;
-            case Dpy::Cmd::hz:
-                break;
-            case Dpy::Cmd::res:
-                break;
-            default:
-                break;
-            };
-            return -EINVAL;
-        }, [&](const char *p) {
-            switch (cmd) {
-            default:
-                return 0;
-            }
-            return -EINVAL;
+            return dpycmd(cmd);
+        }, [&](const char *p) { // window.
+            return wndcmd(cmd);
         });
     });
 }
@@ -195,7 +214,6 @@ static void mkstdlinks() {
 
 // Setup and initialize displays, and make the files pointing to them.
 static void mkdpys() {
-    return;
     stringstream ss;
     ss << "dpy" << idpy;
     ents.emplace_back(File(ss.str()));

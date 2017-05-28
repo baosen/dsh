@@ -1,7 +1,8 @@
 #pragma once
 #include <string>
+#include "types.hpp"
 
-// Display
+// Client display
 class Dpy {
 public:
     // Open a display directory specified by the given path.
