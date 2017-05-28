@@ -11,32 +11,11 @@
 #include "wcmds.hpp"
 using namespace std;
 
-// Machine/server display.
-class Dpy {
-public:
-    // Create display.
-    Dpy() {
-    }
-
-    // Destroy display.
-    ~Dpy() {
-    }
-private:
-};
-
-class Wnd {
-public:
-    Wnd() {
-    }
-    ~Wnd() {
-    }
-private:
-};
+#include "fs.hpp"
 
 namespace {
-    list<File> ents;             // List of file entries.
-    uint idpy = 0;               // Current index of display.
-    unique_ptr<Dpy> dpys; // Displays connected to the computer.
+    list<File>      ents;     // List of file entries.
+    unique_ptr<Dpy> dpys;     // Displays connected to the computer.
 }
 
 // Do correct file operation according to the file type.
@@ -214,8 +193,22 @@ static void mkstdlinks() {
 
 // Setup and initialize displays, and make the files pointing to them.
 static void mkdpys() {
+    static uint i = 0; // Current index of display.
     stringstream ss;
-    ss << "dpy" << idpy;
+    ss << "dpy" << i;
+    ents.emplace_back(File(ss.str()));
+}
+
+#include "kbsys.hpp"
+
+// Setup keyboard.
+static void mkkb() {
+    // TODO: Initialize keyboard.
+    //initkb();
+    // Insert it into filesystem.
+    static uint i = 0; // Current index of keyboard.
+    stringstream ss;
+    ss << "kb" << i;
     ents.emplace_back(File(ss.str()));
 }
 
@@ -240,6 +233,8 @@ int main(int argc, char *argv[]) {
     try {
         // Create standard "this" and "parent" links.
         mkstdlinks();
+        // Connect keyboards.
+        mkkb();
         // TODO: Connect to displays and make them as files.
         mkdpys();
 
