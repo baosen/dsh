@@ -9,9 +9,9 @@
 #include "file.hpp"
 #include "dpycmds.hpp"
 #include "wcmds.hpp"
-using namespace std;
-
+#include "kbsys.hpp"
 #include "fs.hpp"
+using namespace std;
 
 namespace {
     list<File>      ents;     // List of file entries.
@@ -216,8 +216,6 @@ static void mkdpys() {
     ss << "dpy" << i;
     ents.emplace_back(File(ss.str()));
 }
-
-#include "kbsys.hpp"
 
 // Setup keyboard.
 static void mkkb() {

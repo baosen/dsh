@@ -4,7 +4,7 @@
 #include "dpy.hpp"
 #include "dpycmds.hpp"
 
-#define WORKDIR "./hai/"
+#define WORKDIR "./fs/"
 
 // Create display.
 static bool create_display() {

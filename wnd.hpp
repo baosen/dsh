@@ -6,8 +6,6 @@
 // Window.
 class Wnd {
 public:
-    #include "wcmds.hpp"
-
     // Create null window.
     Wnd();
     // Create and place the window.
