@@ -11,6 +11,7 @@ public:
 private:
 };
 
+// Machine/server window.
 class Wnd {
 public:
     Wnd() {
