@@ -106,13 +106,9 @@ static int dsh_open(const char *path, struct fuse_file_info *fi) noexcept {
     return filedo(path, [&](const char *p) {
         if (!exists(p))
             return -ENOENT;
-        //if ((fi->flags & O_ACCMODE) != O_RDONLY)
-        //    return -EACCES;
     }, [&](const char *p) {
         if (!exists(p))
             return -ENOENT; // No entry found.
-        //if ((fi->flags & O_ACCMODE) != O_RDONLY)
-        //    return -EACCES; // Access denied.
     }, [](const char *p) {
         if (!exists(p))
             return -ENOENT;
