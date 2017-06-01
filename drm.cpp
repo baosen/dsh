@@ -1,25 +1,42 @@
-/*
 #include <xf86drm.h>
+#include <xf86drmMode.h>
 
-class Drm {
-public:
-    Drm() {
-        static const char *modules[] = {
-            "exynos",
-            "i915",  // Intel integrated GPU.
-            "msm",
-            "nouveau", // Nvidia open source driver.
-            "omapdrm",
-            "radeon",
-            "tegra",
-            "vc4",
-            "virtio_gpu", // Virtual GPU for virtual machines.
-            "vmwgfx",
-        };
+namespace {
+    int drmfd = -1;
+}
 
-        drmModeRes       *resources;
-        drmModeConnector *connector = NULL;
-        drmModeEncoder   *encoder = NULL;
+// Initialize Direct-Rendering Manager.
+static void init() {
+    static const char *modules[] = {
+        "exynos",
+        "i915",
+        "msm",
+        "nouveau",
+        "omapdrm",
+        "radeon",
+        "tegra",
+        "vc4",
+        "virtio_gpu",
+        "vmwgfx",
+    };
+    drmModeRes       *resources = nullptr;
+    drmModeConnector *connector = nullptr;
+    drmModeEncoder   *encoder   = nullptr;
+
+    for (size_t i = 0; i < NSIZE(modules); i++) {
+        printf("Loading module %s...", modules[i]);
+        drmfd = drmOpen(modules[i], nullptr);
+        if (drmfd < 0)
+            printf("Failed to load module: %s\n", modules[i]);
+        else {
+            printf("Succeeded to load module: %s\n", modules[i]);
+            break;
+        }
     }
-};
-*/
+
+}
+
+// De-initialize Direct-Rendering Manager.
+static void deinit() {
+    drmClose(drmfd);
+}
