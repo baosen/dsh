@@ -215,7 +215,7 @@ static void mkdpys() {
 
 // Setup keyboard.
 static void mkkb() {
-    // TODO: Initialize keyboard.
+    // Initialize keyboard.
     //initkb();
 
     // Insert it into filesystem.
