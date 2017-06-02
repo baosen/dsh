@@ -7,13 +7,17 @@ static void check_extensions()
 {
 #ifdef EGL_MESA_platform_gbm
     const char *ext = eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS);
-
     if (!ext)
         // EGL_EXT_client_extensions is unsupported.
         abort();
     if (!strstr(ext, "EGL_MESA_platform_gbm"))
         abort();
 #endif
+}
+
+namespace {
+    EGLDisplay  egl;
+    gbm_device *gbm;
 }
 
 // Initialize GBM.
@@ -23,14 +27,14 @@ void init()
     if (fd < 0)
         abort();
 
-    auto gbm = gbm_create_device(fd);
+    gbm = gbm_create_device(fd);
     if (!gbm)
         abort();
 
 #ifdef EGL_MESA_platform_gbm
-    auto egl = eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_MESA, dpy.gbm, nullptr);
+    egl = eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_MESA, gbm, nullptr);
 #else
-    auto egl = eglGetDisplay(gbm);
+    egl = eglGetDisplay(gbm);
 #endif
     if (egl == EGL_NO_DISPLAY)
         abort();
@@ -40,6 +44,7 @@ void init()
         abort();
 }
 
+// Configuration.
 void config()
 {
     EGLint attribs[] {
@@ -53,12 +58,12 @@ void config()
 
     // Get EGL configurations.
     EGLint n;
-    if (!eglGetConfigs(dpy.egl, nullptr, 0, &n))
+    if (!eglGetConfigs(egl, nullptr, 0, &n))
         abort();
 
     // Allocate configuration.
-    EGLConfig *configs = malloc(n * sizeof(EGLConfig));
-    if (!eglChooseConfig(dpy.egl, attribs, configs, n, &n))
+    EGLConfig *configs = malloc(n*sizeof(EGLConfig));
+    if (!eglChooseConfig(egl, attribs, configs, n, &n))
         abort();
     if (!n)
         abort();
@@ -66,7 +71,7 @@ void config()
     // Find a config whose native visual ID is the desired GBM format.
     for (int i = 0; i < n; ++i) {
         EGLint fmt;
-        if (!eglGetConfigAttrib(dpy.egl, configs[i], EGL_NATIVE_VISUAL_ID, &fmt))
+        if (!eglGetConfigAttrib(egl, configs[i], EGL_NATIVE_VISUAL_ID, &fmt))
             abort();
         if (fmt == GBM_FORMAT_XRGB8888) {
             config.egl = configs[i];
@@ -78,15 +83,16 @@ void config()
     abort();
 }
 
-void get_window()
+// Get GBM window.
+void getwnd()
 {
     window.gbm = gbm_surface_create(gbm, 256, 256, GBM_FORMAT_XRGB8888, GBM_BO_USE_RENDERING);
     if (!window.gbm)
         abort();
 #ifdef EGL_MESA_platform_gbm
-    window.egl = eglCreatePlatformWindowSurfaceEXT(dpy.egl, egl, gbm, nullptr);
+    window.egl = eglCreatePlatformWindowSurfaceEXT(egl, egl, gbm, nullptr);
 #else
-    window.egl = eglCreateWindowSurface(config.dpy.egl, config.egl, window.gbm, nullptr);
+    window.egl = eglCreateWindowSurface(.egl, config.egl, window.gbm, nullptr);
 #endif
     if (window.egl == EGL_NO_SURFACE)
         abort();

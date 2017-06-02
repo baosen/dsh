@@ -57,8 +57,9 @@ int Kb::get() {
     // Reads the keyboard event from the keyboard.
     input_event e;
     do {
+        // Read an keyboard event.
         e = rd();
-        // Check if key change, and continue if not.
+        // Check if key change. If not, continue reading for a key change.
     } while (e.type != EV_KEY || e.value < 0 || e.value > 2);
     // Print keyboard code if e is a key change.
     DBG("%s 0x%04x (%d)\n", state[e.value], (int)(e.code), (int)(e.code));

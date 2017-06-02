@@ -122,12 +122,12 @@ static int dsh_read(const char *path, char *buf, size_t size, off_t offset, stru
         return filedo(path, [](const char *p) { // Display.
             // TODO.
             return 0;
-        }, [](const char *p) { // Window.
+        }, [](const char *p) {                  // Window.
             // TODO.
             return 0;
-        }, [](const char *p) {
-            // TODO.
-            return 0;
+        }, [](const char *p) {                  // Keyboard.
+            // Read key code.
+            return kb.get();
         });
     });
 }
@@ -138,10 +138,10 @@ static int dsh_write(const char *path, const char *buf, size_t size, off_t offse
         return filedo(path, [](const char *p) { // Display.
             // TODO.
             return 0;
-        }, [](const char *p) { // Window.
+        }, [](const char *p) {                  // Window.
             // TODO.
             return 0;
-        }, [](const char *p) { // Keyboard.
+        }, [](const char *p) {                  // Keyboard.
             // Keyboard is read-only.
             return -EPERM; // Operation not permitted.
         });
@@ -217,6 +217,7 @@ static void mkdpys() {
 static void mkkb() {
     // TODO: Initialize keyboard.
     //initkb();
+
     // Insert it into filesystem.
     static uint i = 0; // Current index of keyboard.
     stringstream ss;
@@ -243,9 +244,9 @@ int main(int argc, char *argv[]) {
 
     // Start our engines!
     try {
-        // Create standard "this" and "parent" links.
+        // Create standard "this" and "parent" links in the file system tree.
         mkstdlinks();
-        // Connect keyboards.
+        // TODO: Connect keyboards and make keyboard files.
         mkkb();
         // TODO: Connect to displays and make them as files.
         mkdpys();

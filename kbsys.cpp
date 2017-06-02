@@ -1,6 +1,6 @@
-#include "kb.hpp"
+#include "kbsys.hpp"
 
-static Kb kb;
+Kb kb;
 
 // Setup and initialize keyboard.
 void initkb() {
