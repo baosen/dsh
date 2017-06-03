@@ -207,6 +207,14 @@ static void mkstdlinks() {
 
 // Setup and initialize displays, and make the files pointing to them.
 static void mkdpys() {
+// Initialize graphical output.
+#ifdef DRM
+    // Use DRM graphical output.
+#elif FB
+    // Use framebuffer graphical output.
+#else
+//#   error No screen output chosen. Choose one to continue compiling.
+#endif
     static uint i = 0; // Current index of display.
     stringstream ss;
     ss << "dpy" << i;
