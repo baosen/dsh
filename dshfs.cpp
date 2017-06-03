@@ -2,7 +2,6 @@
 #define FUSE_USE_VERSION 26
 #include <list>
 #include <sstream>
-#include <memory>
 #include <fuse.h>
 #include "zero.hpp"
 #include "file.hpp"
@@ -14,8 +13,7 @@
 using namespace std;
 
 namespace {
-    list<File>      ents;     // List of file entries.
-    unique_ptr<Dpy> dpys;     // Displays connected to the computer.
+    list<File> ents; // List of file entries.
 }
 
 // Do correct file operation according to the file type.
@@ -168,7 +166,7 @@ static int dsh_mknod(const char *path, mode_t mode, dev_t dev) {
 }
 
 // Create standard "this" and "parent" links.
-static void mkstdlinks() {
+static void mklns() {
     ents.emplace_back(File("."));
     ents.emplace_back(File(".."));
 }
@@ -233,7 +231,7 @@ int main(int argc, char *argv[]) {
     // Start our engines!
     try {
         // Create standard "this" and "parent" links in the file system tree.
-        mkstdlinks();
+        mklns();
         // TODO: Connect keyboards and make keyboard files.
         mkkb();
         // TODO: Connect mouse and make mouse files.
