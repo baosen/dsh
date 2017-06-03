@@ -150,11 +150,11 @@ static int dsh_write(const char *path, const char *buf, size_t size, off_t offse
 // Control files in shell file system.
 static int dsh_ioctl(const char *path, int cmd, void *arg, struct fuse_file_info *fi, unsigned int flags, void *data) noexcept {
     return doifentry(path, [&]() {
-        return filedo(path, [&](const char *p) { // display.
+        return filedo(path, [&](const char *p) { // Display.
             return dpycmd(cmd);
-        }, [&](const char *p) { // window.
+        }, [&](const char *p) {                  // Window.
             return wndcmd(cmd);
-        }, [&](const char *p) {
+        }, [&](const char *p) {                  // Keyboard.
             // No commands for keyboards.
             return -EINVAL;
         });
