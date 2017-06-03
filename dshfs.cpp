@@ -1,7 +1,6 @@
 // Shell server-side file system.
 #define FUSE_USE_VERSION 26
 #include <list>
-#include <iostream>
 #include <sstream>
 #include <memory>
 #include <fuse.h>
