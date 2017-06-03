@@ -31,7 +31,7 @@ public:
     // Releases the mouse input device.    
     ~M();
 
-    // Open.
+    // Open "hacky" mouse.
     bool open(const uint i);
 
     // Waits for mouse event and reads it.

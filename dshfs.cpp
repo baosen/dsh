@@ -7,6 +7,7 @@
 #include "zero.hpp"
 #include "file.hpp"
 #include "kbsys.hpp"
+#include "msys.hpp"
 #include "fs.hpp"
 #include "wndcmd.hpp"
 #include "dpycmd.hpp"
@@ -188,6 +189,18 @@ static void mkdpys() {
     ents.emplace_back(File(ss.str()));
 }
 
+// Setup mouse and make mouse files.
+static void mkm() {
+    // Initialize mouse.
+    //initm();
+
+    // Make mouse files.
+    static uint i = 0;
+    stringstream ss;
+    ss << "m" << i;
+    ents.emplace_back(File(ss.str()));
+}
+
 // Setup keyboard.
 static void mkkb() {
     // Initialize keyboard.
@@ -223,6 +236,8 @@ int main(int argc, char *argv[]) {
         mkstdlinks();
         // TODO: Connect keyboards and make keyboard files.
         mkkb();
+        // TODO: Connect mouse and make mouse files.
+        mkm();
         // TODO: Connect to displays and make them as files.
         mkdpys();
 
