@@ -17,8 +17,7 @@ namespace {
 }
 
 // Do correct file operation according to the file type.
-template<class F, class W, class K>
-auto filedo(const char *path, F df, W wf, K kf) {
+template<class F, class W, class K> auto filedo(const char *path, F df, W wf, K kf) {
     // Check path for what kind of file is opened.
     const char *bs = path+1, *s;
     if ((s = strstr(bs, "dpy")))      // Is a display?
@@ -32,8 +31,7 @@ auto filedo(const char *path, F df, W wf, K kf) {
 }
 
 // Do action if the path specified is in the file system.
-template<class F> 
-auto doifentry(const char *path, F f) {
+template<class F> auto doifentry(const char *path, F f) {
     for (const auto& e : ents)
         if (!strcmp(path+1, e.name.c_str()))
             return f();
@@ -190,8 +188,7 @@ static void mkdpys() {
 // Setup mouse and make mouse files.
 static void mkm() {
     // Initialize mouse.
-    //initm();
-
+    initm();
     // Make mouse files.
     static uint i = 0;
     stringstream ss;
@@ -202,8 +199,7 @@ static void mkm() {
 // Setup keyboard.
 static void mkkb() {
     // Initialize keyboard.
-    //initkb();
-
+    initkb();
     // Insert it into filesystem.
     static uint i = 0; // Current index of keyboard.
     stringstream ss;
