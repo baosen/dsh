@@ -7,10 +7,10 @@
 #include <fuse.h>
 #include "zero.hpp"
 #include "file.hpp"
-#include "dpycmds.hpp"
-#include "wcmds.hpp"
 #include "kbsys.hpp"
 #include "fs.hpp"
+#include "wndcmd.hpp"
+#include "dpycmd.hpp"
 using namespace std;
 
 namespace {
@@ -146,38 +146,6 @@ static int dsh_write(const char *path, const char *buf, size_t size, off_t offse
             return -EPERM; // Operation not permitted.
         });
     });
-}
-
-// Do display command.
-static int dpycmd(const int cmd) {
-    switch (cmd) {
-    case Dpycmd::reset:
-        return 0;
-    case Dpycmd::hz:
-        return 0;
-    case Dpycmd::res:
-        return 0;
-    default:
-        break;
-    };
-    return -EINVAL;
-}
-
-// Do window command.
-static int wndcmd(const int cmd) {
-    switch (cmd) {
-    case Wndcmd::max:   // User wants to maximize window.
-        return 0;
-    case Wndcmd::min:   // User wants to minimize window.
-        return 0;
-    case Wndcmd::click: // User clicks somewhere on the window.
-        return 0;
-    case Wndcmd::copy:  // User wants to copy an existing rectangular image to a window. Sends a raw or compressed rectangular image. User chooses driver.
-        return 0;
-    default:
-        break;
-    }
-    return -EINVAL;
 }
 
 // Control files in shell file system.
