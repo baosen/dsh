@@ -33,14 +33,16 @@ namespace m {
     }
 }
 
-// Init mouse.
+// Initialize mouse.
 bool (*minit[])() {
-    &evm::init, &m::init,
+    &evm::init, // Event mouse initialization.
+    &m::init,   // "hacky" mouse initialization.
 };
 
 // Get mouse position.
 static Mposf mpos[] {
-    &evm::pos, &m::pos
+    &evm::pos, // Get event mouse position.
+    &m::pos    // Get "hacky" mouse position.
 };
 
 // Current mouse device that is used.
