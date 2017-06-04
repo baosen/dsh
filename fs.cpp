@@ -127,15 +127,15 @@ int fs::read(const char *path, char *buf, size_t size, off_t offset, struct fuse
 }
 
 // Write to display. Returns exactly the number of bytes written except on error.
-int fs::write(const char *path, const char *buf, size_t size, off_t offset, struct fuse_file_info *fi) noexcept {
+int fs::write(const char *path, const char *buf, size_t size, off_t i, struct fuse_file_info *fi) noexcept {
     return doifentry(path, [&]() {
-        return filedo(path, [](const char *p) { // Display.
+        return filedo(path, [&](const char *p) { // Display.
+            dsys::copy(buf, i, size);
+            return 0;
+        }, [](const char *p) {                   // Window.
             // TODO.
             return 0;
-        }, [](const char *p) {                  // Window.
-            // TODO.
-            return 0;
-        }, [](const char *p) {                  // Keyboard.
+        }, [](const char *p) {                   // Keyboard.
             // Keyboard is read-only.
             return -EPERM; // Operation not permitted.
         });

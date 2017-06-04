@@ -28,7 +28,7 @@ dpytests: dpytests.cpp
 dsh: dsh.cpp
 	@$(CXX) $(CXXFLAGS) -D$(DEFS) $(SRC) $< -o $@
 
-dshfs: dshfs.cpp file.cpp kb.cpp kbsys.cpp
+dshfs: dshfs.cpp file.cpp kb.cpp kbsys.cpp fs.cpp dsys.cpp $(SRC)
 	@$(CXX) $^ `pkg-config fuse --cflags --libs` -o $@
 
 run: run.cpp
