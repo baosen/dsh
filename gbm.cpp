@@ -7,8 +7,7 @@ static void check_extensions()
 {
 #ifdef EGL_MESA_platform_gbm
     const char *ext = eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS);
-    if (!ext)
-        // EGL_EXT_client_extensions is unsupported.
+    if (!ext) // Is EGL_EXT_client_extensions is supported?
         abort();
     if (!strstr(ext, "EGL_MESA_platform_gbm"))
         abort();
@@ -26,11 +25,9 @@ void init()
     int fd = open("/dev/dri/card0", O_RDWR | FD_CLOEXEC);
     if (fd < 0)
         abort();
-
     gbm = gbm_create_device(fd);
     if (!gbm)
         abort();
-
 #ifdef EGL_MESA_platform_gbm
     egl = eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_MESA, gbm, nullptr);
 #else
@@ -38,13 +35,12 @@ void init()
 #endif
     if (egl == EGL_NO_DISPLAY)
         abort();
-
     EGLint major, minor;
     if (!eglInitialize(egl, &major, &minor))
         abort();
 }
 
-// Configuration.
+// Configure GBM.
 void config()
 {
     EGLint attribs[] {
