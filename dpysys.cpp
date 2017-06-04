@@ -1,4 +1,3 @@
-#include <memory>
 #include "fb.hpp"
 #include "dpysys.hpp"
 using namespace std;
@@ -18,11 +17,11 @@ namespace {
 }
 
 // Initialize display system.
-void dpysys::init() {
+void dpyinit() {
     fb = new Fb();
 }
 
 // De-initialize display system.
-void dpysys::deinit() {
+void dpydeinit() {
     delete fb;
 }

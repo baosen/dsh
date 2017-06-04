@@ -174,7 +174,7 @@ static void mklns() {
 // Setup and initialize displays, and make the files pointing to them.
 static void mkdpys() {
     // Initialize graphical output.
-    dpysys::init();
+    dpyinit();
     static uint i = 0; // Current index of display.
     stringstream ss;
     ss << "dpy" << i;
@@ -204,7 +204,8 @@ static void mkkb() {
 }
 
 static void cleanup() {
-    dpysys::deinit();
+    // TODO: Cleanup keyboard, sound, mouse.
+    dpydeinit();
 }
 
 // File system driver for displays.
