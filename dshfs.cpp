@@ -4,12 +4,14 @@
 #include <sstream>
 #include <fuse.h>
 #include "zero.hpp"
+#include "log.hpp"
 #include "file.hpp"
 #include "kbsys.hpp"
 #include "msys.hpp"
 #include "fs.hpp"
 #include "wndcmd.hpp"
 #include "dpycmd.hpp"
+#include "dpysys.hpp"
 using namespace std;
 
 namespace {
@@ -171,14 +173,8 @@ static void mklns() {
 
 // Setup and initialize displays, and make the files pointing to them.
 static void mkdpys() {
-// Initialize graphical output.
-#ifdef DRM
-    // Use DRM graphical output.
-#elif FB
-    // Use framebuffer graphical output.
-#else
-//#   error No screen output chosen. Choose one to continue compiling.
-#endif
+    // Initialize graphical output.
+    dpysys::init();
     static uint i = 0; // Current index of display.
     stringstream ss;
     ss << "dpy" << i;
@@ -205,6 +201,10 @@ static void mkkb() {
     stringstream ss;
     ss << "kb" << i;
     ents.emplace_back(File(ss.str()));
+}
+
+static void cleanup() {
+    dpysys::deinit();
 }
 
 // File system driver for displays.
@@ -234,10 +234,11 @@ int main(int argc, char *argv[]) {
         mkm();
         // TODO: Connect to displays and make them as files.
         mkdpys();
-
         // Drive user-space file system.
         return fuse_main(argc, argv, &ops, nullptr);
     } catch (...) {
-        return EXIT_FAILURE;
+        error("Exception caught!");
     }
+    cleanup();
+    return EXIT_FAILURE;
 }

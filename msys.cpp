@@ -34,17 +34,17 @@ namespace m {
 }
 
 // Init mouse.
-bool (*minit[])() = {
+bool (*minit[])() {
     &evm::init, &m::init,
 };
 
 // Get mouse position.
-static MPosFunc mpos[] = {
+static Mposf mpos[] {
     &evm::pos, &m::pos
 };
 
 // Current mouse device that is used.
-MPosFunc mcurpos = nullptr;
+Mposf mcurpos = nullptr;
 
 // Initialize and setup mouse.
 void initm() {

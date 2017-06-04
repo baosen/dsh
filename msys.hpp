@@ -6,7 +6,7 @@
 void initm();
 
 // Gets the position of the mouse.
-typedef Pos (*MPosFunc)();
+typedef Pos (*Mposf)();
 
 // Current mouse device that is used.
-extern MPosFunc mcurpos;
+extern Mposf mcurpos;
