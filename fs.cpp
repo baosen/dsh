@@ -6,7 +6,7 @@
 #include "kbsys.hpp"
 #include "msys.hpp"
 #include "cmds.hpp"
-#include "dpysys.hpp"
+#include "dsys.hpp"
 #include "fs.hpp"
 using namespace std;
 
@@ -171,7 +171,7 @@ namespace {
     // Setup and initialize displays, and make the files pointing to them.
     void mkdpys() {
         // Initialize graphical output.
-        dpyinit();
+        dsys::init();
         static uint i = 0; // Current index of display.
         stringstream ss;
         ss << "dpy" << i;
@@ -204,7 +204,7 @@ namespace {
 // Cleanup shell.
 void fs::cleanup() {
     // TODO: Cleanup keyboard, sound, mouse.
-    dpydeinit();
+    dsys::deinit();
 }
 
 // Setup shell.

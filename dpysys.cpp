@@ -17,11 +17,11 @@ namespace {
 }
 
 // Initialize display system.
-void dpyinit() {
+void dsys::init() {
     fb = new Fb();
 }
 
 // De-initialize display system.
-void dpydeinit() {
+void dsys::deinit() {
     delete fb;
 }
