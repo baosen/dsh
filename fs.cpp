@@ -164,8 +164,8 @@ int fs::mknod(const char *path, mode_t mode, dev_t dev) {
 namespace {
     // Create standard "this" and "parent" links.
     void mklns() {
-        ents.emplace_back(File("."));
-        ents.emplace_back(File(".."));
+        ents.emplace_back(File("."));  // Link to current directory.
+        ents.emplace_back(File("..")); // Link to parent directory.
     }
     
     // Setup and initialize displays, and make the files pointing to them.
