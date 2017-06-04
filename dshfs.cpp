@@ -9,8 +9,7 @@
 #include "kbsys.hpp"
 #include "msys.hpp"
 #include "fs.hpp"
-#include "wndcmd.hpp"
-#include "dpycmd.hpp"
+#include "cmds.hpp"
 #include "dpysys.hpp"
 using namespace std;
 
