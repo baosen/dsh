@@ -101,17 +101,18 @@ int fs::readdir(const char *path, void *buf, fuse_fill_dir_t fill, off_t offset,
     return 0;
 }
 
+#define ENTRYCHK \
+    if (!exists(p)) \
+        return -ENOENT; // No entry found.
+
 // Open the desktop shell file system.
 int fs::open(const char *path, struct fuse_file_info *fi) noexcept {
     return filedo(path, [](const char *p) {
-        if (!exists(p))
-            return -ENOENT;
+        ENTRYCHK
     }, [](const char *p) {
-        if (!exists(p))
-            return -ENOENT; // No entry found.
+        ENTRYCHK
     }, [](const char *p) {
-        if (!exists(p))
-            return -ENOENT;
+        ENTRYCHK
     });
     return 0;
 }
