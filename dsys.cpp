@@ -30,6 +30,10 @@ void dsys::copy(const char *buf, const off_t i, const size_t size) {
 #endif
 }
 
+// Read from window.
+void dsys::read(const char* name, const char *buf, const off_t i, const size_t size) {
+}
+
 // De-initialize display system.
 void dsys::deinit() {
     delete fb;

@@ -10,8 +10,6 @@ namespace fs {
     int getattr(const char *path, struct stat *buf) noexcept;
     // Read directory tree.
     int readdir(const char *path, void *buf, fuse_fill_dir_t fill, off_t offset, struct fuse_file_info *fi);
-    // Does the file exist in one of the entries?
-    bool exists(const char *name); 
     // Open the desktop shell file system.
     int open(const char *path, struct fuse_file_info *fi) noexcept;
     // Read file contents.

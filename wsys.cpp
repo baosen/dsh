@@ -1,16 +1,24 @@
-#include <memory>
+#include <list>
+#include <unordered_map>
+#include <string>
 #include "wsys.hpp"
-#include "wnd.hpp"
+#include "mwnd.hpp"
 using namespace std;
 
 namespace {
-    unique_ptr<Wnd> w;
+    unordered_map<string, Mwnd> wnds;
 }
 
 // Initialize and setup window system.
 void wsys::init() {
-    w = unique_ptr<Wnd>();
+    // Add a single window.
+    wnds["dpy0"] = Mwnd();
 }
 
-void wsys::write(const char* name, cohst char *buf, const off_t i, const size_t size) {
+// Read from window.
+void wsys::read(const char* name, const char *buf, const off_t i, const size_t size) {
+}
+
+// Write from window.
+void wsys::write(const char* name, const char *buf, const off_t i, const size_t size) {
 }
