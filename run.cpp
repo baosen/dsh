@@ -7,7 +7,7 @@ void Run::click(const Pos& p) {
         return;
 }
 
-// run: Run program.
+// Run program.
 int main() {
     // First program ran used to load and execute other programs.
     Run r;
