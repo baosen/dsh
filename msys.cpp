@@ -39,6 +39,8 @@ bool (*minit[])() {
     &m::init,   // "hacky" mouse initialization.
 };
 
+using namespace msys;
+
 // Get mouse position.
 static Mposf mpos[] {
     &evm::pos, // Get event mouse position.
@@ -46,10 +48,10 @@ static Mposf mpos[] {
 };
 
 // Current mouse device that is used.
-Mposf mcurpos = nullptr;
+Mposf msys::mcurpos = nullptr;
 
 // Initialize and setup mouse.
-void initm() {
+void init() {
     // Find and initialize an available mouse.
     for (uint i = 0; i < sizeof(minit); ++i) {
         if (minit[i]()) {

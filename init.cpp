@@ -5,11 +5,9 @@
 // Initialize shell.
 void init() {
     // Setup mouse.
-    initm();
+    msys::init();
     // Setup keyboard.
-    initkb();
+    kbsys::init();
     // Setup window.
-    initw();
-    // Setup network.
-    //initnet();
+    wsys::init();
 }

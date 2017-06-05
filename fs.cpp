@@ -190,7 +190,7 @@ namespace {
     // Setup mouse and make mouse files.
     void mkm() {
         // Initialize mouse.
-        initm();
+        msys::init();
         // Make mouse files.
         static uint i = 0;
         stringstream ss;
