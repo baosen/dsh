@@ -103,10 +103,10 @@ int fs::readdir(const char *path, void *buf, fuse_fill_dir_t fill, off_t offset,
 
 // Open the desktop shell file system.
 int fs::open(const char *path, struct fuse_file_info *fi) noexcept {
-    return filedo(path, [&](const char *p) {
+    return filedo(path, [](const char *p) {
         if (!exists(p))
             return -ENOENT;
-    }, [&](const char *p) {
+    }, [](const char *p) {
         if (!exists(p))
             return -ENOENT; // No entry found.
     }, [](const char *p) {
