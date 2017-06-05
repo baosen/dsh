@@ -1,6 +1,7 @@
 #pragma once
 #include "kb.hpp"
 
-extern Kb kb;
-
-void initkb();
+namespace kbsys {
+    extern Kb kb;
+    void init();
+}

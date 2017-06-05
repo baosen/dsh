@@ -1,8 +1,10 @@
 #include "kbsys.hpp"
 
-Kb kb;
+namespace kbsys {
+    Kb kb;
+}
 
 // Setup and initialize keyboard.
-void initkb() {
+void kbsys::init() {
     kb.open();
 }

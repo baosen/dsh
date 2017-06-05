@@ -7,6 +7,7 @@
 #include "msys.hpp"
 #include "cmds.hpp"
 #include "dsys.hpp"
+#include "wsys.hpp"
 #include "fs.hpp"
 using namespace std;
 
@@ -37,7 +38,7 @@ template<class F> auto doifentry(const char *path, F f) {
 }
 
 // Initialize desktop shell file system.
-void *fs::init(struct fuse_conn_info *conn) noexcept {
+void* fs::init(struct fuse_conn_info *conn) noexcept {
     return nullptr;
 }
 
@@ -114,26 +115,26 @@ int fs::open(const char *path, struct fuse_file_info *fi) noexcept {
 int fs::read(const char *path, char *buf, size_t size, off_t offset, struct fuse_file_info *fi) noexcept {
     return doifentry(path, [&]() {
         return filedo(path, [](const char *p) { // Display.
-            // TODO.
+            //dsys::read()
             return 0;
         }, [](const char *p) {                  // Window.
-            // TODO.
+            //wsys::read()
             return 0;
         }, [](const char *p) {                  // Keyboard.
             // Read key code.
-            return kb.get();
+            return kbsys::kb.get();
         });
     });
 }
 
-// Write to display. Returns exactly the number of bytes written except on error.
+// Write to file. Returns exactly the number of bytes written except on error.
 int fs::write(const char *path, const char *buf, size_t size, off_t i, struct fuse_file_info *fi) noexcept {
     return doifentry(path, [&]() {
         return filedo(path, [&](const char *p) { // Display.
             dsys::copy(buf, i, size);
             return 0;
-        }, [](const char *p) {                   // Window.
-            // TODO.
+        }, [&](const char *p) {                  // Window.
+            wsys::write(p, buf, i, size);
             return 0;
         }, [](const char *p) {                   // Keyboard.
             // Keyboard is read-only.
@@ -192,11 +193,22 @@ namespace {
     // Setup keyboard.
     void mkkb() {
         // Initialize keyboard.
-        initkb();
+        kbsys::init();
         // Insert it into filesystem.
         static uint i = 0; // Current index of keyboard.
         stringstream ss;
         ss << "kb" << i;
+        ents.emplace_back(File(ss.str()));
+    }
+
+    // Setup and make windows.
+    void mkw() {
+        // Initialize windows.
+        wsys::init();
+        // Insert it into filesystem.
+        static uint i = 0; // Current index of keyboard.
+        stringstream ss;
+        ss << "wnd" << i;
         ents.emplace_back(File(ss.str()));
     }
 }

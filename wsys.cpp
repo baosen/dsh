@@ -8,6 +8,9 @@ namespace {
 }
 
 // Initialize and setup window system.
-void initw() {
+void wsys::init() {
     w = unique_ptr<Wnd>();
+}
+
+void wsys::write(const char* name, cohst char *buf, const off_t i, const size_t size) {
 }
