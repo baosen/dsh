@@ -139,9 +139,11 @@ int fs::read(const char *path, char *buf, size_t size, off_t i, struct fuse_file
 int fs::write(const char *path, const char *buf, size_t size, off_t i, struct fuse_file_info *fi) noexcept {
     return doifentry(path, [&]() {
         return filedo(path, [&](const char *p) { // Display.
-            dsys::copy(buf, i, size);
+            // Write to display named in p.
+            dsys::write(buf, i, size);
             return 0;
         }, [&](const char *p) {                  // Window.
+            // Write to window named in p.
             wsys::write(p, buf, i, size);
             return 0;
         }, [](const char *p) {                   // Keyboard.

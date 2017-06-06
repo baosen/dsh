@@ -1,9 +1,17 @@
+// DEBUG.
+#define FB
+
+#if defined(DRM)
+    // Use DRM graphical output.
+#elif defined(FB)
+    // Use framebuffer graphical output.
+#else
+#   error No screen output chosen. Choose one to continue compiling.
+#endif
+
 #include <cstring>
 #include "dsys.hpp"
 using namespace std;
-
-// DEBUG.
-#define FB
 
 namespace {
 #if defined(DRM)
@@ -11,8 +19,6 @@ namespace {
 #elif defined(FB)
     // Use framebuffer graphical output.
     Fb *fb;
-#else
-#   error No screen output chosen. Choose one to continue compiling.
 #endif
 }
 
@@ -22,16 +28,16 @@ void dsys::init() {
 }
 
 // Copy data in buffer into framebuffer.
-void dsys::copy(const char *buf, const off_t i, const size_t size) {
-#if defined(FB)
+void dsys::write(const char *buf, const off_t i, const size_t size) {
+#ifdef FB
     memcpy(&fb->get8(i), buf, size);
-#else
-#   error No screen output chosen. Choose one to continue compiling.
 #endif
 }
 
-// Read from window.
-void dsys::read(const char* name, const char *buf, const off_t i, const size_t size) {
+void dsys::read(const char* name, char *buf, const off_t i, const size_t size) {
+#ifdef FB
+    memcpy(buf, &fb->get8(i), size);
+#endif
 }
 
 // De-initialize display system.
