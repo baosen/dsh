@@ -74,20 +74,20 @@ int fs::create(const char *path, mode_t mode, struct fuse_file_info *fi) {
 }
 
 // Get file attributes of a file in the shell file system.
-int fs::getattr(const char *path, struct stat *buf) noexcept {
+int fs::getattr(const char *path, struct stat *stbuf) noexcept {
     // Prepare stat-buffer.
-    zero(*buf);
+    zero(*stbuf);
     // If caller wants to check the attributes of the backslash directory.
     if (!strcmp(path, "/")) {
-        buf->st_mode = S_IFDIR | 0755; // Directory and its permission bits.
-        buf->st_nlink = 0;             // Number of hardlinks that points to this file that exists in the file system.
+        stbuf->st_mode = S_IFDIR | 0755; // Directory and its permission bits.
+        stbuf->st_nlink = 0;             // Number of hardlinks that points to this file that exists in the file system.
         return 0;
     } 
     // Its a file entry.
     return doifentry(path, [&]() {
-        buf->st_mode  = S_IFREG | 0444; // File and its permission bits.
-        buf->st_nlink = 0;              // Hard links.
-        buf->st_size  = 0;              // uhm... size of file?
+        stbuf->st_mode  = S_IFREG | 0444; // File and its permission bits.
+        stbuf->st_nlink = 0;              // Hard links.
+        stbuf->st_size  = 0;              // uhm... size of file?
         return 0;
     });
 }
@@ -95,9 +95,11 @@ int fs::getattr(const char *path, struct stat *buf) noexcept {
 // Read directory tree.
 int fs::readdir(const char *path, void *buf, fuse_fill_dir_t fill, off_t offset, struct fuse_file_info *fi) {
     // Fill recursively.
-    for (const auto& e : ents)
+    for (const auto& e : ents) {
         // Build the file entries in the buffer.
-        fill(buf, e.name.c_str(), nullptr, 0);
+        if (fill(buf, e.name.c_str(), 0, 0) == 1) // is buffer full?
+            return -ENOBUFS;
+    }
     return 0;
 }
 
@@ -239,9 +241,9 @@ void fs::setup() {
     /***********/
 
     // Connect keyboards and make keyboard files.
-    mkkb();
+    //mkkb();
     // Connect mouse and make mouse files.
-    mkm();
+    //mkm();
     // Connect to displays and make them as files.
-    mkdpys();
+    //mkdpys();
 }
