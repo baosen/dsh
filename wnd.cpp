@@ -1,5 +1,5 @@
 #include <sstream>
-#include "fio.hpp"
+//#include "fio.hpp"
 #include "frect.hpp"
 #include "fb.hpp"
 #include "wnd.hpp"
@@ -9,35 +9,36 @@ using namespace std;
 
 // Create a new window.
 Wnd::Wnd(const Pos& p) : Wnd() {
-    rect = shared_ptr<Frect>(new Frect());
+    //rect = shared_ptr<Frect>(new Frect());
 }
 
 // Create an empty window.
-Wnd::Wnd() : rect(nullptr) {
-    if (dsh::iscwdset()) {
-        // Create wnd0, wnd1, wnd2 ... wndN files.
-        static uint index = 0;
-        stringstream ss;
-        ss << dsh::wd << "/wnd" << index;
-        fd = ::open(ss.str().c_str(), O_CREAT); 
-        if (fd == -1)
-            throw err("Invalid name.");
-        this->name = ss.str(); 
-        ++index;
-        return;
-    }
-    throw err("Working directory is not set!");
+//Wnd::Wnd() : rect(nullptr) {
+Wnd::Wnd() {
+    //if (dsh::iscwdset()) {
+    //    // Create wnd0, wnd1, wnd2 ... wndN files.
+    //    static uint index = 0;
+    //    stringstream ss;
+    //    ss << dsh::wd << "/wnd" << index;
+    //    fd = ::open(ss.str().c_str(), O_CREAT); 
+    //    if (fd == -1)
+    //        throw err("Invalid name.");
+    //    this->name = ss.str(); 
+    //    ++index;
+    //    return;
+    //}
+    //throw err("Working directory is not set!");
 }
 
 // Destroy the window.
 Wnd::~Wnd() {
-    // Close the file descriptor handle to the rectangular file.
-    if (close(fd) == -1)
-        error("Failed to close file.");
-        // TODO: Return now?
-    // Delete window file.
-    if (unlink((dsh::wd + this->name).c_str()) == -1)
-        error("Failed to unlink file.");
+    //// Close the file descriptor handle to the rectangular file.
+    //if (close(fd) == -1)
+    //    error("Failed to close file.");
+    //    // TODO: Return now?
+    //// Delete window file.
+    //if (unlink((dsh::wd + this->name).c_str()) == -1)
+    //    error("Failed to unlink file.");
 }
 
 // Drive the window and handle window events.

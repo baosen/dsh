@@ -3,7 +3,7 @@ CXXFLAGS = -std=c++17 -O3 -Wall -Wextra
 # Set G++ as the C++ compiler.
 CXX      = g++
 # Set source dependencies for desktop shell.
-SRC      = m.cpp wnd.cpp col.cpp pos.cpp fb.cpp scr.cpp log.cpp res.cpp ev.cpp evm.cpp msys.cpp kbsys.cpp kb.cpp wsys.cpp frect.cpp wd.cpp parse.cpp init.cpp
+SRC      = m.cpp wnd.cpp col.cpp pos.cpp fb.cpp scr.cpp log.cpp res.cpp ev.cpp evm.cpp msys.cpp kbsys.cpp kb.cpp wsys.cpp frect.cpp wd.cpp parse.cpp init.cpp mwnd.cpp
 # Set preprocessing definitions.
 DEFS     = DEBUG
 # Set the produced executable binaries.
@@ -28,7 +28,7 @@ dpytests: dpytests.cpp
 dsh: dsh.cpp
 	@$(CXX) $(CXXFLAGS) -D$(DEFS) $(SRC) $< -o $@
 
-dshfs: dshfs.cpp file.cpp kb.cpp kbsys.cpp fs.cpp dsys.cpp $(SRC)
+dshfs: dshfs.cpp file.cpp kb.cpp kbsys.cpp fs.cpp dsys.cpp wndcmd.cpp dpycmd.cpp $(SRC)
 	@$(CXX) $^ `pkg-config fuse --cflags --libs` -o $@
 
 run: run.cpp
