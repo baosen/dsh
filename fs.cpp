@@ -233,6 +233,11 @@ void fs::cleanup() {
 void fs::setup() {
     // Create standard "this" and "parent" links in the file system tree.
     mklns();
+
+    /***********/
+    /* Devices */
+    /***********/
+
     // Connect keyboards and make keyboard files.
     mkkb();
     // Connect mouse and make mouse files.
