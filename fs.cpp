@@ -140,15 +140,15 @@ int fs::read(const char *path, char *buf, size_t size, off_t i, struct fuse_file
 // Write to file. Returns exactly the number of bytes written except on error.
 int fs::write(const char *path, const char *buf, size_t size, off_t i, struct fuse_file_info *fi) noexcept {
     return doifentry(path, [&]() {
-        return filedo(path, [&](const char *p) { // Display.
-            // Write to display named in p.
-            dsys::write(buf, i, size);
+        return filedo(path, [&](const char *name) { // Display.
+            // Write to display.
+            dsys::write(name, buf, i, size);
             return 0;
-        }, [&](const char *p) {                  // Window.
-            // Write to window named in p.
-            wsys::write(p, buf, i, size);
+        }, [&](const char *name) {                  // Window.
+            // Write to window.
+            wsys::write(name, buf, i, size);
             return 0;
-        }, [](const char *p) {                   // Keyboard.
+        }, [](const char *name) {                   // Keyboard.
             // Keyboard is read-only.
             return -EPERM; // Operation not permitted.
         });
@@ -207,7 +207,7 @@ namespace {
         // Initialize keyboard.
         kbsys::init();
         // Insert it into filesystem.
-        static uint i = 0; // Current index of keyboard.
+        static uint i = 0; // Current index of the keyboard.
         stringstream ss;
         ss << "kb" << i;
         ents.emplace_back(File(ss.str()));
@@ -218,7 +218,7 @@ namespace {
         // Initialize windows.
         wsys::init();
         // Insert it into filesystem.
-        static uint i = 0; // Current index of keyboard.
+        static uint i = 0; // Current index of the windows.
         stringstream ss;
         ss << "wnd" << i;
         ents.emplace_back(File(ss.str()));
@@ -235,10 +235,6 @@ void fs::cleanup() {
 void fs::setup() {
     // Create standard "this" and "parent" links in the file system tree.
     mklns();
-
-    /***********/
-    /* Devices */
-    /***********/
 
     // Connect keyboards and make keyboard files.
     //mkkb();

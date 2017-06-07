@@ -28,7 +28,7 @@ void dsys::init() {
 }
 
 // Copy data in buffer into framebuffer.
-void dsys::write(const char *buf, const off_t i, const size_t size) {
+void dsys::write(const char *name, const char *buf, const off_t i, const size_t size) {
 #ifdef FB
     memcpy(&fb->get8(i), buf, size);
 #endif
