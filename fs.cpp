@@ -14,8 +14,11 @@ using namespace std;
 // File entries in the file system.
 namespace {
     list<File> ents; // List of file entries.
+
     // Does the file exist in one of the entries?
-    bool exists(const char *name) {
+    bool exists(const char *name) 
+    {
+        // Find the file in the list of file entries.
         for (const auto& e : ents)
             if (!strcmp(name, e.name.c_str()))
                 return true;
