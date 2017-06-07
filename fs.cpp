@@ -137,7 +137,10 @@ int fs::readdir(const char *path,          // File path.
         return -ENOENT; // No entry found.
 
 // Open the shell file system.
-int fs::open(const char *path, struct fuse_file_info *fi) noexcept {
+int fs::open(const char *path,          // Path to file to open.
+             struct fuse_file_info *fi) // Other file info.
+             noexcept 
+{
     return filedo(path, [](const char *p) {
         ENTRYCHK
     }, [](const char *p) {
@@ -149,7 +152,14 @@ int fs::open(const char *path, struct fuse_file_info *fi) noexcept {
 }
 
 // Read file contents.
-int fs::read(const char *path, char *buf, size_t size, off_t i, struct fuse_file_info *fi) noexcept {
+int fs::read(const char            *path, // Pathname of the file to read.
+             char                  *buf,  // Buffer to fill with the file contents read.
+             size_t                 size, // The amount of bytes to read.
+             off_t                  i,    // The offset to read the data from.
+             struct fuse_file_info *fi)   // Other info.
+             noexcept 
+{
+    // Do file read if the asked entry exists.
     return doifentry(path, [&]() {
         return filedo(path, [&](const char *p) { // Display.
             // Read from display.
