@@ -54,7 +54,8 @@ auto filedo(const char *path, // Path of the file.
 
 // Do action if the path specified is in the file system.
 template<class F> 
-auto doifentry(const char *path, F f) 
+auto doifentry(const char *path, // Path of the file.
+               F f)              // Function to call if entry exists.
 {
     for (const auto& e : ents)
         if (!strcmp(path+1, e.name.c_str()))
@@ -69,7 +70,10 @@ void* fs::init(struct fuse_conn_info *conn) noexcept
 }
 
 // Create shell file.
-int fs::create(const char *path, mode_t mode, struct fuse_file_info *fi) 
+int fs::create(const char *path,          // File path.
+               mode_t mode,               // Create mode.
+               struct fuse_file_info *fi) // Other info that is not part of POSIX.
+               noexcept
 {
     // Caller can only create files of type dpy* and wnd*.
     return filedo(path, [](const char *p) {
@@ -89,7 +93,10 @@ int fs::create(const char *path, mode_t mode, struct fuse_file_info *fi)
 }
 
 // Get file attributes of a file in the shell file system.
-int fs::getattr(const char *path, struct stat *stbuf) noexcept {
+int fs::getattr(const char *path,   // File path.
+                struct stat *stbuf) // Buffer to fill the file attributes information.
+                noexcept
+{
     // Prepare stat-buffer.
     zero(*stbuf);
     // If caller wants to check the attributes of the backslash directory.
@@ -108,7 +115,13 @@ int fs::getattr(const char *path, struct stat *stbuf) noexcept {
 }
 
 // Read current tree of the mounted directory.
-int fs::readdir(const char *path, void *buf, fuse_fill_dir_t fill, off_t offset, struct fuse_file_info *fi) {
+int fs::readdir(const char *path,          // File path.
+                void *buf,                 // The returned buffer to fill the file entries.
+                fuse_fill_dir_t fill,      // Function to call to fill the provided buffer with entries.
+                off_t offset,              // Offset to place??
+                struct fuse_file_info *fi) // Other info.
+                noexcept
+{
     // Fill recursively.
     for (const auto& e : ents) {
         // Build the file entries in the buffer.
@@ -193,7 +206,10 @@ int fs::ioctl(const char            *path,  // Path of the file to control.
 }
 
 // Make shell file node. Gets called for creation of all non-directory, non-symbolic link nodes.
-int fs::mknod(const char *path, mode_t mode, dev_t dev) 
+int fs::mknod(const char *path, // File path.
+              mode_t mode,      // Mode to set the newly created file node.
+              dev_t dev)        // Optional device provided.
+              noexcept 
 {
     return create(path, mode, nullptr);
 }
