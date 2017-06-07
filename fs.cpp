@@ -24,17 +24,25 @@ namespace {
 }
 
 // Do correct file operation according to the file type.
-template<class F, class W, class K> auto filedo(const char *path, F df, W wf, K kf) {
+template<class F, class W, class K> 
+auto filedo(const char *path, // Path of the file.
+            F           df,   // Function to call when the path points to a display file.
+            W           wf,   // Function to call when the path points to a window file.
+            K           kf)   // Function to call when the path points to a keyboard file.
+{
     // Check path for what kind of file is opened.
     const char *bs = path+1, *s;
     // Is a display?
     if ((s = strstr(bs, "dpy")))
+        // Call display function.
         return df(s);
     // Is a window?
     else if ((s = strstr(bs, "wnd")))
+        // Call window function.
         return wf(s);
     // Is a keyboard?
     else if ((s = strstr(bs, "kb")))
+        // Call keyboard function.
         return kf(s);
     else
         // Invalid file name.
@@ -42,7 +50,9 @@ template<class F, class W, class K> auto filedo(const char *path, F df, W wf, K 
 }
 
 // Do action if the path specified is in the file system.
-template<class F> auto doifentry(const char *path, F f) {
+template<class F> 
+auto doifentry(const char *path, F f) 
+{
     for (const auto& e : ents)
         if (!strcmp(path+1, e.name.c_str()))
             return f();
@@ -50,12 +60,14 @@ template<class F> auto doifentry(const char *path, F f) {
 }
 
 // Initialize desktop shell file system.
-void* fs::init(struct fuse_conn_info *conn) noexcept {
+void* fs::init(struct fuse_conn_info *conn) noexcept 
+{
     return nullptr;
 }
 
 // Create shell file.
-int fs::create(const char *path, mode_t mode, struct fuse_file_info *fi) {
+int fs::create(const char *path, mode_t mode, struct fuse_file_info *fi) 
+{
     // Caller can only create files of type dpy* and wnd*.
     return filedo(path, [](const char *p) {
         // Create new display.
@@ -92,7 +104,7 @@ int fs::getattr(const char *path, struct stat *stbuf) noexcept {
     });
 }
 
-// Read directory tree.
+// Read current tree of the mounted directory.
 int fs::readdir(const char *path, void *buf, fuse_fill_dir_t fill, off_t offset, struct fuse_file_info *fi) {
     // Fill recursively.
     for (const auto& e : ents) {
@@ -103,11 +115,12 @@ int fs::readdir(const char *path, void *buf, fuse_fill_dir_t fill, off_t offset,
     return 0;
 }
 
+// Check if the entry name given exist in the file tree.
 #define ENTRYCHK \
     if (!exists(p)) \
         return -ENOENT; // No entry found.
 
-// Open the desktop shell file system.
+// Open the shell file system.
 int fs::open(const char *path, struct fuse_file_info *fi) noexcept {
     return filedo(path, [](const char *p) {
         ENTRYCHK
@@ -155,14 +168,21 @@ int fs::write(const char *path, const char *buf, size_t size, off_t i, struct fu
     });
 }
 
-// Control files in shell file system.
-int fs::ioctl(const char *path, int cmd, void *arg, struct fuse_file_info *fi, unsigned int flags, void *data) noexcept {
+// Control a file.
+int fs::ioctl(const char            *path,  // Path of the file to control.
+              int                    cmd,   // The ioctl() command number passed.
+              void                  *arg,   // The arguments provided to the ioctl() call.
+              struct fuse_file_info *fi,    // Other info.
+              unsigned int           flags, // File flags ??
+              void                  *data)  // ??
+              noexcept                      // This function cannot throw an exception.
+{
     return doifentry(path, [&]() {
-        return filedo(path, [&](const char *p) { // Display.
+        return filedo(path, [&](const char *name) { // Display.
             return dpycmd(cmd);
-        }, [&](const char *p) {                  // Window.
+        }, [&](const char *name) {                  // Window.
             return wndcmd(cmd);
-        }, [&](const char *p) {                  // Keyboard.
+        }, [&](const char *name) {                  // Keyboard.
             // No commands for keyboards.
             return -EINVAL;
         });
@@ -170,19 +190,22 @@ int fs::ioctl(const char *path, int cmd, void *arg, struct fuse_file_info *fi, u
 }
 
 // Make shell file node. Gets called for creation of all non-directory, non-symbolic link nodes.
-int fs::mknod(const char *path, mode_t mode, dev_t dev) {
+int fs::mknod(const char *path, mode_t mode, dev_t dev) 
+{
     return create(path, mode, nullptr);
 }
 
 namespace {
     // Create standard "this" and "parent" links.
-    void mklns() {
+    void mklns() 
+    {
         ents.emplace_back(File("."));  // Link to current directory.
         ents.emplace_back(File("..")); // Link to parent directory.
     }
     
     // Setup and initialize displays, and make the files pointing to them.
-    void mkdpys() {
+    void mkdpys() 
+    {
         // Initialize graphical output.
         dsys::init();
         static uint i = 0; // Current index of display.
@@ -192,10 +215,11 @@ namespace {
     }
     
     // Setup mouse and make mouse files.
-    void mkm() {
+    void mkm() 
+    {
         // Initialize mouse.
         msys::init();
-        // Make mouse files.
+        // Make mouse file.
         static uint i = 0;
         stringstream ss;
         ss << "m" << i;
@@ -203,7 +227,8 @@ namespace {
     }
     
     // Setup keyboard.
-    void mkkb() {
+    void mkkb() 
+    {
         // Initialize keyboard.
         kbsys::init();
         // Insert it into filesystem.
@@ -214,7 +239,8 @@ namespace {
     }
 
     // Setup and make windows.
-    void mkw() {
+    void mkw() 
+    {
         // Initialize windows.
         wsys::init();
         // Insert it into filesystem.
