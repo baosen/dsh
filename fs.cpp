@@ -177,7 +177,13 @@ int fs::read(const char            *path, // Pathname of the file to read.
 }
 
 // Write to file. Returns exactly the number of bytes written except on error.
-int fs::write(const char *path, const char *buf, size_t size, off_t i, struct fuse_file_info *fi) noexcept {
+int fs::write(const char            *path, // Path to the file to be written to.
+              const char            *buf,  // The buffer containing the data to write.
+              size_t                 size, // The size in bytes to write.
+              off_t                  i,    // The offset to write to.
+              struct fuse_file_info *fi)   // Other info.
+              noexcept 
+{
     return doifentry(path, [&]() {
         return filedo(path, [&](const char *name) { // Display.
             // Write to display.
