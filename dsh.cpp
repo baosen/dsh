@@ -1,26 +1,18 @@
 // dsh: Shell for desktops.
 #include "parse.hpp"
-#include "init.hpp"
 #include "msys.hpp"
 #include "log.hpp"
 #include "m.hpp"
 #include "run.hpp"
-
-#ifdef DEBUG
-#   include "wd.hpp"
-#endif
+#include "wd.hpp"
 
 // Server.
 int main(const int argc, const char *argv[]) {
     try {
         // Parse arguments.
         parse(argc, argv);
-
-#ifdef DEBUG
+        // Set directory to the shell filesystem.
         dsh::wd = "./dsh/";
-        exit(EXIT_FAILURE);
-#endif
-
         // Initialize window system.
         init();
         // Listen as a server and respond to window commands from clients.

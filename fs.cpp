@@ -5,6 +5,7 @@
 #include "file.hpp"
 #include "kbsys.hpp"
 #include "msys.hpp"
+#include "ssys.hpp"
 #include "cmds.hpp"
 #include "dsys.hpp"
 #include "wsys.hpp"
@@ -286,11 +287,17 @@ namespace {
     }
 }
 
-// Cleanup shell.
+// Cleanup filesystem.
 void fs::cleanup() 
 {
-    // TODO: Cleanup keyboard, sound, mouse.
+    // Cleanup display.
     dsys::deinit();
+    // Cleanup keyboard.
+    kbsys::deinit();
+    // Cleanup sound.
+    ssys::deinit();
+    // Cleanup window.
+    wsys::deinit();
 }
 
 // Setup shell.

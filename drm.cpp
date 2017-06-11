@@ -27,14 +27,13 @@ void drm::init() {
     for (size_t i = 0; i < NSIZE(mod); i++) {
         printf("Loading module %s...", mod[i]);
         drmfd = drmOpen(mod[i], nullptr);
-        if (drmfd < 0)
+        if (drmfd < 0) {
             printf("Failed to load module: %s\n", mod[i]);
-        else {
-            printf("Succeeded to load module: %s\n", mod[i]);
-            break;
+            continue;
         }
+        printf("Succeeded to load module: %s\n", mod[i]);
+        break;
     }
-
 }
 
 // Deinitialize the direct rendering manager.
