@@ -6,7 +6,7 @@
 #include "run.hpp"
 #include "wd.hpp"
 
-// Server.
+// Shell.
 int main(const int argc, const char *argv[]) {
     try {
         // Parse arguments.
