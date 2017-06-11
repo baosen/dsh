@@ -223,8 +223,8 @@ int fs::ioctl(const char            *path,  // Path of the file to control.
 
 // Make shell file node. Gets called for creation of all non-directory, non-symbolic link nodes.
 int fs::mknod(const char *path, // File path.
-              mode_t mode,      // Mode to set the newly created file node.
-              dev_t dev)        // Optional device provided.
+              mode_t      mode, // Mode to set the newly created file node.
+              dev_t       dev)  // Optional device provided.
               noexcept 
 {
     return create(path, mode, nullptr);
@@ -287,16 +287,17 @@ namespace {
 }
 
 // Cleanup shell.
-void fs::cleanup() {
+void fs::cleanup() 
+{
     // TODO: Cleanup keyboard, sound, mouse.
     dsys::deinit();
 }
 
 // Setup shell.
-void fs::setup() {
+void fs::setup() 
+{
     // Create standard "this" and "parent" links in the file system tree.
     mklns();
-
     // Connect keyboards and make keyboard files.
     //mkkb();
     // Connect mouse and make mouse files.
