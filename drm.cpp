@@ -6,8 +6,13 @@ namespace {
 }
 
 // Initialize Direct-Rendering Manager.
-static void init() {
-    static const char *modules[] = {
+void drm::init() {
+    drmModeRes       *resources = nullptr;
+    drmModeConnector *connector = nullptr;
+    drmModeEncoder   *encoder   = nullptr;
+
+    // Load a DRM module in the list below.
+    static const char *mod[] = {
         "exynos",
         "i915",
         "msm",
@@ -19,24 +24,20 @@ static void init() {
         "virtio_gpu",
         "vmwgfx",
     };
-    drmModeRes       *resources = nullptr;
-    drmModeConnector *connector = nullptr;
-    drmModeEncoder   *encoder   = nullptr;
-
-    for (size_t i = 0; i < NSIZE(modules); i++) {
-        printf("Loading module %s...", modules[i]);
-        drmfd = drmOpen(modules[i], nullptr);
+    for (size_t i = 0; i < NSIZE(mod); i++) {
+        printf("Loading module %s...", mod[i]);
+        drmfd = drmOpen(mod[i], nullptr);
         if (drmfd < 0)
-            printf("Failed to load module: %s\n", modules[i]);
+            printf("Failed to load module: %s\n", mod[i]);
         else {
-            printf("Succeeded to load module: %s\n", modules[i]);
+            printf("Succeeded to load module: %s\n", mod[i]);
             break;
         }
     }
 
 }
 
-// De-initialize Direct-Rendering Manager.
-static void deinit() {
+// Deinitialize the direct rendering manager.
+void drm::deinit() {
     drmClose(drmfd);
 }
