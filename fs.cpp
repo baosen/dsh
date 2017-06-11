@@ -238,16 +238,20 @@ namespace {
         ents.emplace_back(File("."));  // Link to current directory.
         ents.emplace_back(File("..")); // Link to parent directory.
     }
+
+#define MKFILES(name) \
+    static uint i = 0; // Current index of the keyboard. \
+    stringstream ss; \
+    ss << "name" << i; \
+    ents.emplace_back(File(ss.str())); 
     
     // Setup and initialize displays, and make the files pointing to them.
     void mkdpys() 
     {
         // Initialize graphical output.
         dsys::init();
-        static uint i = 0; // Current index of display.
-        stringstream ss;
-        ss << "dpy" << i;
-        ents.emplace_back(File(ss.str()));
+        // Insert it into filesystem.
+        MKFILES(dpy)
     }
     
     // Setup mouse and make mouse files.
@@ -255,11 +259,8 @@ namespace {
     {
         // Initialize mouse.
         msys::init();
-        // Make mouse file.
-        static uint i = 0;
-        stringstream ss;
-        ss << "m" << i;
-        ents.emplace_back(File(ss.str()));
+        // Insert it into filesystem.
+        MKFILES(m)
     }
     
     // Setup keyboard.
@@ -268,10 +269,16 @@ namespace {
         // Initialize keyboard.
         kbsys::init();
         // Insert it into filesystem.
-        static uint i = 0; // Current index of the keyboard.
-        stringstream ss;
-        ss << "kb" << i;
-        ents.emplace_back(File(ss.str()));
+        MKFILES(kb)
+    }
+
+    // Setup and make sound files.
+    void mksnd() 
+    {
+        // Initialize sound system.
+        ssys::init();
+        // Insert it into filesystem.
+        MKFILES(snd)
     }
 
     // Setup and make windows.
@@ -280,10 +287,7 @@ namespace {
         // Initialize windows.
         wsys::init();
         // Insert it into filesystem.
-        static uint i = 0; // Current index of the windows.
-        stringstream ss;
-        ss << "wnd" << i;
-        ents.emplace_back(File(ss.str()));
+        MKFILES(wnd)
     }
 }
 

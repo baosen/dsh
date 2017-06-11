@@ -4,7 +4,7 @@
 Mwnd::Mwnd() {}
 Mwnd::Mwnd(const uint size) : mem(size) {}
 
-// Click.
+// Handle window click.
 void Mwnd::click(const Pos& p) {
 }
 
