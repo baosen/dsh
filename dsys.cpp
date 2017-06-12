@@ -1,6 +1,4 @@
-// DEBUG.
-#define FB
-
+#include "config.hpp"
 // Use DRM graphical output.
 #if defined(DRM)
 #   include "drm.hpp"
@@ -10,7 +8,6 @@
 #else
 #   error No screen output chosen. Choose one to continue compiling.
 #endif
-
 #include <cstring>
 #include "dsys.hpp"
 using namespace std;
@@ -25,7 +22,8 @@ namespace {
 }
 
 // Initialize display system.
-void dsys::init() {
+void dsys::init() 
+{
 #if defined(DRM)
     drm::init();
 #elif defined(FB)
@@ -33,8 +31,12 @@ void dsys::init() {
 #endif
 }
 
-// Copy data in buffer into framebuffer.
-void dsys::write(const char *name, const char *buf, const off_t i, const size_t size) {
+// Write to display screen.
+void dsys::write(const char  *name, // Name of the display screen.
+                 const char  *buf,  // Buffer to write to the display screen.
+                 const off_t  i,    // Offset of the display.
+                 const size_t size) // How much in bytes to write to the display screen.
+{
 #ifdef FB
     memcpy(&fb->get8(i), buf, size);
 #elif DRM
@@ -42,7 +44,12 @@ void dsys::write(const char *name, const char *buf, const off_t i, const size_t 
 #endif
 }
 
-void dsys::read(const char* name, char *buf, const off_t i, const size_t size) {
+// Read from display screen.
+void dsys::read(const char  *name, // Name of the display screen.
+                char        *buf,  // Buffer to read to.
+                const off_t  i,    // Offset to read from.
+                const size_t size) // How much in bytes to read from the display screen.
+{
 #ifdef FB
     memcpy(buf, &fb->get8(i), size);
 #elif DRM

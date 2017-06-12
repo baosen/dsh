@@ -235,8 +235,10 @@ namespace {
     // Create standard "this" and "parent" links.
     void mklns() 
     {
-        ents.emplace_back(File("."));  // Link to current directory.
-        ents.emplace_back(File("..")); // Link to parent directory.
+        // Set link to current directory.
+        ents.emplace_back(File("."));
+        // Set link to parent directory.
+        ents.emplace_back(File(".."));
     }
 
 // Make the default numbered files at start.
