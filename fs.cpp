@@ -64,7 +64,7 @@ auto doifentry(const char *path, // Path of the file.
     return -ENOENT;
 }
 
-// Initialize desktop shell file system.
+// Initialize shell file system.
 void* fs::init(struct fuse_conn_info *conn) noexcept 
 {
     return nullptr;
