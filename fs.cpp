@@ -1,4 +1,3 @@
-// Shell server-side file system.
 #include <list>
 #include <sstream>
 #include "zero.hpp"
