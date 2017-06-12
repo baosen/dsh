@@ -37,12 +37,16 @@ void dsys::init() {
 void dsys::write(const char *name, const char *buf, const off_t i, const size_t size) {
 #ifdef FB
     memcpy(&fb->get8(i), buf, size);
+#elif DRM
+#   error Write unimplemented for DRM.
 #endif
 }
 
 void dsys::read(const char* name, char *buf, const off_t i, const size_t size) {
 #ifdef FB
     memcpy(buf, &fb->get8(i), size);
+#elif DRM
+#   error Read unimplemented for DRM.
 #endif
 }
 

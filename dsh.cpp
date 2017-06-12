@@ -1,10 +1,9 @@
 // dsh: Shell for desktops.
 #include "parse.hpp"
-#include "msys.hpp"
 #include "log.hpp"
-#include "m.hpp"
-#include "run.hpp"
+#include "init.hpp"
 #include "wd.hpp"
+#include "types.hpp"
 
 // Shell.
 int main(const int argc, const char *argv[]) {
@@ -15,7 +14,7 @@ int main(const int argc, const char *argv[]) {
         dsh::wd = "./dsh/";
         // Initialize window system.
         init();
-        // Listen as a server and respond to window commands from clients.
+        // Listen for inputs and respond to window commands from clients.
         forever {
             //const auto pos = mcurpos();
         }

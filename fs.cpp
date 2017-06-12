@@ -239,6 +239,7 @@ namespace {
         ents.emplace_back(File("..")); // Link to parent directory.
     }
 
+// Make the default numbered files at start.
 #define MKFILES(name) \
     static uint i = 0; // Current index of the keyboard. \
     stringstream ss; \
@@ -310,9 +311,9 @@ void fs::setup()
     // Create standard "this" and "parent" links in the file system tree.
     mklns();
     // Connect keyboards and make keyboard files.
-    //mkkb();
+    mkkb();
     // Connect mouse and make mouse files.
-    //mkm();
+    mkm();
     // Connect to displays and make them as files.
-    //mkdpys();
+    mkdpys();
 }

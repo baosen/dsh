@@ -15,6 +15,10 @@ void wsys::init() {
     wnds["dpy0"] = Mwnd();
 }
 
+// Deinitialize the window system.
+void wsys::deinit() {
+}
+
 // Read from window.
 void wsys::read(const char* name, const char *buf, const off_t i, const size_t size) {
 }
