@@ -23,7 +23,7 @@ namespace fs {
     int mknod(const char *path, mode_t mode, dev_t dev) noexcept;
 
     // Setup.
-    void setup();
+    bool setup();
     // Cleanup
     void cleanup();
 }

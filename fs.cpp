@@ -210,6 +210,7 @@ int fs::ioctl(const char            *path,  // Path of the file to control.
               void                  *data)  // ??
               noexcept                      // This function cannot throw an exception.
 {
+    // Do if path entry exist in the file entries.
     return doifentry(path, [&]() {
         return filedo(path, [&](const char *name) { // Display.
             return dpycmd(cmd);
@@ -306,7 +307,7 @@ void fs::cleanup()
 }
 
 // Setup shell.
-void fs::setup() 
+bool fs::setup() 
 {
     // Create standard "this" and "parent" links in the file system tree.
     mklns();
@@ -316,4 +317,5 @@ void fs::setup()
     mkm();
     // Connect to displays and make them as files.
     mkdpys();
+    return true;
 }

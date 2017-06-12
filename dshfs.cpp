@@ -23,14 +23,17 @@ int main(int argc, char *argv[]) {
     ops.ioctl   = ioctl;   // Control display.
 
     // Start our engines!
+    int ret = -1;
     try {
         // Setup shell.
-        setup();
+        if (setup())
+            return EXIT_FAILURE;
         // Drive user-space file system.
-        return fuse_main(argc, argv, &ops, nullptr);
+        ret = fuse_main(argc, argv, &ops, nullptr);
     } catch (...) {
         error("Exception caught!");
+        ret = EXIT_FAILURE;
     }
     cleanup();
-    return EXIT_FAILURE;
+    return ret;
 }
