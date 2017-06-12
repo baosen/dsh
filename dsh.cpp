@@ -16,7 +16,7 @@ int main(const int argc, const char *argv[]) {
         init();
         // Listen for inputs and respond to window commands from clients.
         forever {
-            //const auto pos = mcurpos();
+            // TODO!
         }
         return EXIT_SUCCESS;
     } catch (const int c) {
