@@ -13,15 +13,18 @@ static constexpr bool bset(const char n, const ushort i) {
     return !!(n & (1 << i));
 }
 
-// Check if it is a mouse.
+// Check if the file opened is a mouse.
 static bool ism(char b[EV_MAX]) {
     bool key = false, rel = false;
     for (ushort i = 0; i < EV_MAX; i++) {
+        // Check if bit i are set.
         if (bset(b[0], i)) {
             switch (i) {
+            // Has key buttons?
             case EV_KEY:
                 key = true;
                 break;
+            // Has relative axis?
             case EV_REL:
                 rel = true;
                 break;
@@ -30,10 +33,11 @@ static bool ism(char b[EV_MAX]) {
             }
         }
     }
+    // If it has both key and relative axis, then it is mouse. If some are missing, it is not a mouse.
     return key && rel;
 }
 
-// Open event mouse device.
+// Open event mouse device file.
 Evm::Evm() {}
 
 // Find a "event" mouse and open it.
