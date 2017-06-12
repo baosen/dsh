@@ -1,10 +1,9 @@
-// Shell server-side file system.
 #define FUSE_USE_VERSION 26
 #include <fuse.h>
 #include "log.hpp"
 #include "fs.hpp"
 
-// File system driver for displays.
+// Shell file system driver.
 int main(int argc, char *argv[]) {
     using namespace fs;
 
