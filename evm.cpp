@@ -1,40 +1,34 @@
-#include <iostream>
-#include <vector>
-#include <dirent.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <linux/input.h>
 #include "evm.hpp"
-#include "err.hpp"
-using namespace std;
 
-// Is bit set?
-static constexpr bool bset(const char n, const ushort i) {
-    return !!(n & (1 << i));
-}
-
-// Check if the file opened is a mouse.
-static bool ism(char b[EV_MAX]) {
-    bool key = false, rel = false;
-    for (ushort i = 0; i < EV_MAX; i++) {
-        // Check if bit i are set.
-        if (bset(b[0], i)) {
-            switch (i) {
-            // Has key buttons?
-            case EV_KEY:
-                key = true;
-                break;
-            // Has relative axis?
-            case EV_REL:
-                rel = true;
-                break;
-            default:
-                break;
+namespace {
+    // Is bit set?
+    constexpr bool bset(const char n, const ushort i) {
+        return !!(n & (1 << i));
+    }
+    
+    // Check if the file opened is a mouse.
+    bool ism(char b[EV_MAX]) {
+        bool key = false, rel = false;
+        for (ushort i = 0; i < EV_MAX; i++) {
+            // Check if bit i are set.
+            if (bset(b[0], i)) {
+                switch (i) {
+                // Has key buttons?
+                case EV_KEY:
+                    key = true;
+                    break;
+                // Has relative axis?
+                case EV_REL:
+                    rel = true;
+                    break;
+                default:
+                    break;
+                }
             }
         }
+        // If it has both key and relative axis, then it is mouse. If some are missing, it is not a mouse.
+        return key && rel;
     }
-    // If it has both key and relative axis, then it is mouse. If some are missing, it is not a mouse.
-    return key && rel;
 }
 
 // Open event mouse device file.
@@ -54,6 +48,7 @@ bool Evm::open(const uint i) {
     return false;
 }
 
+// Read event mouse.
 int Evm::rd() {
-    return 0;
+    throw err("TODO!");
 }
