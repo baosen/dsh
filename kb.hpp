@@ -4,6 +4,10 @@
 // USB keyboard event file.
 class Kb {
 public:
+    // Keyboard code.
+    typedef int Kbc;
+
+    // Open keyboard event file.
     Kb();
     // Close USB keyboard event file.
     ~Kb();
@@ -14,7 +18,7 @@ public:
     void close();
 
     // Get keyboard code pressed.
-    int  get();
+    Kbc get();
 private:
    input_event rd();
    int fd;

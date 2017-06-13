@@ -1,5 +1,6 @@
 #include <list>
 #include <sstream>
+#include <cstring>
 #include "zero.hpp"
 #include "file.hpp"
 #include "kbsys.hpp"
@@ -27,11 +28,12 @@ namespace {
 }
 
 // Do correct file operation according to the file type.
-template<class F, class W, class K> 
+template<class F, class W, class K, class M> 
 auto filedo(const char *path, // Path of the file.
             F           df,   // Function to call when the path points to a display file.
             W           wf,   // Function to call when the path points to a window file.
-            K           kf)   // Function to call when the path points to a keyboard file.
+            K           kf,   // Function to call when the path points to a keyboard file.
+            M           mf)   // Function to call when the path points to a mouse file.
 {
     // Check path for what kind of file is opened.
     const char *bs = path+1, *s;
@@ -47,6 +49,10 @@ auto filedo(const char *path, // Path of the file.
     else if ((s = strstr(bs, "kb")))
         // Call keyboard function.
         return kf(s);
+    // Is a mouse?
+    else if ((s = strstr(bs, "m")))
+        // Call mouse function.
+        return mf(s);
     else
         // Invalid file name.
         return -EINVAL; 
@@ -86,6 +92,10 @@ int fs::create(const char *path,          // File path.
         return 0;
     }, [](const char *p) {
         // Create new keyboard.
+        ents.emplace_back(File(p));
+        return 0;
+    }, [](const char *p) {
+        // Create new mouse.
         ents.emplace_back(File(p));
         return 0;
     });
@@ -147,6 +157,8 @@ int fs::open(const char *path,          // Path to file to open.
         ENTRYCHK
     }, [](const char *p) {
         ENTRYCHK
+    }, [](const char *p) {
+        ENTRYCHK
     });
     return 0;
 }
@@ -156,7 +168,7 @@ int fs::read(const char            *path, // Pathname of the file to read.
              char                  *buf,  // Buffer to fill with the file contents read.
              size_t                 size, // The amount of bytes to read.
              off_t                  i,    // The offset to read the data from.
-             struct fuse_file_info *fi)   // Other info.
+             struct fuse_file_info *fi)   // Other info about the file read.
              noexcept 
 {
     // Do file read if the asked entry exists.
@@ -169,9 +181,21 @@ int fs::read(const char            *path, // Pathname of the file to read.
             // Read from window.
             wsys::read(p, buf, i, size);
             return 0;
-        }, [](const char *p) {                   // Keyboard.
+        }, [&](const char *p) {                  // Keyboard.
             // Read key code from keyboard.
-            return kbsys::kb.get();
+            if (sizeof(Kb::Kbc) < size)
+                return -EINVAL;
+            const auto c = kbsys::kb.get();
+            memcpy(buf, &c, sizeof(Kb::Kbc));
+            return 0;
+        }, [&](const char *p) {
+            // Read from mouse.
+            if (sizeof(uint) < size)
+                return -EINVAL;
+            const auto pos = msys::mcurpos();
+            memcpy(buf, &pos.x, sizeof(uint));
+            memcpy(buf+sizeof(uint), &pos.y, sizeof(uint));
+            return 0;
         });
     });
 }
@@ -181,7 +205,7 @@ int fs::write(const char            *path, // Path to the file to be written to.
               const char            *buf,  // The buffer containing the data to write.
               size_t                 size, // The size in bytes to write.
               off_t                  i,    // The offset to write to.
-              struct fuse_file_info *fi)   // Other info.
+              struct fuse_file_info *fi)   // Other info about the file read.
               noexcept 
 {
     return doifentry(path, [&]() {
@@ -195,6 +219,8 @@ int fs::write(const char            *path, // Path to the file to be written to.
             return 0;
         }, [](const char *name) {                   // Keyboard.
             // Keyboard is read-only.
+            return -EPERM; // Operation not permitted.
+        }, [](const char *name) {
             return -EPERM; // Operation not permitted.
         });
     });
@@ -215,8 +241,11 @@ int fs::ioctl(const char            *path,  // Path of the file to control.
             return dpycmd(cmd);
         }, [&](const char *name) {                  // Window.
             return wndcmd(cmd);
-        }, [&](const char *name) {                  // Keyboard.
+        }, [](const char *name) {                   // Keyboard.
             // No commands for keyboards.
+            return -EINVAL;
+        }, [](const char *name) {
+            // TODO: Currently no commands for keyboards.
             return -EINVAL;
         });
     });
