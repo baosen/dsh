@@ -54,13 +54,13 @@ void msys::init() {
 
     // Find and initialize an available mouse.
     for (uint i = 0; i < sizeof(minit); ++i) {
+        // Try initializing the mouse.
         if (minit[i]()) {
+            // Set its function to get the position of the mouse.
             mcurpos = mpos[i];
             break;
         }
     }
-    if (!mcurpos) {
-        error("Failed to find mouse on the computer system!");
-        exit(EXIT_FAILURE);
-    }
+    if (!mcurpos)
+        die ("Failed to find a mouse on the system!");
 }
