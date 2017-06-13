@@ -9,7 +9,9 @@ public:
     // Set x and y of position.
     Pos(const uint x, const uint y);
 
-    uint i(const uint w) const;
+    // Get index computed from width.
+    uint               i(const uint stride) const;
+    // Assign position.
     const Pos& operator=(const Pos&);
 
     uint x, y;
