@@ -1,4 +1,3 @@
-#include <string>
 #include <sstream>
 #include "wd.hpp"
 #include "frect.hpp"
@@ -38,12 +37,15 @@ void Frect::fill(const Col& c) const {
 
 // Returns the index to its position in the rectangle.
 uint Frect::i() const {
+    throw err("TODO!");
 }
 
 // Returns the rectangle area size.
 size_t Frect::size() const {
+    throw err("TODO!");
 }
 
 // Resize rectangle image.
 void Frect::resize(const uint w, const uint h) {
+    throw err("TODO!");
 }
