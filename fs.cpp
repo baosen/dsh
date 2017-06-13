@@ -76,26 +76,26 @@ void* fs::init(struct fuse_conn_info *conn) noexcept
 }
 
 // Create shell file.
-int fs::create(const char *path,          // File path.
-               mode_t mode,               // Create mode.
-               struct fuse_file_info *fi) // Other info that is not part of POSIX.
+int fs::create(const char            *path, // File path.
+               mode_t                 mode, // Create mode.
+               struct fuse_file_info *fi)   // Other info that is not part of POSIX.
                noexcept
 {
     // Caller can only create files of type dpy* and wnd*.
     return filedo(path, [](const char *p) {
-        // Create new display.
+        // TODO: Create new display.
         ents.emplace_back(File(p));
         return 0;
     }, [](const char *p) {
-        // Create new window.
+        // TODO: Create new window.
         ents.emplace_back(File(p));
         return 0;
     }, [](const char *p) {
-        // Create new keyboard.
+        // TODO: Create new keyboard.
         ents.emplace_back(File(p));
         return 0;
     }, [](const char *p) {
-        // Create new mouse.
+        // TODO: Create new mouse.
         ents.emplace_back(File(p));
         return 0;
     });
