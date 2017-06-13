@@ -3,18 +3,18 @@
 #include <gbm.h>
 #include "fio.hpp"
 
-static void check_extensions()
-{
-#ifdef EGL_MESA_platform_gbm
-    const char *ext = eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS);
-    if (!ext) // Is EGL_EXT_client_extensions is supported?
-        abort();
-    if (!strstr(ext, "EGL_MESA_platform_gbm"))
-        abort();
-#endif
-}
-
 namespace {
+    void check_extensions()
+    {
+    #ifdef EGL_MESA_platform_gbm
+        const char *ext = eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS);
+        if (!ext) // Is EGL_EXT_client_extensions is supported?
+            abort();
+        if (!strstr(ext, "EGL_MESA_platform_gbm"))
+            abort();
+    #endif
+    }
+
     EGLDisplay  egl;
     gbm_device *gbm;
 }
