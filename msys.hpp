@@ -7,8 +7,8 @@ namespace msys {
     void init();
 
     // Gets the position of the mouse.
-    typedef Pos (*Mposf)();
+    typedef void (*Mposf)(void *buf);
 
     // Current mouse device that is used.
-    extern Mposf mcurpos;
+    extern Mposf pos;
 }

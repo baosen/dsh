@@ -13,9 +13,9 @@ namespace evm {
         return e.open(0);
     }
 
-    // Returns mouse position from event mouse.
-    static Pos pos() {
-        return Pos(0, 0);
+    // Returns mouse position as two uints from event mouse.
+    static void pos(void *buf) {
+        throw err("TODO!");
     }
 }
 
@@ -27,9 +27,9 @@ namespace m {
         return m.open(0);
     }
 
-    // Returns user movement.
-    static Pos pos() {
-        return Pos(0, 0);
+    // Returns mouse positon as uints from "hacky" mouse.
+    static void pos(void *buf) {
+        throw err("TODO!");
     }
 }
 
@@ -46,7 +46,7 @@ static msys::Mposf mpos[] {
 };
 
 // Current mouse device that is used.
-msys::Mposf msys::mcurpos = nullptr;
+msys::Mposf msys::pos = nullptr;
 
 // Initialize and setup mouse.
 void msys::init() {
@@ -57,10 +57,10 @@ void msys::init() {
         // Try initializing the mouse.
         if (minit[i]()) {
             // Set its function to get the position of the mouse.
-            mcurpos = mpos[i];
+            msys::pos = mpos[i];
             break;
         }
     }
-    if (!mcurpos)
-        die ("Failed to find a mouse on the system!");
+    if (!msys::pos)
+        die("Failed to find a mouse on the system!");
 }
