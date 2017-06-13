@@ -1,6 +1,5 @@
 #include <memory>
 #include <string>
-#include "frect.hpp"
 #include "pos.hpp"
 
 // Window.

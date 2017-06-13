@@ -1,5 +1,4 @@
 #include <sstream>
-#include "frect.hpp"
 #include "fb.hpp"
 #include "wnd.hpp"
 #include "wd.hpp"
