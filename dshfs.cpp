@@ -26,14 +26,19 @@ int main(int argc, char *argv[]) {
     int ret = -1;
     try {
         // Setup shell.
-        if (setup())
-            return EXIT_FAILURE;
+        setup();
         // Drive user-space file system.
         ret = fuse_main(argc, argv, &ops, nullptr);
     } catch (...) {
         error("Exception caught!");
         ret = EXIT_FAILURE;
     }
-    cleanup();
+    try {
+        // Cleanup shell system.
+        cleanup();
+    } catch (...) {
+        error("Exception caught!");
+        ret = EXIT_FAILURE;
+    }
     return ret;
 }

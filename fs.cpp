@@ -308,7 +308,7 @@ void fs::cleanup()
 }
 
 // Setup shell.
-bool fs::setup() 
+void fs::setup() 
 {
     // Create standard "this" and "parent" links in the file system tree.
     mklns();
@@ -318,5 +318,4 @@ bool fs::setup()
     mkm();
     // Connect to displays and make them as files.
     mkdpys();
-    return true;
 }
