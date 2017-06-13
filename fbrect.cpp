@@ -18,9 +18,9 @@ void Fbrect::fill(const Col& c) const {
     Fb fb;
 
     // Compute pixel color and position.
-    const auto v = fb.scr.vinfo();
+    const auto v   = fb.scr.vinfo();
     const auto pix = c.val(v.red.offset, v.green.offset, v.blue.offset);
-    const auto s = p.x + (p.y * v.xres);
+    const auto s   = p.x + p.y * v.xres;
 
     // Fill the rectangle in Linux framebuffer.
     for (size_t y = 0; y < r.h; ++y)
