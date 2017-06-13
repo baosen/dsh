@@ -115,7 +115,7 @@ int fs::getattr(const char  *path,  // File path.
         stbuf->st_nlink = 0;             // Number of hardlinks that points to this file that exists in the file system.
         return 0;
     } 
-    // Its a file entry.
+    // It is a file entry.
     return doifentry(path, [&]() {
         stbuf->st_mode  = S_IFREG | 0444; // File and its permission bits.
         stbuf->st_nlink = 0;              // Hard links.
