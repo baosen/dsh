@@ -61,7 +61,7 @@ auto filedo(const char *path, // Path of the file.
 // Do action if the path specified is in the file system.
 template<class F> 
 auto doifentry(const char *path, // Path of the file.
-               F f)              // Function to call if entry exists.
+               F           f)    // Function to call if entry exists.
 {
     for (const auto& e : ents)
         if (!strcmp(path+1, e.name.c_str()))
@@ -103,7 +103,7 @@ int fs::create(const char            *path, // File path.
 }
 
 // Get file attributes of a file in the shell file system.
-int fs::getattr(const char *path,   // File path.
+int fs::getattr(const char  *path,  // File path.
                 struct stat *stbuf) // Buffer to fill the file attributes information.
                 noexcept
 {
@@ -147,8 +147,8 @@ int fs::readdir(const char            *path,   // File path.
         return -ENOENT; // No entry found.
 
 // Open the shell file system.
-int fs::open(const char *path,          // Path to file to open.
-             struct fuse_file_info *fi) // Other file info.
+int fs::open(const char            *path, // Path to file to open.
+             struct fuse_file_info *fi)   // Other file info.
              noexcept 
 {
     return filedo(path, [](const char *p) {
