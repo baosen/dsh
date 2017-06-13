@@ -1,5 +1,5 @@
 #include "file.hpp"
-using namespace std;
 
-//File::File(const string& name) : name(name), n(0) {}
-File::File(const string& name) : name(name) {}
+// Set filename.
+File::File(const std::string& name) // Name of the file to set.
+    : name(name) {}
