@@ -194,7 +194,7 @@ int fs::read(const char            *path, // Pathname of the file to read.
                 return -EINVAL; // Invalid parameter.
             // Copy x and y and place it after each other in the buffer.
             const auto pos = msys::mcurpos();
-            memcpy(buf, &pos.x, sizeof(uint));
+            memcpy(buf,              &pos.x, sizeof(uint));
             memcpy(buf+sizeof(uint), &pos.y, sizeof(uint));
             return 0;
         });
