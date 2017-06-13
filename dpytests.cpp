@@ -1,7 +1,6 @@
 #include <cassert>
 #include <sys/ioctl.h>
 #include "fio.hpp"
-#include "dpy.hpp"
 #include "dpycmds.hpp"
 
 #define WORKDIR "./fs/"
@@ -41,7 +40,7 @@ bool control_display() {
     return true;
 }
 
-// Test opening non-existing display file.
+// Test opening existing display file.
 bool open_display() {
     const auto fd = open(WORKDIR "dpy0", O_RDWR);
     if (fd == -1) {
@@ -52,7 +51,15 @@ bool open_display() {
     return true;
 }
 
-// Test opening non-existing window file.
+// Test opening non-existing display file.
+bool open_nonexisting_display() {
+    const auto fd = open(WORKDIR "dpy0", O_RDWR);
+    if (fd == -1 && errno == ENOENT) // Failed to open because no entry exists.
+        return true;
+    return false;
+}
+
+// Test opening window file.
 bool open_window() {
     const auto fd = open(WORKDIR "wnd0", O_RDWR);
     if (fd == -1) {
@@ -64,8 +71,9 @@ bool open_window() {
 
 // Run test cases.
 int main() {
+    assert(open_nonexisting_display());
     assert(open_display());
-    assert(open_window());
     assert(create_display());
     assert(control_display());
+    assert(open_window());
 }
