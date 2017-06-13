@@ -7,7 +7,7 @@
 #define WORKDIR "./fs/"
 
 // Create display.
-static bool create_display() {
+bool create_display() {
     // Create file with user read and user write permissions.
     const auto fd = creat(WORKDIR "dpytest", S_IRUSR | S_IWUSR);
     if (fd == -1) {
@@ -22,7 +22,7 @@ static bool create_display() {
 }
 
 // Test controlling the display using ioctl().
-static bool control_display() {
+bool control_display() {
     const auto fd = open(WORKDIR "dpytest", O_RDWR);
     if (fd == -1) {
         puts("Failed to open " WORKDIR "dpytest!");
@@ -42,7 +42,7 @@ static bool control_display() {
 }
 
 // Test opening non-existing display file.
-static bool open_display() {
+bool open_display() {
     const auto fd = open(WORKDIR "dpy0", O_RDWR);
     if (fd == -1) {
         puts("Failed to open " WORKDIR "dpy0!");
@@ -53,7 +53,7 @@ static bool open_display() {
 }
 
 // Test opening non-existing window file.
-static bool open_window() {
+bool open_window() {
     const auto fd = open(WORKDIR "wnd0", O_RDWR);
     if (fd == -1) {
         puts("Failed to open " WORKDIR "wnd0!");
@@ -65,7 +65,7 @@ static bool open_window() {
 // Run test cases.
 int main() {
     assert(open_display());
-    //assert(open_window());
+    assert(open_window());
     assert(create_display());
     assert(control_display());
 }
