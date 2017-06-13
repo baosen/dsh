@@ -125,11 +125,11 @@ int fs::getattr(const char *path,   // File path.
 }
 
 // Read current tree of the mounted directory.
-int fs::readdir(const char *path,          // File path.
-                void *buf,                 // The returned buffer to fill the file entries.
-                fuse_fill_dir_t fill,      // Function to call to fill the provided buffer with entries.
-                off_t offset,              // Offset to place??
-                struct fuse_file_info *fi) // Other info.
+int fs::readdir(const char            *path,   // File path.
+                void                  *buf,    // The returned buffer to fill the file entries.
+                fuse_fill_dir_t        fill,   // Function to call to fill the provided buffer with entries.
+                off_t                  offset, // Offset to place??
+                struct fuse_file_info *fi)     // Other info about the file.
                 noexcept
 {
     // Fill recursively.
