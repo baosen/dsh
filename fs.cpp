@@ -188,7 +188,7 @@ int fs::read(const char            *path, // Pathname of the file to read.
             const auto c = kbsys::kb.get();
             memcpy(buf, &c, sizeof(Kb::Kbc));
             return 0;
-        }, [&](const char *p) {
+        }, [&](const char *p) {                  // Mouse.
             // Read from mouse.
             if (sizeof(uint) < size)
                 return -EINVAL;
@@ -221,6 +221,7 @@ int fs::write(const char            *path, // Path to the file to be written to.
             // Keyboard is read-only.
             return -EPERM; // Operation not permitted.
         }, [](const char *name) {
+            // Mouse is read-only.
             return -EPERM; // Operation not permitted.
         });
     });
