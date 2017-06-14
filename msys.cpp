@@ -14,6 +14,7 @@ namespace evm {
 
     // Returns mouse position as two unsigned integers from the event mouse file.
     static void pos(void *buf) {
+        msys::Ev mev;
         const auto ev = e.rd();
     }
 }
