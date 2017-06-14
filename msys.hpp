@@ -1,7 +1,6 @@
-// Mouse subsystem.
 #pragma once
-#include "pos.hpp"
 
+// Mouse subsystem.
 namespace msys {
     // Mouse event.
     struct Ev {
