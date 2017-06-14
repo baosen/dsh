@@ -28,7 +28,7 @@ dpytests: dpytests.cpp
 dsh: dsh.cpp
 	@$(CXX) $(CXXFLAGS) -D$(DEFS) $(SRC) $< -o $@
 
-dshfs: dshfs.cpp file.cpp kb.cpp kbsys.cpp fs.cpp dsys.cpp wndcmd.cpp dpycmd.cpp wsys.cpp ssys.cpp $(SRC)
+dshfs: dshfs.cpp kb.cpp kbsys.cpp fs.cpp dsys.cpp wndcmd.cpp dpycmd.cpp wsys.cpp ssys.cpp $(SRC)
 	@$(CXX) $^ `pkg-config fuse --cflags --libs` -o $@
 
 run: run.cpp

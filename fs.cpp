@@ -14,14 +14,14 @@ using namespace std;
 
 // File entries in the file system.
 namespace {
-    list<File> ents; // List of file entries.
+    list<string> ents; // List of file entries.
 
     // Does the file exist in one of the entries?
     bool exists(const char *name) 
     {
         // Find the file in the list of file entries.
         for (const auto& e : ents)
-            if (!strcmp(name, e.name.c_str()))
+            if (!strcmp(name, e.c_str()))
                 return true;
         return false;
     }
@@ -64,7 +64,7 @@ auto doifentry(const char *path, // Path of the file.
                F           f)    // Function to call if entry exists.
 {
     for (const auto& e : ents)
-        if (!strcmp(path+1, e.name.c_str()))
+        if (!strcmp(path+1, e.c_str()))
             return f();
     return -ENOENT;
 }
@@ -84,19 +84,19 @@ int fs::create(const char            *path, // File path.
     // Caller can only create files of type dpy* and wnd*.
     return filedo(path, [](const char *p) {
         // TODO: Create new display.
-        ents.emplace_back(File(p));
+        ents.emplace_back(p);
         return 0;
     }, [](const char *p) {
         // TODO: Create new window.
-        ents.emplace_back(File(p));
+        ents.emplace_back(p);
         return 0;
     }, [](const char *p) {
         // TODO: Create new keyboard.
-        ents.emplace_back(File(p));
+        ents.emplace_back(p);
         return 0;
     }, [](const char *p) {
         // TODO: Create new mouse.
-        ents.emplace_back(File(p));
+        ents.emplace_back(p);
         return 0;
     });
     return -EINVAL; // Invalid path.
@@ -135,7 +135,7 @@ int fs::readdir(const char            *path,   // File path.
     // Fill recursively.
     for (const auto& e : ents) {
         // Build the file entries in the buffer.
-        if (fill(buf, e.name.c_str(), 0, 0) == 1) // is buffer full?
+        if (fill(buf, e.c_str(), 0, 0) == 1) // is buffer full?
             return -ENOBUFS;
     }
     return 0;
@@ -265,9 +265,9 @@ namespace {
     void mklns() 
     {
         // Set link to current directory.
-        ents.emplace_back(File("."));
+        ents.emplace_back(".");
         // Set link to parent directory.
-        ents.emplace_back(File(".."));
+        ents.emplace_back("..");
     }
 
 // Make the default numbered files at start.

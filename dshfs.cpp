@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
     ops.ioctl   = ioctl;   // Control display.
 
     // Start our engines!
-    int ret = -1;
+    int ret = EXIT_FAILURE;
     try {
         // Setup shell.
         setup();
