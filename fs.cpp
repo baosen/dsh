@@ -2,7 +2,6 @@
 #include <sstream>
 #include <cstring>
 #include "zero.hpp"
-#include "file.hpp"
 #include "kbsys.hpp"
 #include "msys.hpp"
 #include "ssys.hpp"
