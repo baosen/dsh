@@ -10,12 +10,11 @@ namespace evm {
 
     // Open mouse event device.
     static bool init() {
-        return e.open(0);
     }
 
-    // Returns mouse position as two uints from event mouse.
+    // Returns mouse position as two unsigned integers from the event mouse file.
     static void pos(void *buf) {
-        throw err("TODO!");
+        const auto ev = e.rd();
     }
 }
 

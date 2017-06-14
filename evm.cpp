@@ -1,4 +1,5 @@
 #include "evm.hpp"
+#include "fio.hpp"
 
 namespace {
     // Is bit set?
@@ -43,12 +44,7 @@ Evm::Evm(const uint i) : ev(i) {
         throw err("No mouse capabilities in this event device.");
 }
 
-// Open event mouse.
-bool Evm::open(const uint i) {
-    return false;
-}
-
 // Read event mouse.
-int Evm::rd() {
-    throw err("TODO!");
+input_event Evm::rd() {
+    return ev.rd();
 }
