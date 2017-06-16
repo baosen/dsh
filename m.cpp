@@ -16,21 +16,13 @@ M::M(const uint i) {
     stringstream ss;
     ss << "/dev/input/mouse" << i;
     string s(ss.str());
-    ss << "Cannot open " << s << ": " << strerror(errno);
+    ss << "Cannot open hacky mouse file " << s << ": " << strerror(errno);
     throw err(ss.str());
 }
 
 // Close mouse input device file.
 M::~M() {
-    // If empty "hacky" mouse.
-    if (fd == -2)
-        return;
-    // Close "hacky" mouse file.
-    stringstream ss;
-    if (::close(fd) == -1) {
-        ss << "Cannot close mouse input device file: " << strerror(errno);
-        die(ss.str().c_str());
-    }
+    close();
 }
 
 // Open "hacky" mouse.
@@ -43,10 +35,13 @@ bool M::open(const uint i) {
 
 // Close "hacky" mouse.
 void M::close() {
+    // If empty "hacky" mouse.
+    if (fd == -2)
+        return;
+    // Close "hacky" mouse file.
+    stringstream ss;
     if (::close(fd) == -1) {
-        // TODO: Do this?
-        stringstream ss;
-        ss << "Cannot close event device file: " << strerror(errno);
+        ss << "Cannot close hacky mouse device file: " << strerror(errno);
         die(ss.str().c_str());
     }
 }
