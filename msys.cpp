@@ -121,35 +121,40 @@ namespace evm {
     }
 
     // Wait for event and get it.
-    static void waitevt(void *buf) {
+    static void waitevt(char *buf, const size_t n) {
         msys::Ev mev;
-        zero(mev);
-        forever {
-            const auto ev = e.rd();
-            switch (ev.type) {
-            case EV_REL: // Relative motion.
-                rel(mev, ev);
-                break;
-            case EV_KEY: // Mouse button press and release.
-                key(mev, ev);
-                break;
-            case EV_ABS: // Absolute motion.
-                // Absolute value to announce touch pad movement speed?
-                continue;
-            case EV_MSC: // Miscellanous?
-                continue;
-            case EV_SYN: // Synchronization events.
-                syn(mev, ev.code);
-                break;
-            default: {   // Ignore unknown events.
-                continue;
-                //stringstream ss;
-                //ss << "Unknown type:" << hex << setw(2) << e.type << endl;
-                //throw err(ss.str().c_str());
-                     }
+        for (uint i = 0; i < n; ++i) {
+            zero(mev);
+            forever {
+                const auto ev = e.rd();
+                switch (ev.type) {
+                case EV_REL: // Relative motion.
+                    rel(mev, ev);
+                    break;
+                case EV_KEY: // Mouse button press and release.
+                    key(mev, ev);
+                    break;
+                case EV_ABS: // Absolute motion.
+                    // Absolute value to announce touch pad movement speed?
+                    continue;
+                case EV_MSC: // Miscellanous?
+                    continue;
+                case EV_SYN: // Synchronization events.
+                    syn(mev, ev.code);
+                    break;
+                default: {   // Ignore unknown events.
+                    continue;
+                    //stringstream ss;
+                    //ss << "Unknown type:" << hex << setw(2) << e.type << endl;
+                    //throw err(ss.str().c_str());
+                         }
+                }
             }
+            // Copy mouse event block over to the buffer.
+            memcpy(buf, &mev, sizeof mev);
+            // Go to next block in the buffer.
+            buf = buf+sizeof(mev);
         }
-        memcpy(buf, &mev, sizeof mev);
     }
 }
 
@@ -161,11 +166,27 @@ namespace m {
         return m.open(0);
     }
 
-    static void waitevt(void *buf) {
+    // Wait for mouse motion event and get it.
+    static void waitevt(char *buf, const size_t n) {
         msys::Ev mev;
-        zero(mev);
-        // TODO!
-        memcpy(buf, &mev, sizeof mev);
+        for (uint i = 0; i < n; ++i) {
+            zero(mev);
+            const auto ev = m.rd();
+            if (ev.x != 0) {
+                mev.type = msys::Ev::X;
+                mev.val  = ev.x;
+                memcpy(buf, &mev, sizeof mev);
+                // TODO! Save if there is more!
+            }
+            if (ev.y != 0) {
+                mev.type = msys::Ev::Y;
+                mev.val  = ev.y;
+                memcpy(buf, &mev, sizeof mev);
+                // TODO! Save if there is more!
+            }
+            // Go to next block in the buffer.
+            buf = buf+sizeof(mev);
+        }
     }
 }
 

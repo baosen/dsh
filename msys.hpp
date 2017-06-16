@@ -21,19 +21,19 @@ namespace msys {
             TASK,    // Task button.
         } type;
         // Data describing the event.
-            // Mouse move in the mirrored y cartesian axis. 
-            // Y-axis is mirrored to act the same as the axis of a framebuffer usually found in graphical devices.
-            int val;
-            // a move in the x-axis where towards the right is positive and towards the left is negative.
-            // a move in the y-axis where towards the bottom is positive (+) and towards the top is negative (-).
-            // Up scroll is 1. Down scroll is -1.
+        // Mouse move in the mirrored y cartesian axis. 
+        // Y-axis is mirrored to act the same as the axis of a framebuffer usually found in graphical devices.
+        int val;
+        // a move in the x-axis where towards the right is positive and towards the left is negative.
+        // a move in the y-axis where towards the bottom is positive (+) and towards the top is negative (-).
+        // Up scroll is 1. Down scroll is -1.
     };
 
     // Initialize and setup mouse.
     void init();
 
     // Wait for event and get mouse motion.
-    typedef void (*Mmotion)(void *buf);
+    typedef void (*Mmotion)(char *buf, const size_t n);
 
     // Current mouse device that is used.
     extern MMotion devmot;
