@@ -255,11 +255,12 @@ void msys::init() {
     using namespace msys;
 
     // Find and initialize an available mouse.
-    for (uint i = 0; i < sizeof(minit); ++i) {
+    for (size_t i = 0; i < sizeof(minit); ++i) {
         // Try initializing the mouse.
         if (minit[i]()) {
-            // Set its function to get the position of the mouse.
+            // Set its function to get mouse event.
             msys::devmot = mot[i];
+            // Set its function to clean up mouse.
             devdeinit    = mdeinit[i];
             break;
         }
