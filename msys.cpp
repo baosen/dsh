@@ -162,30 +162,56 @@ namespace evm {
 namespace m {
     M m; // "Hacky" mouse.
 
+    // Initialize and setup "hacky" mouse.
     static bool init() {
         return m.open(0);
     }
 
     // Wait for mouse motion event and get it.
+    deque<msys::Ev> evq; // events that has not been given to the upper layer.
     static void waitevt(char *buf, const size_t n) {
-        msys::Ev mev;
-        for (uint i = 0; i < n; ++i) {
+        msys::Ev   mev;
+        const auto ev = m.rd();
+        // Add X-axis event.
+        if (ev.x != 0) {
             zero(mev);
-            const auto ev = m.rd();
-            if (ev.x != 0) {
-                mev.type = msys::Ev::X;
-                mev.val  = ev.x;
-                memcpy(buf, &mev, sizeof mev);
-                // TODO! Save if there is more!
-            }
-            if (ev.y != 0) {
-                mev.type = msys::Ev::Y;
-                mev.val  = ev.y;
-                memcpy(buf, &mev, sizeof mev);
-                // TODO! Save if there is more!
-            }
+            mev.type = msys::Ev::X;
+            mev.val  = ev.x;
+            evq.push_back(mev);
+        }
+        // Add Y-axis event.
+        if (ev.y != 0) {
+            zero(mev);
+            mev.type = msys::Ev::Y;
+            mev.val  = ev.y;
+            evq.push_back(mev);
+        }
+        // Add left button event.
+        zero(mev);
+        mev.type = msys::Ev::LEFT;
+        mev.val  = ev.left;
+        evq.push_back(mev);
+        // Add middle button event.
+        zero(mev);
+        mev.type = msys::Ev::MID;
+        mev.val  = ev.mid;
+        evq.push_back(mev);
+        // Add right button event.
+        zero(mev);
+        mev.type = msys::Ev::RIGHT;
+        mev.val  = ev.right;
+        evq.push_back(mev);
+        // Copy the mouse events to the buffer.
+        for (uint i = 0; i < n; ++i) {
+            if (evq.empty())
+                return;
+            // Get mouse event from the front of the queue.
+            mev = evq.front();
+            memcpy(buf, &mev, sizeof mev);
             // Go to next block in the buffer.
             buf = buf+sizeof(mev);
+            // Remove it from the front of the queue.
+            evq.pop_front();
         }
     }
 }
