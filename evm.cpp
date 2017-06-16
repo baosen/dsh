@@ -44,6 +44,16 @@ Evm::Evm(const uint i) : ev(i) {
         throw err("No mouse capabilities in this event device.");
 }
 
+// Open mouse event device file.
+bool Evm::open(const uint i) {
+    return ev.open(i);
+}
+
+// Close mouse event device file.
+void Evm::close() {
+    ev.close();
+}
+
 // Read event mouse.
 input_event Evm::rd() {
     return ev.rd();

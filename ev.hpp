@@ -10,6 +10,12 @@ public:
     // Open event device file.
     Ev(const uint i);
 
+    // Open device file.
+    bool open(const uint i);
+
+    // Close device file.
+    void close();
+
     // Read from event file.
     input_event rd();
 

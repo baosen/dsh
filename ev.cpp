@@ -11,11 +11,22 @@ Ev::Ev() : fd(-2) {}
 
 // Open event device file.
 Ev::Ev(const uint i) {
+    open(i);
+}
+
+// Close event device file.
+Ev::~Ev() {
+    close();
+}
+
+// Open device file.
+bool Ev::open(const uint i) {
     // Try opening the event device file.
     stringstream ss;
     ss << "/dev/input/event" << i;
+    // Open event* file.
     if ((fd = ::open(ss.str().c_str(), O_RDONLY)) != -1)
-        return;
+        return true; // Succeeded opened.
     // Throw opening failure error.
     string s(ss.str());
     ss.str("");
@@ -23,8 +34,8 @@ Ev::Ev(const uint i) {
     throw err(ss.str());
 }
 
-// Close event device file.
-Ev::~Ev() {
+// Close device file.
+void Ev::close() {
     // If no event device file is opened yet.
     if (fd == -2)
         return;

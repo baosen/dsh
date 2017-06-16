@@ -191,8 +191,8 @@ int fs::read(const char            *path, // Pathname of the file to read.
             // Read from mouse.
             if (sizeof(uint)*2 < size)
                 return -EINVAL; // Invalid parameter.
-            // Copy x and y and place it after each other in the buffer.
-            msys::pos(buf);
+            // Copy mouse event into the buffer.
+            msys::devmot(buf, size);
             return 0;
         });
     });
@@ -327,8 +327,12 @@ void fs::cleanup()
 {
     // Cleanup display.
     dsys::deinit();
+    // Cleanup mouse.
+    msys::deinit();
     // Cleanup keyboard.
     kbsys::deinit();
+    // Cleanup mouse.
+    msys::deinit();
     // Cleanup sound.
     ssys::deinit();
     // Cleanup window.

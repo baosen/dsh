@@ -31,6 +31,8 @@ namespace msys {
 
     // Initialize and setup mouse.
     void init();
+    // Deinitialize and setup mouse.
+    void deinit();
 
     // Wait for event and get mouse motion.
     typedef void (*Mmotion)(char *buf, const size_t n);

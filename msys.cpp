@@ -117,7 +117,12 @@ namespace evm {
 
     // Open mouse event device.
     static bool init() {
-        return false;
+        e.open(0);
+    }
+
+    // Deinitialize event device mouse file.
+    static void deinit() {
+        e.close();
     }
 
     // Wait for event and get it.
@@ -165,6 +170,11 @@ namespace m {
     // Initialize and setup "hacky" mouse.
     static bool init() {
         return m.open(0);
+    }
+
+    // Deinitialize "hacky" mouse file.
+    static void deinit() {
+        m.close();
     }
 
     // Wait for mouse motion event and get it.
@@ -222,6 +232,12 @@ bool (*minit[])() {
     &m::init,   // "hacky" mouse initialization.
 };
 
+// Deinitialize mouse.
+void (*mdeinit[])() {
+    &evm::deinit,
+    &m::deinit,
+};
+
 // Wait for event and get mouse motion.
 static msys::Mmotion mot[] {
     &evm::waitevt, // Get event mouse motion.
@@ -244,6 +260,11 @@ void msys::init() {
             break;
         }
     }
+    // Check if a mouse exists.
     if (!msys::devmot)
         die("Failed to find a mouse on the system!");
+}
+
+// Deinitialize mouse.
+void msys::deinit() {
 }
