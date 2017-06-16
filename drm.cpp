@@ -1,42 +1,20 @@
 #include <xf86drm.h>
-#include <xf86drmMode.h>
 
 namespace {
-    int drmfd = -1;
+    int fd = -1;
 }
 
 // Initialize Direct-Rendering Manager.
-void drm::init() {
+void drm::init(const char *path) {
     drmModeRes       *resources = nullptr;
     drmModeConnector *connector = nullptr;
     drmModeEncoder   *encoder   = nullptr;
 
-    // Load a DRM module in the list below.
-    static const char *mod[] = {
-        "exynos",
-        "i915",
-        "msm",
-        "nouveau",
-        "omapdrm",
-        "radeon",
-        "tegra",
-        "vc4",
-        "virtio_gpu",
-        "vmwgfx",
-    };
-    for (size_t i = 0; i < NSIZE(mod); i++) {
-        printf("Loading module %s...", mod[i]);
-        drmfd = drmOpen(mod[i], nullptr);
-        if (drmfd < 0) {
-            printf("Failed to load module: %s\n", mod[i]);
-            continue;
-        }
-        printf("Succeeded to load module: %s\n", mod[i]);
-        break;
-    }
+    if (fd = open(path, O_RDWR) == -1)
+        throw errno; // TODO!
 }
 
 // Deinitialize the direct rendering manager.
 void drm::deinit() {
-    drmClose(drmfd);
+    close(fd);
 }
