@@ -12,16 +12,10 @@ public:
         DOWN = -1, // Scroll downwards.
     };
 
-    // Button state
-    enum Btn {
-        RLS, // Released.
-        PRS  // Pressed.
-    };
-
     // Mouse input event.
     struct Ev {
         int  x, y;             // x and y cartesian movement.
-        bool left, right, mid; // Left, middle and right pressed or released mouse buttons.
+        bool left, mid, right; // Left, middle and right pressed or released mouse buttons.
     };
 
     // Create a empty "hacky" mouse.

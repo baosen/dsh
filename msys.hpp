@@ -1,4 +1,5 @@
 #pragma once
+#include <cstring>
 
 // Mouse subsystem.
 namespace msys {
@@ -38,5 +39,5 @@ namespace msys {
     typedef void (*Mmotion)(char *buf, const size_t n);
 
     // Current mouse device that is used.
-    extern MMotion devmot;
+    extern Mmotion devmot;
 }

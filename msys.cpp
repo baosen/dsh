@@ -117,7 +117,7 @@ namespace evm {
 
     // Open mouse event device.
     static bool init() {
-        e.open(0);
+        return e.open(0);
     }
 
     // Deinitialize event device mouse file.
