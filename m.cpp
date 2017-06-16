@@ -25,6 +25,7 @@ M::~M() {
     // If empty "hacky" mouse.
     if (fd == -2)
         return;
+    // Close "hacky" mouse file.
     stringstream ss;
     if (::close(fd) == -1) {
         ss << "Cannot close mouse input device file: " << strerror(errno);

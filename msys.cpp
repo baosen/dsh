@@ -1,8 +1,115 @@
-// Mouse subsystem.
+#include <iomanip>
 #include "msys.hpp"
 #include "evm.hpp"
 #include "m.hpp"
 #include "log.hpp"
+#include "zero.hpp"
+using namespace std;
+
+// Mouse subsystem.
+namespace {
+    deque<msys::Ev> evq; // Queue of mouse events.
+
+    // Key. Mouse button press or release.
+    void key(msys::Ev& ev, const input_event& e) {
+        switch (e.code) {
+        case BTN_LEFT:    // Left mouse button.
+            ev.type = msys::Ev::LEFT;
+            ev.val = e.value;
+            break;
+        case BTN_RIGHT:   // Right mouse button.
+            ev.type = msys::Ev::RIGHT;
+            ev.val = e.value;
+            break;
+        case BTN_MIDDLE:  // Middle mouse button.
+            ev.type = msys::Ev::MID;
+            ev.val = e.value;
+            break;
+        case BTN_SIDE:    // Side mouse button.
+            ev.type = msys::Ev::SIDE;
+            ev.val = e.value;
+            break;
+        case BTN_EXTRA:   // Extra mouse button?
+            ev.type = msys::Ev::EXTRA;
+            ev.val = e.value;
+            break;
+        case BTN_FORWARD: // Forward button.
+            ev.type = msys::Ev::FORWARD;
+            ev.val = e.value;
+            break;
+        case BTN_BACK:    // Back button (to go backwards in browser?).
+            ev.type = msys::Ev::BACK;
+            ev.val = e.value;
+            break;
+        case BTN_TASK:    // Task button.
+            ev.type = msys::Ev::TASK;
+            ev.val = e.value;
+            break;
+        default:
+            // Unknown.
+            break;
+        }
+    }
+    
+    // Relative axis. Mouse movement.
+    void rel(msys::Ev& ev, const input_event& e) {
+        // Mouse movements follows top-left coordinate system, where origo is at the top left of the screen and the positive y-axis points downwards.
+        switch (e.code) {
+        case 0: // x-axis, - left, + right.
+            ev.type = msys::Ev::X;
+            ev.val = e.value;
+            break;
+        case 1: // y-axis, - upwards, + downwards.
+            ev.type = msys::Ev::Y;
+            ev.val = e.value;
+            break;
+        case 8: // wheel scroll, 1 up and -1 down.
+            ev.type = msys::Ev::WHEEL;
+            ev.val = e.value;
+            break;
+        }
+    }
+    
+    // Synthetic. Handle synthetic events.
+    bool syn(msys::Ev& ev, const __s32 code) {
+        switch (code) {
+        case SYN_REPORT:  // Reported event.
+            return true;
+        case SYN_DROPPED: // Dropped event.
+            // TODO: Throw away all frames between the reports.
+            break; 
+        }
+        return false;
+    }
+    
+    // Fill in event based on its read type.
+    bool fillevt(deque<msys::Ev>& d, const input_event& e) {
+        msys::Ev ev;
+        zero(ev);
+        switch (e.type) {
+        case EV_REL: // Relative motion.
+            rel(ev, e);
+            d.push_back(ev);
+            return false;
+        case EV_KEY: // Mouse button press and release.
+            key(ev, e);
+            d.push_back(ev);
+            return false;
+        case EV_ABS: // Absolute motion.
+            // Absolute value to announce touch pad movement speed?
+            return false;
+        case EV_MSC: // Miscellanous?
+            return false;
+        case EV_SYN: // Synchronization events.
+            return syn(ev, e.code);
+        default: {
+            stringstream ss;
+            ss << "Unknown type:" << hex << setw(2) << e.type << endl;
+            throw err(ss.str().c_str());
+                 }
+        }
+    }
+}
 
 // Window functions for event device mouse.
 namespace evm {
@@ -10,12 +117,39 @@ namespace evm {
 
     // Open mouse event device.
     static bool init() {
+        return false;
     }
 
-    // Returns mouse position as two unsigned integers from the event mouse file.
-    static void pos(void *buf) {
+    // Wait for event and get it.
+    static void waitevt(void *buf) {
         msys::Ev mev;
-        const auto ev = e.rd();
+        zero(mev);
+        forever {
+            const auto ev = e.rd();
+            switch (ev.type) {
+            case EV_REL: // Relative motion.
+                rel(mev, ev);
+                break;
+            case EV_KEY: // Mouse button press and release.
+                key(mev, ev);
+                break;
+            case EV_ABS: // Absolute motion.
+                // Absolute value to announce touch pad movement speed?
+                continue;
+            case EV_MSC: // Miscellanous?
+                continue;
+            case EV_SYN: // Synchronization events.
+                syn(mev, ev.code);
+                break;
+            default: {   // Ignore unknown events.
+                continue;
+                //stringstream ss;
+                //ss << "Unknown type:" << hex << setw(2) << e.type << endl;
+                //throw err(ss.str().c_str());
+                     }
+            }
+        }
+        memcpy(buf, &mev, sizeof mev);
     }
 }
 
@@ -27,9 +161,11 @@ namespace m {
         return m.open(0);
     }
 
-    // Returns mouse positon as uints from "hacky" mouse.
-    static void pos(void *buf) {
-        throw err("TODO!");
+    static void waitevt(void *buf) {
+        msys::Ev mev;
+        zero(mev);
+        // TODO!
+        memcpy(buf, &mev, sizeof mev);
     }
 }
 
@@ -39,14 +175,14 @@ bool (*minit[])() {
     &m::init,   // "hacky" mouse initialization.
 };
 
-// Get mouse position.
-static msys::Mposf mpos[] {
-    &evm::pos, // Get event mouse position.
-    &m::pos    // Get "hacky" mouse position.
+// Wait for event and get mouse motion.
+static msys::Mmotion mot[] {
+    &evm::waitevt, // Get event mouse motion.
+    &m::waitevt    // Get "hacky" mouse motion.
 };
 
 // Current mouse device that is used.
-msys::Mposf msys::pos = nullptr;
+msys::Mmotion msys::devmot = nullptr;
 
 // Initialize and setup mouse.
 void msys::init() {
@@ -57,10 +193,10 @@ void msys::init() {
         // Try initializing the mouse.
         if (minit[i]()) {
             // Set its function to get the position of the mouse.
-            msys::pos = mpos[i];
+            msys::devmot = mot[i];
             break;
         }
     }
-    if (!msys::pos)
+    if (!msys::devmot)
         die("Failed to find a mouse on the system!");
 }
