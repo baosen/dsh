@@ -244,6 +244,9 @@ static msys::Mmotion mot[] {
     &m::waitevt    // Get "hacky" mouse motion.
 };
 
+// The deinitialize for the current mouse device that is used.
+static void (*devdeinit)() = nullptr;
+
 // Current mouse device that is used.
 msys::Mmotion msys::devmot = nullptr;
 
@@ -257,6 +260,7 @@ void msys::init() {
         if (minit[i]()) {
             // Set its function to get the position of the mouse.
             msys::devmot = mot[i];
+            devdeinit    = mdeinit[i];
             break;
         }
     }
@@ -265,6 +269,8 @@ void msys::init() {
         die("Failed to find a mouse on the system!");
 }
 
-// Deinitialize mouse.
+// Deinitialize mouse device.
 void msys::deinit() {
+    if (devdeinit)
+        devdeinit();
 }

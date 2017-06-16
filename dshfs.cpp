@@ -30,6 +30,7 @@ int main(int argc, char *argv[]) {
         // Drive user-space file system.
         ret = fuse_main(argc, argv, &ops, nullptr);
     } catch (...) {
+        // TODO! Show more informed error messages.
         error("Exception caught!");
         ret = EXIT_FAILURE;
     }
@@ -37,6 +38,7 @@ int main(int argc, char *argv[]) {
         // Cleanup shell system.
         cleanup();
     } catch (...) {
+        // TODO! Show more informed error messages.
         error("Exception caught!");
         ret = EXIT_FAILURE;
     }

@@ -41,6 +41,16 @@ bool M::open(const uint i) {
     return (fd = ::open(ss.str().c_str(), O_RDONLY)) != -1;
 }
 
+// Close "hacky" mouse.
+void M::close() {
+    if (::close(fd) == -1) {
+        // TODO: Do this?
+        stringstream ss;
+        ss << "Cannot close event device file: " << strerror(errno);
+        die(ss.str().c_str());
+    }
+}
+
 // Read mouse input from mouse device file.
 M::Ev M::rd() {
     // Read using generic mouse device file.

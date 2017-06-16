@@ -33,6 +33,8 @@ public:
 
     // Open "hacky" mouse.
     bool open(const uint i);
+    // Close "hacky" mouse.
+    void close();
 
     // Waits for mouse event and reads it.
     Ev rd();
