@@ -213,6 +213,7 @@ namespace m {
         evq.push_back(mev);
         // Copy the mouse events to the buffer.
         for (uint i = 0; i < n; ++i) {
+            // Is event queue empty?
             if (evq.empty())
                 return;
             // Get mouse event from the front of the queue.
