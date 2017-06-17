@@ -234,8 +234,8 @@ bool (*minit[])() {
 
 // Deinitialize mouse.
 void (*mdeinit[])() {
-    &evm::deinit,
-    &m::deinit,
+    &evm::deinit, // Deinitialize event mouse device file.
+    &m::deinit,   // Deinitialize mouse device file.
 };
 
 // Wait for event and get mouse motion.
