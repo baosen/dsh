@@ -29,8 +29,7 @@ bool control_display() {
     }
     // Test reset command.
     if (ioctl(fd, Dpycmd::reset) < 0) {
-        puts("Failed to control " WORKDIR "dpytest");
-        printf("errno: %d\n", errno);
+        printf("Failed to control " WORKDIR "dpytest! Errno: %d\n", errno);
         return false;
     }
     if (close(fd) == -1) {
@@ -44,8 +43,7 @@ bool control_display() {
 bool open_display() {
     const auto fd = open(WORKDIR "dpy0", O_RDWR);
     if (fd == -1) {
-        puts("Failed to open " WORKDIR "dpy0!");
-        printf("errno: %d\n", errno);
+        printf("Failed to open " WORKDIR "dpy0! Errno: %d\n", errno);
         return false;
     }
     return true;
