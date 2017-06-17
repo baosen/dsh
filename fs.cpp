@@ -294,7 +294,7 @@ namespace {
         MKFILES(m)
     }
     
-    // Setup keyboard.
+    // Setup keyboard and make keyboard files.
     void mkkb() 
     {
         // Initialize keyboard.
