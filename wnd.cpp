@@ -6,7 +6,8 @@
 using namespace std;
 
 // Create a new window.
-Wnd::Wnd(const Pos& p) : Wnd() {}
+Wnd::Wnd(const Pos& p) // The position to place the window.
+    : cur(p) {}
 
 // Create an empty window.
 Wnd::Wnd() {}

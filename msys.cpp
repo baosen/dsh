@@ -249,7 +249,7 @@ static msys::Mmotion mot[] {
 static void (*devdeinit)() = nullptr;
 
 // Current mouse device that is used.
-msys::Mmotion msys::devmot = nullptr;
+msys::Mmotion msys::copymot = nullptr;
 
 // Initialize and setup mouse.
 void msys::init() {
@@ -260,14 +260,14 @@ void msys::init() {
         // Try initializing the mouse.
         if (minit[i]()) {
             // Set its function to get mouse event.
-            msys::devmot = mot[i];
+            msys::copymot = mot[i];
             // Set its function to clean up mouse.
             devdeinit    = mdeinit[i];
             break;
         }
     }
     // Check if a mouse exists.
-    if (!msys::devmot)
+    if (!msys::copymot)
         die("Failed to find a mouse on the system!");
 }
 

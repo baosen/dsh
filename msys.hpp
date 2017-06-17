@@ -39,5 +39,5 @@ namespace msys {
     typedef void (*Mmotion)(char *buf, const size_t n);
 
     // Current mouse device that is used.
-    extern Mmotion devmot;
+    extern Mmotion copymot;
 }

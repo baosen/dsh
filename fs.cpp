@@ -192,7 +192,7 @@ int fs::read(const char            *path, // Pathname of the file to read.
             if (sizeof(uint)*2 < size)
                 return -EINVAL; // Invalid parameter.
             // Copy mouse event into the buffer.
-            msys::devmot(buf, size);
+            msys::copymot(buf, size);
             return 0;
         });
     });
