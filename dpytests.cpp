@@ -76,4 +76,5 @@ int main() {
     assert(create_display());
     assert(control_display());
     assert(open_window());
+    return EXIT_SUCCESS;
 }

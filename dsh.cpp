@@ -11,7 +11,7 @@ int main(const int argc, const char *argv[]) {
         // Parse arguments.
         parse(argc, argv);
         // Set directory to the shell filesystem.
-        dsh::wd = "./dsh/";
+        dsh::wd = "./sh/";
         // Initialize window system.
         init();
         // Listen for inputs and respond to window commands from clients.
