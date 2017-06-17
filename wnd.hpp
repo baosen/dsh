@@ -1,3 +1,4 @@
+#pragma once
 #include "pos.hpp"
 #include "rect.hpp"
 
@@ -28,12 +29,13 @@ public:
     // Destroy the window.
     virtual ~Wnd();
 protected:
-    Pos cur, // Current position.
-        old; // Old position.
+    Pos pcur, // Current position.
+        pold; // Old position.
 
 private:
     // Save old position.
     void save();
 
-    Rect rect; // The rectangular image to draw on for the current window.
+    Rect rcur, // The current rectangular image to draw on for the current window.
+         rold; // The old rectangular image to draw on for the current window.
 };
