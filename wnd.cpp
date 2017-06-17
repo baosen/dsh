@@ -22,7 +22,7 @@ void Wnd::run() {
 // Maximize the window.
 void Wnd::max() {
     save();
-    // TODO!
+    rect.max();
 }
 
 // Minimize the window.

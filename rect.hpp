@@ -20,6 +20,9 @@ public:
 
     // Resize rectangle image.
     void   resize(const uint w, const uint h);
+
+    // Maximize the rectangle to fill the screen.
+    void   max();
 private:
     Pos p; // Position.
     Res r; // Resolution.

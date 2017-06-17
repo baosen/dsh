@@ -44,3 +44,13 @@ void Rect::resize(const uint w, const uint h)
     r.w = w;
     r.h = h;
 }
+
+// Maximize the rectangle to fill the screen.
+void Rect::max() 
+{
+    // Open framebuffer.
+    Fb         fb;
+    // Resize the rectangle to fill the entire screen.
+    const auto v = fb.scr.vinfo();
+    resize(v.xres, v.yres);
+}
