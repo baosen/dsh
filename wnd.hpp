@@ -1,5 +1,5 @@
-#include <string>
 #include "pos.hpp"
+#include "rect.hpp"
 
 // Window.
 class Wnd {
@@ -35,8 +35,5 @@ private:
     // Save old position.
     void save();
 
-    //std::shared_ptr<Rect> rect; // The rectangular image to draw on for the current window.
-
-    //int                   fd;   // File descriptor.
-    //std::string           name; // Name of the file for storing the rectangular image.
+    Rect rect; // The rectangular image to draw on for the current window.
 };

@@ -1,6 +1,6 @@
 #pragma once
 #include "pos.hpp"
-#include "fbrect.hpp"
+#include "rect.hpp"
 #include "col.hpp"
 #include "scr.hpp"
 
@@ -10,7 +10,7 @@ class Fb {
     size_t size;
     u8*    fb;
 
-    friend class Fbrect;
+    friend class Rect;
 public:
     // Grab framebuffer.
     Fb();

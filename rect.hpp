@@ -1,20 +1,28 @@
 #pragma once
+#include "rect.hpp"
+#include "pos.hpp"
+#include "res.hpp"
 #include "col.hpp"
-#include "types.hpp"
 
-// Rectangle interface.
+// Rectangle image in framebuffer.
 class Rect {
 public:
-    // Fill rectangle with colour.
-    virtual void   fill(const Col& c) const           = 0;
+    Rect();
+    Rect(const Pos& p, const Res& r);
 
-    // Returns the index to its position in the rectangle.
-    virtual uint   i()    const                       = 0;
+    // Fill rectangle with colour.
+    void   fill(const Col& c) const;
+
+    // Returns the index to its position in the framebuffer.
+    uint   i()    const;
     // Returns the rectangle area size.
-    virtual size_t size() const                       = 0;
+    size_t size() const;
 
     // Resize rectangle image.
-    virtual void   resize(const uint w, const uint h) = 0;
+    void   resize(const uint w, const uint h);
+private:
+    Pos p; // Position.
+    Res r; // Resolution.
 
-    virtual        ~Rect() {}
+    friend class Wnd;
 };
