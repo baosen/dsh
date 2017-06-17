@@ -36,7 +36,9 @@ namespace {
 Evm::Evm() {}
 
 // Find a "event" mouse and open it.
-Evm::Evm(const uint i) : ev(i) {
+Evm::Evm(const uint i) // The ith mouse to open.
+    : ev(i) 
+{
     // Check if input device given has mouse capabilities.
     char b[EV_MAX];
     ev.evbits(b);

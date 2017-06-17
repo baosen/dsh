@@ -33,12 +33,14 @@ void Rect::fill(const Col& c) // Colour to fill the inside of the rectangle with
 }
 
 // Get the size of the rectangle.
-size_t Rect::size() const {
+size_t Rect::size() const 
+{
     return r.h*r.w;
 }
 
-// Resize rectangle image.
-void Rect::resize(const uint w, const uint h) {
+// Resize the rectangle image in the framebuffer.
+void Rect::resize(const uint w, const uint h) 
+{
     r.w = w;
     r.h = h;
 }
