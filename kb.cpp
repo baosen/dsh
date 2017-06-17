@@ -9,7 +9,8 @@ using namespace std;
 static const char *path = "/dev/input/event1";
 
 // Creates an empty keyboard.
-Kb::Kb() : fd(-2) {}
+Kb::Kb() 
+    : fd(-2) {}
 
 // Close the keyboard file descriptor.
 Kb::~Kb() {
