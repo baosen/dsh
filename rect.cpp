@@ -59,13 +59,17 @@ void Rect::max()
 }
 
 // Read from the picture buffer of the rectangle.
-int Rect::read(char *buf, off_t i, size_t size) const noexcept
+int Rect::read(char  *buf,  // Buffer of 32-bit unsigned RGBA pixels.
+               off_t  i,    // Offset to write to framebuffer.
+               size_t size) // The size in bytes to write.
+               const 
+               noexcept
 {
     // Check if size of read is out of range.
     if (size > this->size())
         return -EINVAL; // Invalid parameter.
     // Open framebuffer file.
-    Fb fb;
+    Fb         fb;
     // Get screen attributes.
     const auto v = fb.scr.vinfo();
     const auto s = p.x+p.y*v.xres;
@@ -80,14 +84,14 @@ int Rect::read(char *buf, off_t i, size_t size) const noexcept
 // Write to the picture buffer to the rectangle. Returns exactly the number of bytes written except on error.
 int Rect::write(const char *buf,  // Buffer of 32-bit unsigned RGBA pixels.
                 off_t       i,    // Offset to write to framebuffer.
-                size_t      size) // The size in bytes to write
+                size_t      size) // The size in bytes to write.
                 noexcept
 {
     // Check if size of write is out of range.
     if (size > this->size())
         return -EINVAL; // Invalid parameter.
     // Open framebuffer file.
-    Fb fb;
+    Fb         fb;
     // Get screen attributes.
     const auto v = fb.scr.vinfo();
     const auto s = p.x+p.y*v.xres;
