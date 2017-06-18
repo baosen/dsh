@@ -11,8 +11,9 @@ Scr::Scr() {
     fd = ::open("/dev/fb0", O_RDWR);
     if (fd == -1)
         throw err("Cannot open /dev/fb0!");
-    const auto v = vinfo();
 #ifdef DEBUG
+    // Get variable screen information.
+    const auto v = vinfo();
     // Display screen resolution.
     printf("Screen resolution: %ux%u, %ubpp\n", v.xres, v.yres, v.bits_per_pixel);
     // Display the offsets to pixel in the RGB value.

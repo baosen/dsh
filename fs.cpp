@@ -206,13 +206,11 @@ int fs::write(const char            *path, // Path to the file to be written to.
 {
     return doifentry(path, [&]() {
         return filedo(path, [&](const char *name) { // Display.
-            // Write to display.
-            // TODO: Which pixel format?
+            // Write to display in the display/screen's pixel format.
             dsys::write(name, buf, i, size);
             return 0;
         }, [&](const char *name) {                  // Window.
-            // Write to window.
-            // TODO: Which pixel format?
+            // Write to window in the display/screen's pixel format.
             wsys::write(name, buf, i, size);
             return 0;
         }, [](const char *name) {                   // Keyboard.

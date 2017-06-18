@@ -89,7 +89,10 @@ int Rect::write(const char *buf, off_t i, size_t size) noexcept
     // TODO: Convert pixels in the given buffer and write it to the framebuffer file.
     for (size_t y = 0; y < r.h; ++y) {
         for (size_t x = 0; x < r.w; ++x) {
-            buf[x+y*r.w];
+            const u32* p = rcast<const u32*>(buf);
+            uint r = &buf[x+y*r.w],
+                 g = &buf[x+y*r.w],
+                 b = &buf[x+y*r.w];
             fb.get32(s+x+y*v.xres) = Col(r, g, b).val();
         }
     }
