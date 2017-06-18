@@ -1,4 +1,3 @@
-#include <cstring>
 #include "rect.hpp"
 #include "fb.hpp"
 using namespace std;
@@ -26,7 +25,7 @@ void Rect::fill(const Col& c) // Colour to fill the inside of the rectangle with
 
     // Compute pixel color and position.
     const auto v   = fb.scr.vinfo();
-    const auto pix = c.val(v.red.offset, v.green.offset, v.blue.offset);
+    const auto pix = c.val(v.red.offset, v.green.offset, v.blue.offset, v.transp.offset);
     const auto s   = p.x + p.y * v.xres; // The start index of the position.
 
     // Fill the rectangle in Linux framebuffer.
@@ -35,7 +34,7 @@ void Rect::fill(const Col& c) // Colour to fill the inside of the rectangle with
             fb.get32(s+x+(y*v.xres)) = pix;
 }
 
-// Get the size of the rectangle.
+// Get the size in bytes of the rectangle.
 size_t Rect::size() const 
 {
     return r.h*r.w;
@@ -71,12 +70,18 @@ int Rect::read(char *buf, off_t i, size_t size) const noexcept
     const auto v = fb.scr.vinfo();
     const auto s = p.x+p.y*v.xres;
     // TODO: Read framebuffer, convert and copy pixels to the reading buffer.
-
+    for (size_t y = 0; y < r.h; ++y) {
+        for (size_t x = 0; x < r.w; ++x) {
+        }
+    }
     return 0; // Operation succeeded.
 }
 
 // Write to the picture buffer to the rectangle. Returns exactly the number of bytes written except on error.
-int Rect::write(const char *buf, off_t i, size_t size) noexcept
+int Rect::write(const char *buf,  // Buffer of 32-bit unsigned RGBA pixels.
+                off_t       i,    // Offset to write to framebuffer.
+                size_t      size) // The size in bytes to write
+                noexcept
 {
     // Check if size of write is out of range.
     if (size > this->size())
@@ -86,14 +91,20 @@ int Rect::write(const char *buf, off_t i, size_t size) noexcept
     // Get screen attributes.
     const auto v = fb.scr.vinfo();
     const auto s = p.x+p.y*v.xres;
-    // TODO: Convert pixels in the given buffer and write it to the framebuffer file.
-    for (size_t y = 0; y < r.h; ++y) {
-        for (size_t x = 0; x < r.w; ++x) {
+    // Convert pixels in the given buffer and write it to the framebuffer file.
+    for (uint y = 0; y < r.h; ++y) {
+        for (uint x = 0; x < r.w; ++x) {
+            // Assume 32-bit unsigned RGBA pixels.
             const u32* p = rcast<const u32*>(buf);
-            uint r = &buf[x+y*r.w],
-                 g = &buf[x+y*r.w],
-                 b = &buf[x+y*r.w];
-            fb.get32(s+x+y*v.xres) = Col(r, g, b).val();
+            const auto w = this->r.w;
+            uint       r = p[0+x+y*w], // 32-bit red.
+                       g = p[1+x+y+w], // 32-bit green.
+                       b = p[2+x+y+w], // 32-bit blue.
+                       a = p[3+x+y+w]; // 32-bit alpha-transparency.
+            fb.get32(s+x+y*v.xres) = Col(r, g, b, a).val(v.red.offset, 
+                                                         v.green.offset, 
+                                                         v.blue.offset,
+                                                         v.transp.offset);
         }
     }
     return 0; // Operation succeeded.
