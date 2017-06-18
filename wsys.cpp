@@ -21,12 +21,12 @@ void wsys::deinit()
 
 // Read from window.
 void wsys::read(const char  *name, // Name of the window.
-                const char  *buf,  // Name of the buffer.
+                char        *buf,  // Name of the buffer.
                 const off_t  i,    // Offset of the buffer to read from.
                 const size_t size) // The size in bytes to read from the buffer.
 {
-    // TODO!
-    wnds[name];
+    // TODO: What happens if it does not exists?
+    wnds[name]->read(buf, i, size);
 }
 
 // Write to window.
@@ -35,6 +35,6 @@ void wsys::write(const char  *name, // Name of the window.
                  const off_t  i,    // Offset of the buffer to write to.
                  const size_t size) // The size in bytes to write to the buffer.
 {
-    // TODO!
-    wnds[name];
+    // TODO: What happens if it does not exists?
+    wnds[name]->write(buf, i, size);
 }
