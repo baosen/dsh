@@ -1,9 +1,6 @@
-#include <cstring>
 #include <sys/mman.h>
-#include "types.hpp"
-#include "rect.hpp"
 #include "fb.hpp"
-#include "col.hpp"
+#include "log.hpp"
 
 // Setup framebuffer file mapping to the address space.
 Fb::Fb() {
@@ -15,10 +12,8 @@ Fb::Fb() {
 
 // Unmap framebuffer from the system address space.
 Fb::~Fb() {
-    if (munmap(fb, size) == -1) {
-        perror("Error");
-        exit(errno);
-    }
+    if (munmap(fb, size) == -1)
+        die("Failed to unmap the framebuffer from the system's address space!");
 }
 
 // Access framebuffer memory 8 bits at a time.
