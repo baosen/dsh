@@ -36,6 +36,7 @@ void dsys::write(const char  *name, // Name of the display screen.
                  const char  *buf,  // Buffer to write to the display screen.
                  const off_t  i,    // Offset of the display.
                  const size_t size) // How much in bytes to write to the display screen.
+                 noexcept
 {
 #ifdef FB
     memcpy(&fb->get8(i), buf, size);
@@ -49,6 +50,7 @@ void dsys::read(const char  *name, // Name of the display screen.
                 char        *buf,  // Buffer to read to.
                 const off_t  i,    // Offset to read from.
                 const size_t size) // How much in bytes to read from the display screen.
+                noexcept
 {
 #ifdef FB
     memcpy(buf, &fb->get8(i), size);

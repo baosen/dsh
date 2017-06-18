@@ -1,3 +1,4 @@
+#include <cstring>
 #include "rect.hpp"
 #include "fb.hpp"
 
@@ -53,4 +54,16 @@ void Rect::max()
     // Resize the rectangle to fill the entire screen.
     const auto v = fb.scr.vinfo();
     resize(v.xres, v.yres);
+}
+
+// Read from the picture buffer of the rectangle.
+void Rect::read(char *buf, off_t i, size_t size) noexcept
+{
+    memcpy(buf, mem.data()+i, size);
+}
+
+// Write to the picture buffer to the rectangle. Returns exactly the number of bytes written except on error.
+void Rect::write(const char *buf, off_t i, size_t size) noexcept
+{
+    memcpy(mem.data()+i, buf, size);
 }
