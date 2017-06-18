@@ -73,9 +73,11 @@ int Rect::read(char  *buf,  // Buffer of 32-bit unsigned RGBA pixels.
     // Get screen attributes.
     const auto v = fb.scr.vinfo();
     const auto s = p.x+p.y*v.xres;
-    // TODO: Read framebuffer, convert and copy pixels to the reading buffer.
+    // TODO: Read framebuffer, convert and copy pixels to the buffer provided by the caller.
+    const auto w = this->r.w;
     for (size_t y = 0; y < r.h; ++y) {
         for (size_t x = 0; x < r.w; ++x) {
+            u32* p = rcast<u32*>(buf);
         }
     }
     return 0; // Operation succeeded.
@@ -96,11 +98,11 @@ int Rect::write(const char *buf,  // Buffer of 32-bit unsigned RGBA pixels.
     const auto v = fb.scr.vinfo();
     const auto s = p.x+p.y*v.xres; // Compute the start index of the position.
     // Convert pixels in the given buffer and write it to the framebuffer file.
+    const auto w = this->r.w;
     for (uint y = 0; y < r.h; ++y) {
         for (uint x = 0; x < r.w; ++x) {
             // Assume 32-bit unsigned RGBA pixels.
             const u32* p = rcast<const u32*>(buf);
-            const auto w = this->r.w;
             uint       r = p[0+x+y*w], // 32-bit red.
                        g = p[1+x+y+w], // 32-bit green.
                        b = p[2+x+y+w], // 32-bit blue.
