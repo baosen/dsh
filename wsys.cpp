@@ -11,11 +11,7 @@ namespace {
 }
 
 // Initialize and setup window system.
-void wsys::init() 
-{
-    // Add a single window.
-    wnds["wnd0"] = unique_ptr<Wnd>(new Mwnd());
-}
+void wsys::init() {}
 
 // Deinitialize the window system.
 void wsys::deinit() 
