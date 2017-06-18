@@ -1,4 +1,3 @@
-// dsh: Shell for desktops.
 #include "parse.hpp"
 #include "log.hpp"
 #include "init.hpp"
