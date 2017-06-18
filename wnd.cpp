@@ -22,7 +22,10 @@ void Wnd::max() {
 
 // Minimize the window.
 void Wnd::min() {
+    // Set the old rectangle as the current rectangle.
     rcur = rold;
+    // Set old position as the current position.
+    pcur = pold;
 }
 
 // Save old rectangle.

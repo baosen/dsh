@@ -3,7 +3,7 @@
 // Click on window at position p.
 void Run::click(const Pos& p) {
     // Is outside window rectangle?
-    if (p.x < cur.x || p.y < cur.y)
+    if (p.x < pcur.x || p.y < pcur.y)
         return;
 }
 
