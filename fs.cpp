@@ -1,6 +1,4 @@
 #include <list>
-#include <sstream>
-#include <cstring>
 #include "zero.hpp"
 #include "kbsys.hpp"
 #include "msys.hpp"
