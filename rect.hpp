@@ -1,5 +1,4 @@
 #pragma once
-#include <vector>
 #include "rect.hpp"
 #include "pos.hpp"
 #include "res.hpp"
@@ -26,15 +25,13 @@ public:
     void   max();
 
     // Read from the picture buffer of the rectangle.
-    void   read(char *buf, off_t offset, size_t size)        noexcept;
+    int    read(char *buf, off_t offset, size_t size) const  noexcept;
     // Write to the picture buffer to the rectangle. Returns exactly the number of bytes written except on error.
-    void   write(const char *buf, off_t offset, size_t size) noexcept;
+    int    write(const char *buf, off_t offset, size_t size) noexcept;
 
 private:
     Pos p; // Position of the rectangle in the framebuffer.
     Res r; // Resolution/size of the rectangle in the framebuffer.
-
-    std::vector<u8> mem;
 
     friend class Wnd;
 };

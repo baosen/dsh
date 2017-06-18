@@ -1,6 +1,7 @@
 #include <cstring>
 #include "rect.hpp"
 #include "fb.hpp"
+using namespace std;
 
 // Create an empty rectangle in the framebuffer.
 Rect::Rect() {}
@@ -11,7 +12,8 @@ Rect::Rect(const Pos& p, // The position to place the rectangle in the framebuff
     : p(p), r(r) {}
 
 // Computes the index of its position in the framebuffer.
-uint Rect::i() const {
+uint Rect::i() const 
+{
     return p.i(r.w);
 }
 
@@ -25,7 +27,7 @@ void Rect::fill(const Col& c) // Colour to fill the inside of the rectangle with
     // Compute pixel color and position.
     const auto v   = fb.scr.vinfo();
     const auto pix = c.val(v.red.offset, v.green.offset, v.blue.offset);
-    const auto s   = p.x + p.y * v.xres;
+    const auto s   = p.x + p.y * v.xres; // The start index of the position.
 
     // Fill the rectangle in Linux framebuffer.
     for (size_t y = 0; y < r.h; ++y)
@@ -44,12 +46,13 @@ void Rect::resize(const uint w, const uint h)
 {
     r.w = w;
     r.h = h;
+    // TODO: Redraw the rectangle in the framebuffer.
 }
 
 // Maximize the rectangle to fill the screen.
 void Rect::max() 
 {
-    // Open framebuffer.
+    // Open framebuffer file.
     Fb         fb;
     // Resize the rectangle to fill the entire screen.
     const auto v = fb.scr.vinfo();
@@ -57,13 +60,38 @@ void Rect::max()
 }
 
 // Read from the picture buffer of the rectangle.
-void Rect::read(char *buf, off_t i, size_t size) noexcept
+int Rect::read(char *buf, off_t i, size_t size) const noexcept
 {
-    memcpy(buf, mem.data()+i, size);
+    // Check if size of read is out of range.
+    if (size > this->size())
+        return -EINVAL; // Invalid parameter.
+    // Open framebuffer file.
+    Fb fb;
+    // Get screen attributes.
+    const auto v = fb.scr.vinfo();
+    const auto s = p.x+p.y*v.xres;
+    // TODO: Read framebuffer, convert and copy pixels to the reading buffer.
+
+    return 0; // Operation succeeded.
 }
 
 // Write to the picture buffer to the rectangle. Returns exactly the number of bytes written except on error.
-void Rect::write(const char *buf, off_t i, size_t size) noexcept
+int Rect::write(const char *buf, off_t i, size_t size) noexcept
 {
-    memcpy(mem.data()+i, buf, size);
+    // Check if size of write is out of range.
+    if (size > this->size())
+        return -EINVAL; // Invalid parameter.
+    // Open framebuffer file.
+    Fb fb;
+    // Get screen attributes.
+    const auto v = fb.scr.vinfo();
+    const auto s = p.x+p.y*v.xres;
+    // TODO: Convert pixels in the given buffer and write it to the framebuffer file.
+    for (size_t y = 0; y < r.h; ++y) {
+        for (size_t x = 0; x < r.w; ++x) {
+            buf[x+y*r.w];
+            fb.get32(s+x+y*v.xres) = Col(r, g, b).val();
+        }
+    }
+    return 0; // Operation succeeded.
 }

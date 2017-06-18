@@ -38,13 +38,13 @@ void Wnd::save() {
 }
 
 // Read from the picture buffer of the window.
-void Wnd::read(char *buf, off_t i,  size_t size) noexcept
+int Wnd::read(char *buf, off_t i,  size_t size) noexcept
 {
-    rcur.read(buf, i, size);
+    return rcur.read(buf, i, size);
 }
 
 // Write to the picture buffer to the window. Returns exactly the number of bytes written except on error.
-void Wnd::write(const char *buf, off_t i, size_t size) noexcept
+int Wnd::write(const char *buf, off_t i, size_t size) noexcept
 {
-    rcur.write(buf, i, size);
+    return rcur.write(buf, i, size);
 }

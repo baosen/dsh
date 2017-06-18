@@ -19,9 +19,9 @@ public:
     void min();
 
     // Read from the picture buffer of the window.
-    void read(char *buf, off_t offset, size_t size) noexcept;
+    int read(char *buf, off_t offset, size_t size) noexcept;
     // Write to the picture buffer to the window. Returns exactly the number of bytes written except on error.
-    void write(const char *buf, off_t offset, size_t size) noexcept;
+    int write(const char *buf, off_t offset, size_t size) noexcept;
 
     // Click on window at position p.
     virtual void click(const Pos& p) = 0;
