@@ -94,7 +94,7 @@ int Rect::write(const char *buf,  // Buffer of 32-bit unsigned RGBA pixels.
     Fb         fb;
     // Get screen attributes.
     const auto v = fb.scr.vinfo();
-    const auto s = p.x+p.y*v.xres;
+    const auto s = p.x+p.y*v.xres; // Compute the start index of the position.
     // Convert pixels in the given buffer and write it to the framebuffer file.
     for (uint y = 0; y < r.h; ++y) {
         for (uint x = 0; x < r.w; ++x) {
