@@ -1,26 +1,27 @@
-#include "libdsh/wnd.hpp"
-#include "libdsh/log.hpp"
-using namespace std;
+#include "parse.hpp"
+#include "log.hpp"
+#include "init.hpp"
+#include "wd.hpp"
+#include "types.hpp"
 
-namespace {
-    Col GREEN = Col(0, 0, 255);
-    Wnd w1(Rect(Pos(100, 200), Res(100, 100)));
-    Wnd w2(Rect(Pos(200, 300), Res(200, 200)));
-    Wnd w3(Rect(Pos(300, 400), Res(300, 300)));
-    Wnd w4(Rect(Pos(400, 500), Res(400, 400)));
-    void draw() {
-        w1.fill(GREEN);
-    }
-}
-
-int main() {
+// Shell.
+int main(const int argc, const char *argv[]) {
     try {
-        draw();
-        return 0;
+        // Parse arguments.
+        parse(argc, argv);
+        // Set directory to the shell filesystem.
+        dsh::wd = "./sh/";
+        // Initialize window system.
+        init();
+        // Listen for inputs and respond to window commands from clients.
+        forever {
+            // TODO!
+        }
+        return EXIT_SUCCESS;
     } catch (const int c) {
         die(c);
     } catch (const err& e) {
         error(e);
     }
-    return 1;
+    return EXIT_FAILURE;
 }

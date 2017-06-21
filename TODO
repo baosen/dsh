@@ -1,8 +1,10 @@
-dsh
-- programs for desktop.
+Name change to gwsh (Graphical window shell)?
 
 Hotkeys:
-- CTRL+R for open.
+- "Super"-key to open RUN-program.
 
-lsh
-- programs for laptops.
+Arch:
+- Run dsh in its own account in user-space.
+
+Seats.
+- Multiple user and seats for a single computer.
