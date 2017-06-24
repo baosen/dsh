@@ -15,8 +15,12 @@ uint Pos::i(const uint stride) // stride.
     return x+y*stride;
 }
 
-const Pos& Pos::operator=(const Pos& p) {
+// Assign (x, y)-position.
+const Pos& Pos::operator=(const Pos& p) // Position to assign.
+{
+    // Copy the coordinates over to this object.
     x = p.x;
     y = p.y;
+    // Return this object.
     return *this;
 }
