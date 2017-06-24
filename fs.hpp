@@ -1,8 +1,8 @@
 #pragma once
 #include <fuse.h>
 
+// FUSE file operations.
 namespace fs {
-    /* FUSE file operations */
     // Initialize desktop shell file system.
     void *init(struct fuse_conn_info *conn) noexcept;
     // Create shell file.
