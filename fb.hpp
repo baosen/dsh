@@ -12,14 +12,21 @@ public:
     // Release framebuffer.
     ~Fb();
 
-    // Access its memory.
+    // Get 32-bit color value from the framebuffer memory.
     u8&   get8(const uint i);
     u32&  get32(const uint i);
+
+    // Set color value in the framebuffer.
+    void  set(const uint i, const Col& c);
+
+    // Get size in bytes of the framebuffer.
+    size_t len() const;
 
     Scr    scr; // The screen to grab the framebuffer.
 private:
     size_t size;
     u8*    fb;
+    uint   roff, goff, boff, aoff;
 
     friend class Rect;
 };

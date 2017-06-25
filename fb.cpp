@@ -8,6 +8,11 @@ Fb::Fb() {
     size = scr.finfo().smem_len;
     // Map framebuffer to computer's address space.
     fb = scast<u8*>(mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_SHARED, scr.fd, 0));
+    const auto v = scr.vinfo();
+    roff = v.red.offset;
+    goff = v.green.offset;
+    boff = v.blue.offset;
+    aoff = v.transp.offset;
 }
 
 // Unmap framebuffer from the system address space.
@@ -17,11 +22,25 @@ Fb::~Fb() {
 }
 
 // Access framebuffer memory 8 bits at a time.
-u8& Fb::get8(const uint i) {
+u8& Fb::get8(const uint i) // Index beginning at 0 indexiing a string of framebuffer bytes.
+{
     return fb[i];
 }
 
 // Access framebuffer memory 32 bits at a time.
-u32& Fb::get32(const uint i) {
+u32& Fb::get32(const uint i) 
+{
     return *(rcast<u32*>(fb)+i);
+}
+
+// Get size in bytes of the framebuffer.
+size_t Fb::len() const 
+{
+    return size;
+}
+
+// Set color value in the framebuffer.
+void Fb::set(const uint i, const Col& c)
+{
+    get32(i) = c.val(roff, goff, boff, aoff);
 }

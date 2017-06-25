@@ -24,14 +24,13 @@ void Rect::fill(const Col& c) // Colour to fill the inside of the rectangle with
     Fb fb;
 
     // Compute pixel color and position.
-    const auto v   = fb.scr.vinfo();
-    const auto pix = c.val(v.red.offset, v.green.offset, v.blue.offset, v.transp.offset);
-    const auto s   = p.x + p.y * v.xres; // The start index of the position.
+    const auto v = fb.scr.vinfo();
+    const auto s = p.x + p.y * v.xres; // The start index of the position.
 
     // Fill the rectangle in Linux framebuffer.
     for (size_t y = 0; y < r.h; ++y)
         for (size_t x = 0; x < r.w; ++x)
-            fb.get32(s+x+(y*v.xres)) = pix;
+            fb.set(s+x+(y*v.xres), c);
 }
 
 // Get the size in bytes of the rectangle.
@@ -107,10 +106,7 @@ int Rect::write(const char *buf,  // Buffer of 32-bit unsigned RGBA pixels.
                        g = p[1+x+y+w], // 32-bit green.
                        b = p[2+x+y+w], // 32-bit blue.
                        a = p[3+x+y+w]; // 32-bit alpha-transparency.
-            fb.get32(s+x+y*v.xres) = Col(r, g, b, a).val(v.red.offset, 
-                                                         v.green.offset, 
-                                                         v.blue.offset,
-                                                         v.transp.offset);
+            fb.set(s+x+y*v.xres, Col(r, g, b, a));
         }
     }
     return 0; // Operation succeeded.
