@@ -12,7 +12,7 @@ namespace {
     }
 }
 
-// Initialize Direct-Rendering Manager.
+// Initialize the direct rendering manager.
 void drm::init(const char *path) {
     Drminst inst;
     zero(inst);
