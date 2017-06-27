@@ -3,7 +3,7 @@
 #include "fio.hpp"
 #include "dpycmds.hpp"
 
-#define WORKDIR "./fs/"
+#define WORKDIR "./sh/"
 
 // Create display.
 bool create_display() {
