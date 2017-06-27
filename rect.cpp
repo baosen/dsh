@@ -33,14 +33,15 @@ void Rect::fill(const Col& c) // Colour to fill the inside of the rectangle with
             fb.set(s+x+(y*v.xres), c);
 }
 
-// Get the size in bytes of the rectangle.
+// Get the size/length in bytes of the rectangle.
 size_t Rect::size() const 
 {
     return r.h*r.w;
 }
 
 // Resize the rectangle image in the framebuffer.
-void Rect::resize(const uint w, const uint h) 
+void Rect::resize(const uint w, // new width to resize the rectangle to.
+                  const uint h) // new height to resize the rectangle to.
 {
     r.w = w;
     r.h = h;
@@ -72,11 +73,15 @@ int Rect::read(char  *buf,  // Buffer of 32-bit unsigned RGBA pixels.
     // Get screen attributes.
     const auto v = fb.scr.vinfo();
     const auto s = p.x+p.y*v.xres;
+
     // TODO: Read framebuffer, convert and copy pixels to the buffer provided by the caller.
+    // Get width of the rectangle to read.
     const auto w = this->r.w;
+    // Read and convert all pixels into the buffer.
     for (size_t y = 0; y < r.h; ++y) {
         for (size_t x = 0; x < r.w; ++x) {
             u32* p = rcast<u32*>(buf);
+            // TODO: Convert framebuffer pixel into 32-bit RGBA pixel.
         }
     }
     return 0; // Operation succeeded.
