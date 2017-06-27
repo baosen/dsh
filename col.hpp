@@ -8,6 +8,6 @@ public:
 private:
     uint r,     // Red.
          g,     // Green.
-         b;     // Blue.
+         b,     // Blue.
          a;     // Alpha-transparency.
 };
