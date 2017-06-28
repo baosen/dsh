@@ -17,7 +17,7 @@ namespace {
     }
 
     EGLDisplay  egl; // OpenGL ES display.
-    gbm_device *gbm;
+    gbm_device *gbm; // "Generic buffer management"-device by Mesa.
 }
 
 // Initialize Mesa's generic buffer management.
