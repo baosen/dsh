@@ -1,5 +1,6 @@
 #include <EGL/egl.h>
 #include <gbm.h>
+#include "gbm.hpp"
 #include "fio.hpp"
 #include "log.hpp"
 
@@ -16,11 +17,11 @@ namespace {
     }
 
     EGLDisplay  egl; // OpenGL ES display.
-    gbm_device *gbm; // "Generic buffer management"-device by Mesa.
+    gbm_device *gbmdev; // "Generic buffer management"-device by Mesa.
 }
 
 // Initialize Mesa's generic buffer management.
-void init()
+void gbm::init()
 {
     // Path to the main device card file.
     #define CARD0_PATH "/dev/dri/card0"
@@ -28,8 +29,8 @@ void init()
     const auto fd = open(CARD0_PATH, O_RDWR | FD_CLOEXEC);
     if (fd < 0)
         die("Failed to open " CARD0_PATH "!");
-    gbm = gbm_create_device(fd);
-    if (!gbm)
+    gbmdev = gbm_create_device(fd);
+    if (!gbmdev)
         die("Failed to create a GBM device.");
 #ifdef EGL_MESA_platform_gbm
     egl = eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_MESA, gbm, nullptr);

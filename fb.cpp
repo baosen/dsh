@@ -3,7 +3,8 @@
 #include "log.hpp"
 
 // Setup framebuffer file mapping to the address space.
-Fb::Fb() {
+Fb::Fb() 
+{
     // Get size of framebuffer in bytes.
     size = scr.finfo().smem_len;
     // Map framebuffer to computer's address space.
