@@ -14,7 +14,7 @@ using namespace std;
 
 namespace {
 #if defined(DRM)
-    // Use DRM graphical output.
+    // TODO: Use DRM graphical output.
 #elif defined(FB)
     // Use framebuffer graphical output.
     Fb *fb;
