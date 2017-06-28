@@ -9,10 +9,14 @@ DEFS     = DEBUG
 # Set the produced executable binaries.
 BINS     = tests dpytests dsh run dshfs
 
+# Build everything.
 all: $(BINS)
 
+# Test code.
 test: $(BINS)
 	./tests
+
+# Remove built files.
 clean:
 	@rm -rf *.o $(BINS)
 
@@ -24,6 +28,9 @@ tests: tests.cpp
 dpytests: dpytests.cpp
 	@$(CXX) $(CXXFLAGS) $< dpy.cpp log.cpp -o $@
 
+fbtest: fbtest.cpp
+	@$(CXX) $(CXXFLAGS) $< $(SRC) -o $@
+
 dsh: dsh.cpp
 	@$(CXX) $(CXXFLAGS) -D$(DEFS) $(SRC) $< -o $@
 
@@ -34,5 +41,8 @@ dshfs: dshfs.cpp kb.cpp kbsys.cpp fs.cpp dsys.cpp wndcmd.cpp dpycmd.cpp wsys.cpp
 # Compile "do"-program, the beginning program that ask the user what to do.
 do: do.cpp do.hpp
 	@$(CXX) $(CXXFLAGS) $(SRC) $< -o $@
+
+%.o: %.cpp
+	@$(CXX) $(CXXFLAGS) $< -o $@
 
 .PHONY: all test clean

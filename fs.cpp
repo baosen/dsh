@@ -272,7 +272,16 @@ namespace {
     static uint i = 0; // Current index of the keyboard. \
     stringstream ss; \
     ss << "name" << i; \
-    ents.emplace_back(File(ss.str())); 
+    ents.emplace_back(ss.str()); 
+
+    // Make file that contain the color bit depth per component, which is used for all things graphics.
+    void mkcfmt() 
+    {
+        ents.emplace_back("r"); // contains color bit depth for red component.
+        ents.emplace_back("g"); // contains color bit depth for green component.
+        ents.emplace_back("b"); // contains color bit depth for blue component.
+        ents.emplace_back("a"); // contains color bit depth for alpha component.
+    }
     
     // Setup and initialize displays, and make the files pointing to them.
     void mkdpys() 
@@ -281,6 +290,8 @@ namespace {
         dsys::init();
         // Insert it into filesystem.
         MKFILES(dpy)
+        // Make file that show the color format.
+        mkcfmt();
     }
     
     // Setup mouse and make mouse files.
