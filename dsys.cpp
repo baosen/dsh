@@ -26,6 +26,7 @@ void dsys::init()
 #if defined(DRM)
     drm::init();
 #elif defined(FB)
+    // Allocate framebuffer.
     fb    = new Fb();
     // Set color bit depths.
     red   = fb->roff;
@@ -67,6 +68,7 @@ void dsys::read(const char  *name, // Name of the display screen.
 void dsys::deinit() {
 #ifdef FB
     delete fb;
+    red = green = blue = alpha = 0;
 #elif DRM
     drm::deinit();
 #endif
