@@ -59,7 +59,7 @@ void config()
     // Get EGL configurations.
     EGLint n;
     if (!eglGetConfigs(egl, nullptr, 0, &n))
-        abort();
+        die("Failed to get EGL configurations.");
 
     // Allocate EGL configuration.
     EGLConfig *configs = malloc(n*sizeof(EGLConfig));
@@ -76,7 +76,7 @@ void config()
     for (uint i = 0; i < n; ++i) {
         EGLint fmt; // GBM surface format.
         if (!eglGetConfigAttrib(egl, configs[i], EGL_NATIVE_VISUAL_ID, &fmt))
-            abort();
+            die("Failed to get a configuration attribute.");
         if (fmt == GBM_FORMAT_XRGB8888) {
             config.egl = configs[i];
             free(configs);
