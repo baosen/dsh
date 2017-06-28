@@ -10,7 +10,7 @@ namespace dsys {
     void read(const char* name, char *buf, const off_t i, const size_t size) noexcept;
 	// Write to display.
     void write(const char* name, const char *buf, const off_t i, const size_t size) noexcept;
-	// De-nitialize display system.
+	// Deinitialize display system.
     void deinit();
 
 	// Bit depths of color components.
