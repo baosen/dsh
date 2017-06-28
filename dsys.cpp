@@ -8,9 +8,7 @@
 #else
 #   error No screen output chosen. Choose one to continue compiling.
 #endif
-#include <cstring>
 #include "dsys.hpp"
-using namespace std;
 
 namespace {
 #if defined(DRM)
