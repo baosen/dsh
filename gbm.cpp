@@ -1,4 +1,3 @@
-#include <cstdlib>
 #include <EGL/egl.h>
 #include <gbm.h>
 #include "fio.hpp"
