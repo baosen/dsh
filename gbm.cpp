@@ -84,8 +84,8 @@ void config()
             return config;
         }
     }
-    // Failed to find a config with matching GBM format.
-    abort();
+    // Failed to find a config with a matching GBM format.
+    die("Failed to find a configuration with a matching GBM format.");
 }
 
 struct Wnd {
