@@ -17,7 +17,8 @@ Fb::Fb() {
 }
 
 // Unmap framebuffer from the system address space.
-Fb::~Fb() {
+Fb::~Fb() 
+{
     if (munmap(fb, size) == -1)
         die("Failed to unmap the framebuffer from the system's address space!");
 }

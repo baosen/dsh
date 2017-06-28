@@ -10,6 +10,7 @@
 #endif
 #include "dsys.hpp"
 
+// Display system.
 namespace {
 #if defined(DRM)
     // TODO: Use DRM graphical output.
@@ -25,7 +26,12 @@ void dsys::init()
 #if defined(DRM)
     drm::init();
 #elif defined(FB)
-    fb = new Fb();
+    fb    = new Fb();
+    // Set color bit depths.
+    red   = fb->roff;
+    green = fb->goff;
+    blue  = fb->boff;
+    alpha = fb->aoff;
 #endif
 }
 

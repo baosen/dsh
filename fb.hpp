@@ -22,11 +22,14 @@ public:
     // Get size in bytes of the framebuffer.
     size_t len() const;
 
-    Scr    scr; // The screen to grab the framebuffer.
+    Scr    scr;  // The screen to grab the framebuffer.
+    uint   roff, // Red offset.
+           goff, // Green offset.
+           boff, // Blue offset.
+           aoff; // Alpha offset.
 private:
     size_t size;
     u8*    fb;
-    uint   roff, goff, boff, aoff;
 
     friend class Rect;
 };
