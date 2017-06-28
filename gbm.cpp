@@ -87,9 +87,10 @@ void config()
     die("Failed to find a configuration with a matching GBM format.");
 }
 
+// GL window.
 struct Wnd {
     struct gbm_surface *gbm; // GBM surface.
-    EGLSurface  *egl; // EGL surface.
+    EGLSurface         *egl; // EGL surface.
 };
 
 // Get GBM window.
