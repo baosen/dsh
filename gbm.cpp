@@ -99,13 +99,13 @@ static Wnd getwnd()
     Wnd w;
     w.gbm = gbm_surface_create(gbm, 256, 256, GBM_FORMAT_XRGB8888, GBM_BO_USE_RENDERING);
     if (!w.gbm)
-        abort();
+        die("Failed to get GBM surface!");
 #ifdef EGL_MESA_platform_gbm
     w.egl = eglCreatePlatformWindowSurfaceEXT(egl, egl, gbm, nullptr);
 #else
     w.egl = eglCreateWindowSurface(w.egl, config.egl, w.gbm, nullptr);
 #endif
     if (w.egl == EGL_NO_SURFACE)
-        abort();
+        die("No GBM surface exists!");
     return w;
 }
