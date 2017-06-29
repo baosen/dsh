@@ -44,6 +44,7 @@ scr.o: scr.cpp
 
 # Tests for the framebuffer file.
 fbtest: fbtest.cpp fb.o col.o scr.o log.o
+	@$(CXX) $(CXXFLAGS) $^ -o $@
 
 # Tests for the hacky mouse file.
 mtest: mtest.cpp m.o log.o
