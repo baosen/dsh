@@ -2,7 +2,8 @@
 #include "fb.hpp"
 using namespace std;
 
-static void keywait() {
+static void keywait() 
+{
     cout << "Press any key." << endl;
     cin.get();
 }
