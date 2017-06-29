@@ -2,6 +2,8 @@
 CXX      = g++
 # Set C++ compiler flags.
 CXXFLAGS = -std=c++17 -O3 -Wall -Wextra
+# Compile command.
+COMPILE = @$(CXX) $(CXXFLAGS)
 # Set source dependencies for desktop shell.
 SRC      = m.cpp wnd.cpp col.cpp pos.cpp fb.cpp scr.cpp log.cpp res.cpp ev.cpp evm.cpp msys.cpp kbsys.cpp kb.cpp wsys.cpp wd.cpp parse.cpp init.cpp mwnd.cpp rect.cpp 
 # Set preprocessing definitions.
@@ -24,34 +26,34 @@ clean:
 
 # Compile general tests.
 tests: tests.cpp
-	@$(CXX) $(CXXFLAGS) $< kb.cpp log.cpp -o $@
+	$(COMPILE) $< kb.cpp log.cpp -o $@
 
 # Compile display tests.
 dpytests: dpytests.cpp
-	@$(CXX) $(CXXFLAGS) $< dpy.cpp log.cpp -o $@
+	$(COMPILE) $< dpy.cpp log.cpp -o $@
 
 # Displays notifications to the user.
 log.o: log.cpp log.hpp
-	@$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(COMPILE) -c $< -o $@
 
 # Framebuffer module.
 fb.o: fb.cpp scr.o log.o
-	@$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(COMPILE) -c $< -o $@
 
 # Screen module.
 scr.o: scr.cpp
-	@$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(COMPILE) -c $< -o $@
 
 # Tests for the framebuffer file.
 fbtest: fbtest.cpp fb.o col.o scr.o log.o
-	@$(CXX) $(CXXFLAGS) $^ -o $@
+	$(COMPILE) $^ -o $@
 
 # Tests for the hacky mouse file.
 mtest: mtest.cpp m.o log.o
-	@$(CXX) $(CXXFLAGS) $^ -o $@
+	$(COMPILE) $^ -o $@
 
 dsh: dsh.cpp
-	@$(CXX) $(CXXFLAGS) -D$(DEFS) $(SRC) $< -o $@
+	$(COMPILE) -D$(DEFS) $(SRC) $< -o $@
 
 # Compile shell file system executable.
 dshfs: dshfs.cpp kb.cpp kbsys.cpp fs.cpp dsys.cpp wndcmd.cpp dpycmd.cpp wsys.cpp ssys.cpp $(SRC)
@@ -59,9 +61,9 @@ dshfs: dshfs.cpp kb.cpp kbsys.cpp fs.cpp dsys.cpp wndcmd.cpp dpycmd.cpp wsys.cpp
 
 # Compile "do"-program, the beginning program that ask the user what to do.
 do: do.cpp do.hpp
-	@$(CXX) $(CXXFLAGS) $(SRC) $< -o $@
+	$(COMPILE) $(SRC) $< -o $@
 
 %.o: %.cpp
-	@$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(COMPILE) -c $< -o $@
 
 .PHONY: all test clean
