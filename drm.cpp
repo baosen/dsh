@@ -14,7 +14,8 @@ namespace {
 }
 
 // Initialize the direct rendering manager.
-void drm::init() {
+void drm::init() 
+{
     Drminst inst;
     zero(inst);
     if (fd = open(path, O_RDWR) == -1)
@@ -23,7 +24,8 @@ void drm::init() {
 }
 
 // Deinitialize the direct rendering manager.
-void drm::deinit() {
+void drm::deinit() 
+{
     if (close(fd) == -1)
         die("Failed to close the direct rendering manager!");
 }
