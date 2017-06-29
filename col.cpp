@@ -8,11 +8,20 @@ Col::Col(const uint r, // Red.
     : r(r), g(g), b(b), a(a) {}
 
 // Compute pixel formatted to the framebuffer's pixel format.
-u32 Col::val(const uint roff, // Red bit position.
-             const uint goff, // Green bit position.
-             const uint boff, // Blue bit position.
-             const uint aoff) // Alpha-transparency bit position.
+u32 Col::val(const int roff, // Red bit position.
+             const int goff, // Green bit position.
+             const int boff, // Blue bit position.
+             const int aoff) // Alpha-transparency bit position.
              const 
 {
-    return r << roff | g << goff | b << boff | a << aoff;
+    u32 pix = 0;
+    if (roff >= 0)
+        pix |= r << roff;
+    if (goff >= 0)
+        pix |= g << goff;
+    if (boff >= 0)
+        pix |= b << boff;
+    if (aoff >= 0)
+        pix |= a << aoff;
+    return pix;
 }

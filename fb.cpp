@@ -4,6 +4,7 @@
 
 // Setup framebuffer file mapping to the address space.
 Fb::Fb() 
+    : roff(-1), goff(-1), boff(-1), aoff(-1)
 {
     // Get size of framebuffer in bytes.
     size = scr.finfo().smem_len;
@@ -12,10 +13,14 @@ Fb::Fb()
     fb = scast<u8*>(mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_SHARED, scr.fd, 0));
     // Set the positions to the color bits.
     const auto v = scr.vinfo();
-    roff = v.red.offset;    // Position to red bits.
-    goff = v.green.offset;  // Position to green bits.
-    boff = v.blue.offset;   // Position to blue bits.
-    aoff = v.transp.offset; // Position to alpha-transparency bits.
+    if (v.red.length)
+        roff = v.red.offset;    // Position to red bits.
+    if (v.green.length)
+        goff = v.green.offset;  // Position to green bits.
+    if (v.blue.length)
+        boff = v.blue.offset;   // Position to blue bits.
+    if (v.transp.length)
+        aoff = v.transp.offset; // Position to alpha-transparency bits.
 }
 
 // Unmap framebuffer from the system address space.

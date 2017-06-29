@@ -24,11 +24,11 @@ public:
     // Get size in bytes of the framebuffer.
     size_t len() const;
 
-    Scr    scr;  // The screen to grab the framebuffer.
-    uint   roff, // Red offset.
-           goff, // Green offset.
-           boff, // Blue offset.
-           aoff; // Alpha offset.
+    Scr   scr;  // The screen to grab the framebuffer.
+    int   roff, // Red offset.
+          goff, // Green offset.
+          boff, // Blue offset.
+          aoff; // Alpha offset.
 private:
     size_t size, // Size in bytes.
            plen; // Size in pixels.

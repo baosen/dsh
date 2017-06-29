@@ -42,7 +42,7 @@ fb.o: fb.cpp scr.o log.o
 
 # Screen module.
 scr.o: scr.cpp
-	$(COMPILE) -c $< -o $@
+	$(COMPILE) -c $< -o $@ -DDEBUG
 
 # Tests for the framebuffer file.
 fbtest: fbtest.cpp fb.o col.o scr.o log.o

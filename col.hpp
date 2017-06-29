@@ -10,10 +10,10 @@ public:
         const uint a); // Alpha.
 
     // Compute pixel formatted to the framebuffer's pixel format.
-    u32 val(const uint roff, // Red offset.
-            const uint goff, // Green offset.
-            const uint boff, // Blue offset.
-            const uint aoff) // Alpha offset.
+    u32 val(const int roff, // Red offset.
+            const int goff, // Green offset.
+            const int boff, // Blue offset.
+            const int aoff) // Alpha offset.
             const;
 private:
     uint r, // Red.
