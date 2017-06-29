@@ -19,6 +19,8 @@ public:
     // Set color value in the framebuffer.
     void  set(const uint i, const Col& c);
 
+    // Get size in pixels of the framebuffer.
+    size_t pixlen() const;
     // Get size in bytes of the framebuffer.
     size_t len() const;
 
@@ -28,7 +30,9 @@ public:
            boff, // Blue offset.
            aoff; // Alpha offset.
 private:
-    size_t size;
+    size_t size, // Size in bytes.
+           plen; // Size in pixels.
+
     u8*    fb;
 
     friend class Rect;

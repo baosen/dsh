@@ -7,6 +7,7 @@ Fb::Fb()
 {
     // Get size of framebuffer in bytes.
     size = scr.finfo().smem_len;
+    plen = size / sizeof(u32);
     // Map framebuffer to computer's address space.
     fb = scast<u8*>(mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_SHARED, scr.fd, 0));
     // Set the positions to the color bits.
@@ -41,6 +42,12 @@ u32& Fb::get32(const uint i) // Index beginning at 0 indexing a string of frameb
 size_t Fb::len() const 
 {
     return size;
+}
+
+// Get size in pixels of the framebuffer.
+size_t Fb::pixlen() const
+{
+    return plen;
 }
 
 // Set color value in the framebuffer.
