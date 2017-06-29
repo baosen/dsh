@@ -6,17 +6,6 @@
 #include "log.hpp"
 
 namespace {
-    void check_extensions()
-    {
-    #ifdef EGL_MESA_platform_gbm
-        const char *ext = eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS);
-        if (!ext) // Is EGL_EXT_client_extensions is supported?
-            die("EGL_EXT_client_extensions is not supported.");
-        if (!strstr(ext, "EGL_MESA_platform_gbm"))
-            die("EGL_MESA_platform_gbm is not supported.");
-    #endif
-    }
-
     EGLDisplay  egldisp; // OpenGL ES display.
     gbm_device *gbmdev;  // "Generic buffer management"-device by Mesa.
 }
