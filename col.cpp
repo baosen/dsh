@@ -1,13 +1,13 @@
 #include "col.hpp"
 
-// Colour pixel.
+// The color of a pixel.
 Col::Col(const uint r, // Red.
          const uint g, // Green.
          const uint b, // Blue.
          const uint a) // Alpha.
     : r(r), g(g), b(b), a(a) {}
 
-// Get pixel formatted to framebuffer's pixel format.
+// Compute pixel formatted to the framebuffer's pixel format.
 u32 Col::val(const uint roff, // Red bit position.
              const uint goff, // Green bit position.
              const uint boff, // Blue bit position.

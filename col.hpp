@@ -1,13 +1,23 @@
 #pragma once
 #include "types.hpp"
 
+// Pixel color.
 class Col {
 public:
-    Col(const uint r, const uint g, const uint b, const uint a);
-    u32 val(const uint roff, const uint goff, const uint boff, const uint aoff) const;
+    Col(const uint r,  // Red.
+        const uint g,  // Green.
+        const uint b,  // Blue.
+        const uint a); // Alpha.
+
+    // Compute pixel formatted to the framebuffer's pixel format.
+    u32 val(const uint roff, // Red offset.
+            const uint goff, // Green offset.
+            const uint boff, // Blue offset.
+            const uint aoff) // Alpha offset.
+            const;
 private:
-    uint r,     // Red.
-         g,     // Green.
-         b,     // Blue.
-         a;     // Alpha-transparency.
+    uint r, // Red.
+         g, // Green.
+         b, // Blue.
+         a; // Alpha-transparency.
 };

@@ -26,15 +26,15 @@ Fb::~Fb()
 }
 
 // Access framebuffer memory 8 bits at a time.
-u8& Fb::get8(const uint i) // Index beginning at 0 indexiing a string of framebuffer bytes.
+u8& Fb::get8(const uint i) // Index beginning at 0 indexing a string of framebuffer bytes.
 {
     return fb[i];
 }
 
 // Access framebuffer memory 32 bits at a time.
-u32& Fb::get32(const uint i) 
+u32& Fb::get32(const uint i) // Index beginning at 0 indexing a string of framebuffer bytes. 
 {
-    return *(rcast<u32*>(fb)+i);
+    return *(rcast<u32*>(fb) + i);
 }
 
 // Get size in bytes of the framebuffer.
