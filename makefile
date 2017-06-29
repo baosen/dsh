@@ -7,7 +7,9 @@ SRC      = m.cpp wnd.cpp col.cpp pos.cpp fb.cpp scr.cpp log.cpp res.cpp ev.cpp e
 # Set preprocessing definitions.
 DEFS     = DEBUG
 # Set the produced executable binaries.
-BINS     = tests dpytests dsh run dshfs
+BINS     = \
+    fbtest tests dpytests \
+    dsh run dshfs
 
 # Build everything.
 all: $(BINS)
@@ -28,8 +30,21 @@ tests: tests.cpp
 dpytests: dpytests.cpp
 	@$(CXX) $(CXXFLAGS) $< dpy.cpp log.cpp -o $@
 
-fbtest: fbtest.cpp
-	@$(CXX) $(CXXFLAGS) $< $(SRC) -o $@
+# Displays notifications to the user.
+log.o: log.cpp log.hpp
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Framebuffer module.
+fb.o: fb.cpp scr.o log.o
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Screen module.
+scr.o: scr.cpp
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Tests for the framebuffer file.
+fbtest: fbtest.cpp fb.o col.o scr.o log.o
+	@$(CXX) $(CXXFLAGS) $^ -o $@
 
 dsh: dsh.cpp
 	@$(CXX) $(CXXFLAGS) -D$(DEFS) $(SRC) $< -o $@
@@ -43,6 +58,6 @@ do: do.cpp do.hpp
 	@$(CXX) $(CXXFLAGS) $(SRC) $< -o $@
 
 %.o: %.cpp
-	@$(CXX) $(CXXFLAGS) $< -o $@
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .PHONY: all test clean
