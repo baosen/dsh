@@ -1,11 +1,10 @@
-#include <cstdarg>
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>
 #include "log.hpp"
 #include "scr.hpp"
 
-// Setup screen.
+// Setup framebuffer screen.
 Scr::Scr() {
     // Open the framebuffer file.
     fd = ::open("/dev/fb0", O_RDWR);
@@ -29,14 +28,14 @@ Scr::~Scr() {
         die("Failed to close /dev/fb0!");
 }
 
-// Control screen.
+// Control framebuffer screen.
 #define CTL(req, ...) ioctl(fd, req, __VA_ARGS__)
 
 // Returns framebuffer variable screen info.
 Scr::varinfo Scr::vinfo() {
     varinfo v;
     if (CTL(FBIOGET_VSCREENINFO, &v))
-        throw err("Can't read video screen information.");
+        throw err("Failed to read video screen information from framebuffer file!");
     return v;
 }
 
@@ -44,6 +43,6 @@ Scr::varinfo Scr::vinfo() {
 Scr::fixinfo Scr::finfo() {
     fixinfo f;
     if (CTL(FBIOGET_FSCREENINFO, &f))
-        throw err("Can't read fixed screen information.");
+        throw err("Failed to read fixed screen information from framebuffer file!");
     return f;
 }
