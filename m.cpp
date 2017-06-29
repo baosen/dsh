@@ -9,7 +9,8 @@ using namespace std;
 M::M() : fd(-2) {}
 
 // Open the "hacky" mouse input device file.
-M::M(const uint i) {
+M::M(const uint i) 
+{
     if (open(i))
         return;
     // Generic input using mouse* device file.
@@ -50,7 +51,7 @@ void M::close() {
 // Read mouse input from mouse device file.
 M::Ev M::rd() {
     // Read using generic mouse device file.
-    char e[3];
+    char       e[3]; // The read mouse state.
     const auto ret = ::read(fd, &e, sizeof e);
     if (ret == -1)
         throw errno; // todo.

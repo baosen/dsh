@@ -8,7 +8,7 @@ SRC      = m.cpp wnd.cpp col.cpp pos.cpp fb.cpp scr.cpp log.cpp res.cpp ev.cpp e
 DEFS     = DEBUG
 # Set the produced executable binaries.
 BINS     = \
-    fbtest tests dpytests \
+    mtest fbtest tests dpytests \
     dsh run dshfs
 
 # Build everything.
@@ -44,6 +44,9 @@ scr.o: scr.cpp
 
 # Tests for the framebuffer file.
 fbtest: fbtest.cpp fb.o col.o scr.o log.o
+
+# Tests for the hacky mouse file.
+mtest: mtest.cpp m.o log.o
 	@$(CXX) $(CXXFLAGS) $^ -o $@
 
 dsh: dsh.cpp

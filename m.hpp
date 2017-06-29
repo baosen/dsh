@@ -14,8 +14,11 @@ public:
 
     // Mouse input event.
     struct Ev {
-        int  x, y;             // x and y cartesian movement.
-        bool left, mid, right; // Left, middle and right pressed or released mouse buttons.
+        int x, // Movement in the X-axis of an cartesian coordinate system.
+            y; // Movement in the Y-axis of an cartesian coordinate system.
+        bool left,  // Is left button pressed or released?
+             mid,   // Is middle button pressed or released?
+             right; // Is right button pressed or released?
     };
 
     // Create a empty "hacky" mouse.
