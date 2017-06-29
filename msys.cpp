@@ -52,7 +52,9 @@ namespace {
     }
     
     // Relative axis. Mouse movement.
-    void rel(msys::Ev& ev, const input_event& e) {
+    void rel(msys::Ev&          ev, // Event.
+             const input_event& e)  // Mouse input event.
+    {
         // Mouse movements follows top-left coordinate system, where origo is at the top left of the screen and the positive y-axis points downwards.
         switch (e.code) {
         case 0: // x-axis, - left, + right.
@@ -70,8 +72,10 @@ namespace {
         }
     }
     
-    // Synthetic. Handle synthetic events.
-    bool syn(msys::Ev& ev, const __s32 code) {
+    // Handle synthetic events.
+    bool syn(msys::Ev&   ev,   // Syntheic event.
+             const __s32 code) // Code reported.
+    {
         switch (code) {
         case SYN_REPORT:  // Reported event.
             return true;
