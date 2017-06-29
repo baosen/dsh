@@ -9,7 +9,10 @@ namespace {
     
     // Check if the file opened is a mouse.
     bool ism(char b[EV_MAX]) {
-        bool key = false, rel = false;
+        bool key = false, // Has key?
+             rel = false; // Has relative axis?
+
+        // Check for key and relative axis.
         for (ushort i = 0; i < EV_MAX; i++) {
             // Check if bit i are set.
             if (bset(b[0], i)) {
@@ -27,6 +30,7 @@ namespace {
                 }
             }
         }
+
         // If it has both key and relative axis, then it is mouse. If some are missing, it is not a mouse.
         return key && rel;
     }
