@@ -37,7 +37,7 @@ Evm::Evm() {}
 
 // Find a "event" mouse and open it.
 Evm::Evm(const uint i) // The ith mouse to open.
-    : ev(i) 
+    : ev(i) // Open the ith event file.
 {
     // Check if input device given has mouse capabilities.
     char b[EV_MAX];

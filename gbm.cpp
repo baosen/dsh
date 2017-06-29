@@ -1,3 +1,4 @@
+#include "config.hpp"
 #include <EGL/egl.h>
 #include <gbm.h>
 #include "gbm.hpp"
@@ -16,16 +17,13 @@ namespace {
     #endif
     }
 
-    EGLDisplay  egl; // OpenGL ES display.
-    gbm_device *gbmdev; // "Generic buffer management"-device by Mesa.
+    EGLDisplay  egldisp; // OpenGL ES display.
+    gbm_device *gbmdev;  // "Generic buffer management"-device by Mesa.
 }
 
 // Initialize Mesa's generic buffer management.
 void gbm::init()
 {
-    // Path to the main device card file.
-    #define CARD0_PATH "/dev/dri/card0"
-
     const auto fd = open(CARD0_PATH, O_RDWR | FD_CLOEXEC);
     if (fd < 0)
         die("Failed to open " CARD0_PATH "!");
@@ -33,15 +31,15 @@ void gbm::init()
     if (!gbmdev)
         die("Failed to create a GBM device.");
 #ifdef EGL_MESA_platform_gbm
-    egl = eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_MESA, gbm, nullptr);
+    egldisp = eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_MESA, gbm, nullptr);
 #else
-    egl = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+    egldisp = eglGetDisplay(EGL_DEFAULT_DISPLAY);
 #endif
-    if (egl == EGL_NO_DISPLAY)
+    if (egldisp == EGL_NO_DISPLAY)
         die("Found no EGL display.");
     EGLint major, // Major version number.
            minor; // Minor version number.
-    if (!eglInitialize(egl, &major, &minor))
+    if (!eglInitialize(egldisp, &major, &minor))
         die("Failed to initialize EGL!");
 }
 
@@ -59,12 +57,12 @@ void config()
 
     // Get EGL configurations.
     EGLint n;
-    if (!eglGetConfigs(egl, nullptr, 0, &n))
+    if (!eglGetConfigs(egldisp, nullptr, 0, &n))
         die("Failed to get EGL configurations.");
 
     // Allocate EGL configuration.
     EGLConfig *configs = malloc(n*sizeof(EGLConfig));
-    if (!eglChooseConfig(egl, attribs, configs, n, &n)) {
+    if (!eglChooseConfig(egldisp, attribs, configs, n, &n)) {
         free(configs);
         die("Failed to choose EGL configuration.");
     }
@@ -76,7 +74,7 @@ void config()
     // Find a config whose native visual ID is the desired GBM format.
     for (uint i = 0; i < n; ++i) {
         EGLint fmt; // GBM surface format.
-        if (!eglGetConfigAttrib(egl, configs[i], EGL_NATIVE_VISUAL_ID, &fmt))
+        if (!eglGetConfigAttrib(egldisp, configs[i], EGL_NATIVE_VISUAL_ID, &fmt))
             die("Failed to get a configuration attribute.");
         if (fmt == GBM_FORMAT_XRGB8888) {
             config.egl = configs[i];
