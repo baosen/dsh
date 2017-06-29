@@ -38,6 +38,10 @@ int main()
 
     keywait();
 
+    // Fill with mixed color.
+    for (size_t i = 0; i < fb.pixlen(); ++i)
+        fb.set(i, Col(100, 120, 22, 0));
+
     // BUG: Using alpha breaks the color.
 
     return 0;
