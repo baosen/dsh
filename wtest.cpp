@@ -2,6 +2,7 @@
 #include "m.hpp"
 #include "keywait.hpp"
 
+// Test "hacky" mouse combined with window rectangle.
 int main() 
 {
     M m(1);
