@@ -9,7 +9,7 @@ Scr::Scr()
 {
     // Open the framebuffer file.
     fd = ::open("/dev/fb0", O_RDWR);
-    if (fd == -1)
+    if (fd < 0)
         throw err("Cannot open /dev/fb0!");
 #ifdef DEBUG
     // Get variable screen information.
@@ -29,7 +29,7 @@ Scr::Scr()
 // Close framebuffer file.
 Scr::~Scr() 
 {
-    if (close(fd) == -1)
+    if (close(fd) < 0)
         die("Failed to close /dev/fb0!");
 }
 
@@ -40,7 +40,7 @@ Scr::~Scr()
 Scr::varinfo Scr::vinfo() 
 {
     varinfo v;
-    if (CTL(FBIOGET_VSCREENINFO, &v))
+    if (CTL(FBIOGET_VSCREENINFO, &v) < 0)
         throw err("Failed to read video screen information from framebuffer file!");
     return v;
 }
@@ -49,7 +49,7 @@ Scr::varinfo Scr::vinfo()
 Scr::fixinfo Scr::finfo() 
 {
     fixinfo f;
-    if (CTL(FBIOGET_FSCREENINFO, &f))
+    if (CTL(FBIOGET_FSCREENINFO, &f) < 0)
         throw err("Failed to read fixed screen information from framebuffer file!");
     return f;
 }
@@ -57,6 +57,6 @@ Scr::fixinfo Scr::finfo()
 // Wait for vertical sync.
 void Scr::vsync()
 {
-    if (CTL(FBIO_WAITFORVSYNC, 0))
+    if (CTL(FBIO_WAITFORVSYNC, 0) < 0)
         throw err("Failed to wait for vertical sync!");
 }
