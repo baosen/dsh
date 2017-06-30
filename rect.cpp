@@ -16,6 +16,12 @@ uint Rect::i() const
     return p.i(r.w);
 }
 
+// Compute start index position.
+uint Rect::start(const Scr::varinfo& v) const
+{
+    return p.x + p.y * v.xres; // The start index of the position.
+}
+
 // Fill rectangle in framebuffer with the colour c.
 void Rect::fill(const Col& c) // Colour to fill the inside of the rectangle with.
                 const 
@@ -25,12 +31,12 @@ void Rect::fill(const Col& c) // Colour to fill the inside of the rectangle with
 
     // Compute pixel color and position.
     const auto v = fb.scr.vinfo();
-    const auto s = p.x + p.y * v.xres; // The start index of the position.
+    const auto s = start(v); // The start index of the position.
 
     // Fill the rectangle in Linux framebuffer.
     for (size_t y = 0; y < r.h; ++y)
         for (size_t x = 0; x < r.w; ++x)
-            fb.set(s+x+(y*v.xres), c);
+            fb.set(s + x + (y * v.xres), c);
 }
 
 // Get the size/length in bytes of the rectangle.
@@ -96,11 +102,14 @@ int Rect::write(const char *buf,  // Buffer of 32-bit unsigned RGBA pixels.
     // Check if size of write is out of range.
     if (size > this->size())
         return -EINVAL; // Invalid parameter.
+
     // Open framebuffer file.
     Fb         fb;
+
     // Get screen attributes.
-    const auto v = fb.scr.vinfo();
-    const auto s = p.x+p.y*v.xres; // Compute the start index of the position.
+    const auto v = fb.scr.vinfo(); // Get "variable" screen info.
+    const auto s = start(v);       // Compute the start index of the position.
+
     // Convert pixels in the given buffer and write it to the framebuffer file.
     const auto w = this->r.w;
     for (uint y = 0; y < r.h; ++y) {

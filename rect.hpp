@@ -3,6 +3,7 @@
 #include "pos.hpp"
 #include "res.hpp"
 #include "col.hpp"
+#include "scr.hpp"
 
 // Rectangle image in framebuffer.
 class Rect {
@@ -32,6 +33,9 @@ public:
 private:
     Pos p; // Position of the rectangle in the framebuffer.
     Res r; // Resolution/size of the rectangle in the framebuffer.
+
+    // Compute start index position.
+    uint start(const Scr::varinfo& v) const;
 
     friend class Wnd;
 };

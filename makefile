@@ -43,7 +43,7 @@ scr.o: scr.cpp
 	$(COMPILE) -c $< -o $@
 
 # Tests for the framebuffer file.
-fbtest: fbtest.cpp fb.o col.o scr.o log.o
+fbtest: fbtest.cpp fb.o col.o scr.o log.o keywait.o
 	$(COMPILE) $^ -o $@
 
 wtest: wtest.cpp fb.o col.o scr.o log.o pos.o rect.o res.o keywait.o m.o
