@@ -57,5 +57,6 @@ Scr::fixinfo Scr::finfo()
 // Wait for vertical sync.
 void Scr::vsync()
 {
-    CTL(FBIO_WAITFORVSYNC, 0);
+    if (CTL(FBIO_WAITFORVSYNC, 0))
+        throw err("Failed to wait for vertical sync!");
 }
