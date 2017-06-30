@@ -5,7 +5,8 @@
 #include "scr.hpp"
 
 // Setup framebuffer screen.
-Scr::Scr() {
+Scr::Scr() 
+{
     // Open the framebuffer file.
     fd = ::open("/dev/fb0", O_RDWR);
     if (fd == -1)
@@ -26,7 +27,8 @@ Scr::Scr() {
 }
 
 // Close framebuffer file.
-Scr::~Scr() {
+Scr::~Scr() 
+{
     if (close(fd) == -1)
         die("Failed to close /dev/fb0!");
 }
@@ -35,7 +37,8 @@ Scr::~Scr() {
 #define CTL(req, ...) ioctl(fd, req, __VA_ARGS__)
 
 // Returns framebuffer variable screen info.
-Scr::varinfo Scr::vinfo() {
+Scr::varinfo Scr::vinfo() 
+{
     varinfo v;
     if (CTL(FBIOGET_VSCREENINFO, &v))
         throw err("Failed to read video screen information from framebuffer file!");
@@ -43,9 +46,16 @@ Scr::varinfo Scr::vinfo() {
 }
 
 // Returns framebuffer fixed screen info.
-Scr::fixinfo Scr::finfo() {
+Scr::fixinfo Scr::finfo() 
+{
     fixinfo f;
     if (CTL(FBIOGET_FSCREENINFO, &f))
         throw err("Failed to read fixed screen information from framebuffer file!");
     return f;
+}
+
+// Wait for vertical sync.
+void Scr::vsync()
+{
+    CTL(FBIO_WAITFORVSYNC, 0);
 }

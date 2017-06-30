@@ -6,7 +6,7 @@
 using namespace std;
 
 namespace {
-    vector<char> dbuf; // Double buffer for tear-free framebuffer manipulation.
+    vector<u8> dbuf; // Double buffer for tear-free framebuffer manipulation.
 };
 
 // Setup framebuffer file mapping to the address space.
@@ -44,13 +44,13 @@ Fb::~Fb()
 // Access framebuffer memory 8 bits at a time.
 u8& Fb::get8(const uint i) // Index beginning at 0 indexing a string of framebuffer bytes.
 {
-    return fb[i];
+    return dbuf[i];
 }
 
 // Access framebuffer memory 32 bits at a time.
 u32& Fb::get32(const uint i) // Index beginning at 0 indexing a string of framebuffer bytes. 
 {
-    return *(rcast<u32*>(fb) + i);
+    return *(rcast<u32*>(dbuf.data()) + i);
 }
 
 // Get size in bytes of the framebuffer.
@@ -89,10 +89,11 @@ void Fb::set(const uint i, // Index to set the color value to.
     get32(i) = c.val(roff, goff, boff, aoff);
 }
 
-// TODO: Copy double buffer into the framebuffer.
+// Copy double buffer into the framebuffer.
 void Fb::blit()
 {
-    // TODO: Wait for vertical sync before copying.
+    // Wait for vertical sync before copying.
+    scr.vsync();
 
     // Blit!
     memcpy(fb, dbuf.data(), size);
@@ -101,5 +102,6 @@ void Fb::blit()
 // Clear/blacken the entire screen.
 void Fb::clear()
 {
-    memset(fb, 0, size);
+    //memset(fb, 0, size);
+    fill(begin(dbuf), end(dbuf), 0);
 }

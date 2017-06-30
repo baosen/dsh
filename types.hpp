@@ -3,6 +3,7 @@
 #include <stdexcept>
 typedef unsigned int   uint;
 typedef unsigned short ushort;
+typedef unsigned char  uchar;
 typedef uint32_t       u32;
 typedef int32_t        s32;
 typedef uint8_t        u8;
