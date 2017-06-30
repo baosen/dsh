@@ -27,6 +27,9 @@ public:
     // Get size in bytes of the framebuffer.
     size_t len() const;
 
+    // Copy double buffer into the framebuffer.
+    void blit();
+
     Scr   scr;  // The screen to grab the framebuffer.
 
     // Bit offsets to the position of the color value.

@@ -1,4 +1,5 @@
 #include <vector>
+#include <cstring>
 #include <sys/mman.h>
 #include "fb.hpp"
 #include "log.hpp"
@@ -14,7 +15,10 @@ Fb::Fb()
 {
     // Get size of framebuffer in bytes.
     size = scr.finfo().smem_len;
+    // Compute number of pixels.
     plen = size / sizeof(u32);
+    // Set size of the double buffer to be the same as the framebuffer size in bytes.
+    dbuf.resize(size);
     // Map framebuffer to computer's address space.
     fb = scast<u8*>(mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_SHARED, scr.fd, 0));
     // Set the positions to the color bits.
@@ -83,4 +87,13 @@ void Fb::set(const uint i, // Index to set the color value to.
              const Col& c) // Color to set.
 {
     get32(i) = c.val(roff, goff, boff, aoff);
+}
+
+// TODO: Copy double buffer into the framebuffer.
+void Fb::blit()
+{
+    // TODO: Wait for vertical sync before copying.
+
+    // Blit!
+    memcpy(fb, dbuf.data(), size);
 }
