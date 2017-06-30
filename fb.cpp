@@ -1,3 +1,4 @@
+#include <cstring>
 #include <sys/mman.h>
 #include "fb.hpp"
 #include "log.hpp"
@@ -60,4 +61,10 @@ void Fb::set(const uint i, // Index to set the color value to.
              const Col& c) // Color to set.
 {
     get32(i) = c.val(roff, goff, boff, aoff);
+}
+
+// Clear/blacken the entire screen.
+void Fb::clear()
+{
+    memset(fb, 0, size);
 }

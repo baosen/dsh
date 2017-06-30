@@ -33,6 +33,9 @@ void Rect::fill(const Col& c) // Colour to fill the inside of the rectangle with
     const auto v = fb.scr.vinfo();
     const auto s = start(v); // The start index of the position.
 
+    // Clear/blacken the entire screen.
+    fb.clear();
+
     // Fill the rectangle in Linux framebuffer.
     for (size_t y = 0; y < r.h; ++y)
         for (size_t x = 0; x < r.w; ++x)

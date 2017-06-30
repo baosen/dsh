@@ -18,6 +18,8 @@ public:
 
     // Set color value in the framebuffer.
     void  set(const uint i, const Col& c);
+    // Clear/blacken the entire screen.
+    void  clear();
 
     // Get size in pixels of the framebuffer.
     size_t pixlen() const;
