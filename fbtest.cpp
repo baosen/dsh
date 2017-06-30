@@ -1,13 +1,5 @@
-#include <iostream>
+#include "keywait.hpp"
 #include "fb.hpp"
-using namespace std;
-
-// Wait for keypress.
-static void keywait() 
-{
-    cout << "Press any key." << endl;
-    cin.get();
-}
 
 // Test framebuffer methods.
 int main() 

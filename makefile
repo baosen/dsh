@@ -6,8 +6,6 @@ CXXFLAGS = -std=c++17 -O3 -Wall -Wextra
 COMPILE = @$(CXX) $(CXXFLAGS)
 # Set source dependencies for desktop shell.
 SRC      = m.cpp wnd.cpp col.cpp pos.cpp fb.cpp scr.cpp log.cpp res.cpp ev.cpp evm.cpp msys.cpp kbsys.cpp kb.cpp wsys.cpp wd.cpp parse.cpp init.cpp mwnd.cpp rect.cpp 
-# Set preprocessing definitions.
-DEFS     = DEBUG
 # Set the produced executable binaries.
 BINS     = \
     mtest fbtest tests dpytests \
@@ -42,10 +40,13 @@ fb.o: fb.cpp scr.o log.o
 
 # Screen module.
 scr.o: scr.cpp
-	$(COMPILE) -c $< -o $@ -DDEBUG
+	$(COMPILE) -c $< -o $@
 
 # Tests for the framebuffer file.
 fbtest: fbtest.cpp fb.o col.o scr.o log.o
+	$(COMPILE) $^ -o $@
+
+wtest: wtest.cpp fb.o col.o scr.o log.o pos.o rect.o res.o keywait.o m.o
 	$(COMPILE) $^ -o $@
 
 # Tests for the hacky mouse file.
@@ -53,7 +54,7 @@ mtest: mtest.cpp m.o log.o
 	$(COMPILE) $^ -o $@
 
 dsh: dsh.cpp
-	$(COMPILE) -D$(DEFS) $(SRC) $< -o $@
+	$(COMPILE) $(SRC) $< -o $@
 
 # Compile shell file system executable.
 dshfs: dshfs.cpp kb.cpp kbsys.cpp fs.cpp dsys.cpp wndcmd.cpp dpycmd.cpp wsys.cpp ssys.cpp $(SRC)
