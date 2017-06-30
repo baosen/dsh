@@ -97,3 +97,9 @@ void Fb::blit()
     // Blit!
     memcpy(fb, dbuf.data(), size);
 }
+
+// Clear/blacken the entire screen.
+void Fb::clear()
+{
+    memset(fb, 0, size);
+}

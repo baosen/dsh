@@ -18,9 +18,12 @@ public:
 
     // Set color value in the framebuffer.
     void  set(const uint i, const Col& c);
+
     // Fill a box in the framebuffer.
     void  boxfill(const char *buf, const uint w, const uint h);
     void  rowfill(const char *buf, const uint row, const uint len);
+    // Clear/blacken the entire screen.
+    void  clear();
 
     // Get size in pixels of the framebuffer.
     size_t pixlen() const;
