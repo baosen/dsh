@@ -1,6 +1,12 @@
+#include <vector>
 #include <sys/mman.h>
 #include "fb.hpp"
 #include "log.hpp"
+using namespace std;
+
+namespace {
+    vector<char> dbuf; // Double buffer for tear-free framebuffer manipulation.
+};
 
 // Setup framebuffer file mapping to the address space.
 Fb::Fb() 
@@ -47,6 +53,23 @@ u32& Fb::get32(const uint i) // Index beginning at 0 indexing a string of frameb
 size_t Fb::len() const 
 {
     return size;
+}
+
+// TODO: Fill a box in the framebuffer.
+void Fb::boxfill(const char *buf, // Buffer.
+                 const uint  w,   // Width.
+                 const uint  h)   // Height.
+{
+    for (uint i = 0; i < h; ++i)
+        rowfill(buf+i, i, w);
+}
+
+// TODO: Fill a row of pixels.
+void Fb::rowfill(const char *buf, // Buffer.
+                 const uint  row, // The index to the row to fill.
+                 const uint  len) // The length of the row.
+{
+    // TODO: memcpy.
 }
 
 // Get size in pixels of the framebuffer.

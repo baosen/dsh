@@ -18,6 +18,9 @@ public:
 
     // Set color value in the framebuffer.
     void  set(const uint i, const Col& c);
+    // Fill a box in the framebuffer.
+    void  boxfill(const char *buf, const uint w, const uint h);
+    void  rowfill(const char *buf, const uint row, const uint len);
 
     // Get size in pixels of the framebuffer.
     size_t pixlen() const;
@@ -25,6 +28,8 @@ public:
     size_t len() const;
 
     Scr   scr;  // The screen to grab the framebuffer.
+
+    // Bit offsets to the position of the color value.
     int   roff, // Red offset.
           goff, // Green offset.
           boff, // Blue offset.
