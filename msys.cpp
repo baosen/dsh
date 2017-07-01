@@ -73,7 +73,7 @@ namespace {
     }
     
     // Handle synthetic events.
-    bool syn(msys::Ev&   ev,   // Syntheic event.
+    bool syn(msys::Ev&   ev,   // Synthetic event.
              const __s32 code) // Code reported.
     {
         switch (code) {
