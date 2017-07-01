@@ -15,7 +15,8 @@ Fb::Fb()
 {
     // Get size of framebuffer in bytes.
     size = scr.finfo().smem_len;
-    // TODO: because of the extended virtual screen used a "double buffer", it will be twice.
+
+    // TODO: Check if double buffer using double height of virtual screen is setup.
 
     // Compute number of pixels.
     plen = size / sizeof(u32);
@@ -81,20 +82,16 @@ void Fb::set(const uint i, // Index to set the color value to.
     get32(i) = c.val(roff, goff, boff, aoff);
 }
 
-// Copy double buffer into the framebuffer.
-void Fb::blit()
-{
-    // Wait for vertical sync before copying.
-    scr.vsync();
-
-    // Blit!
-    memcpy(fb, dbuf.data(), size);
-}
-
 // Flip between buffers.
 void Fb::flip()
 {
-    scr.flip();
+    // Wait for vertical sync before copying.
+    //scr.vsync();
+
+    // Blit by copying the double buffer into the framebuffer.
+    memcpy(fb, dbuf.data(), size);
+
+    //scr.flip();
     // TODO: Change pointer.
 }
 

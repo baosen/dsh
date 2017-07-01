@@ -23,6 +23,13 @@ void error(const err& e) {
     cout << "\033[1;31mError:\033[0m " << e << endl;
 }
 
+// Print operating system error.
+void syserror(const std::string& s) 
+{
+    error(s);  // TODO: Colorize.
+    perror(0);
+}
+
 // Print warning.
 void warn(const char *m) {
     cout << "\033[1;33mWarning:\033[0m " << m << endl;

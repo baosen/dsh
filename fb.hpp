@@ -29,9 +29,7 @@ public:
     // Get size in bytes of the framebuffer.
     size_t len() const;
 
-    // Copy double buffer into the framebuffer.
-    void blit();
-
+    // Flip between buffers.
     void flip();
 
     // Bit offsets to the position of the color value.
