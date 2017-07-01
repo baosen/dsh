@@ -43,6 +43,7 @@ private:
          page;                   // Current buffer page.
 
     varinfo v;
+    bool    dbufen;              // Is double buffer enabled?
 
     friend class Fb;
 };

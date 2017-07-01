@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include "pos.hpp"
 #include "rect.hpp"
 #include "col.hpp"
@@ -42,6 +43,9 @@ private:
 
     size_t size, // Size in bytes.
            plen; // Size in pixels.
+
+    std::vector<u8> dbuf;  // Double buffer for tear-free framebuffer manipulation.
+    bool            vsync; // Is vertical sync enabled.
 
     u8*    fb;
 

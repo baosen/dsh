@@ -1,22 +1,21 @@
-#include <vector>
 #include <cstring>
 #include <sys/mman.h>
 #include "fb.hpp"
 #include "log.hpp"
 using namespace std;
 
-namespace {
-    vector<u8> dbuf; // Double buffer for tear-free framebuffer manipulation.
-};
-
 // Setup framebuffer file mapping to the address space.
 Fb::Fb() 
-    : roff(-1), goff(-1), boff(-1), aoff(-1)
+    : roff(-1), goff(-1), boff(-1), aoff(-1), vsync(true)
 {
-    // Get size of framebuffer in bytes.
-    size = scr.finfo().smem_len;
-
-    // TODO: Check if double buffer using double height of virtual screen is setup.
+    // Check if double buffer using double height of virtual screen is setup.
+    if (scr.dbufen) {
+        // Get size of framebuffer in bytes and half it to accommedate for the virtual screen.
+        size = scr.finfo().smem_len / 2;
+    } else {
+        // Get size of framebuffer in bytes.
+        size = scr.finfo().smem_len;
+    }
 
     // Compute number of pixels.
     plen = size / sizeof(u32);
@@ -82,11 +81,19 @@ void Fb::set(const uint i, // Index to set the color value to.
     get32(i) = c.val(roff, goff, boff, aoff);
 }
 
-// Flip between buffers.
+// Flip between buffers, thus reduce tearing.
 void Fb::flip()
 {
     // Wait for vertical sync before copying.
-    //scr.vsync();
+    if (vsync) { // Check if vertical sync is enabled.
+        try {
+            // Wait for vertical sync.
+            scr.vsync();
+        } catch (const err& e) {
+            // Disable vertical sync, because it is not supported.
+            vsync = false;
+        }
+    }
 
     // Blit by copying the double buffer into the framebuffer.
     memcpy(fb, dbuf.data(), size);
