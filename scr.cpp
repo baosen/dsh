@@ -77,7 +77,6 @@ void Scr::pan(const Scr::varinfo& v)
 // Flip to another buffer.
 void Scr::flip()
 {
-    ++page;
-    page %= 2;
+    page = (page + 1) % 2;
     v.yoffset = page * v.yres;
 }
