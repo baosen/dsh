@@ -16,7 +16,7 @@ int main()
         if (py < 0)
             py = 0;
         Rect r(Pos(px, py), Res(100, 100));
-        r.fill(Col(255, 255, 255, 255));
+        r.fill(Pix(255, 255, 255, 255));
     }
     return 0;
 }

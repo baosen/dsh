@@ -1,14 +1,14 @@
-#include "col.hpp"
+#include "pix.hpp"
 
 // The color of a pixel.
-Col::Col(const uint r, // Red.
+Pix::Pix(const uint r, // Red.
          const uint g, // Green.
          const uint b, // Blue.
          const uint a) // Alpha.
     : r(r), g(g), b(b), a(a) {}
 
 // Compute pixel formatted to the framebuffer's pixel format.
-u32 Col::val(const int roff, // Red bit position.
+u32 Pix::val(const int roff, // Red bit position.
              const int goff, // Green bit position.
              const int boff, // Blue bit position.
              const int aoff) // Alpha-transparency bit position.

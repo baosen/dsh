@@ -42,8 +42,8 @@ Scr::Scr()
     if (CTL(FBIOPUT_VSCREENINFO, &v) < 0) {
 #ifdef DEBUG
         syserror("Failed to setup double buffering!");
-        dbufen = false;
 #endif
+        dbufen = false;
     }
 }
 

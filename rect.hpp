@@ -2,7 +2,7 @@
 #include "rect.hpp"
 #include "pos.hpp"
 #include "res.hpp"
-#include "col.hpp"
+#include "pix.hpp"
 #include "scr.hpp"
 
 // Rectangle image in framebuffer.
@@ -12,7 +12,7 @@ public:
     Rect(const Pos& p, const Res& r);
 
     // Fill rectangle with colour.
-    void   fill(const Col& c) const;
+    void   fill(const Pix& c) const;
 
     // Returns the index to its position in the framebuffer.
     uint   i()    const;

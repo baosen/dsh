@@ -2,7 +2,7 @@
 #include <vector>
 #include "pos.hpp"
 #include "rect.hpp"
-#include "col.hpp"
+#include "pix.hpp"
 #include "scr.hpp"
 
 // Framebuffer.
@@ -18,7 +18,7 @@ public:
     u32&  get32(const uint i);
 
     // Set color value in the framebuffer.
-    void  set(const uint i, const Col& c);
+    void  set(const uint i, const Pix& c);
 
     // Copy provided buffer to this framebuffer.
     void  copy(const uint i, const char *buf, const size_t len);
@@ -39,13 +39,15 @@ public:
           boff, // Blue offset.
           aoff; // Alpha offset.
 private:
+    void vsync();
+
     Scr   scr;  // The screen to grab the framebuffer.
 
     size_t size, // Size in bytes.
            plen; // Size in pixels.
 
-    std::vector<u8> dbuf;  // Double buffer for tear-free framebuffer manipulation.
-    bool            vsync; // Is vertical sync enabled.
+    std::vector<u8> dbuf;    // Double buffer for tear-free framebuffer manipulation.
+    bool            vsyncen; // Is vertical sync enabled.
 
     u8*    fb;
 

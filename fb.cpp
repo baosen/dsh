@@ -6,7 +6,8 @@ using namespace std;
 
 // Setup framebuffer file mapping to the address space.
 Fb::Fb() 
-    : roff(-1), goff(-1), boff(-1), aoff(-1), vsync(true)
+    : roff(-1), goff(-1), boff(-1), aoff(-1), // Blanken color offsets.
+      vsyncen(true)                           // Enable vertical sync.
 {
     // Check if double buffer using double height of virtual screen is setup.
     if (scr.dbufen) {
@@ -15,14 +16,16 @@ Fb::Fb()
     } else {
         // Get size of framebuffer in bytes.
         size = scr.finfo().smem_len;
+        // Set size of the double buffer to be the same as the framebuffer size in bytes.
+        dbuf.resize(size);
     }
 
     // Compute number of pixels.
     plen = size / sizeof(u32);
-    // Set size of the double buffer to be the same as the framebuffer size in bytes.
-    dbuf.resize(size);
+
     // Map framebuffer to computer's address space.
     fb = scast<u8*>(mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_SHARED, scr.fd, 0));
+
     // Set the positions to the color bits.
     const auto v = scr.vinfo();
     if (v.red.length)
@@ -33,6 +36,9 @@ Fb::Fb()
         boff = v.blue.offset;   // Position to blue bits.
     if (v.transp.length)
         aoff = v.transp.offset; // Position to alpha-transparency bits.
+
+    // Try waiting for vertical sync to check if it is available.
+    this->vsync();
 }
 
 // Unmap framebuffer from the system address space.
@@ -76,30 +82,37 @@ void Fb::copy(const uint i, const char *buf, const size_t len)
 
 // Set color value in the framebuffer.
 void Fb::set(const uint i, // Index to set the color value to.
-             const Col& c) // Color to set.
+             const Pix& c) // Color to set.
 {
     get32(i) = c.val(roff, goff, boff, aoff);
 }
 
-// Flip between buffers, thus reduce tearing.
+// Wait for vertical sync.
+void Fb::vsync()
+{
+    // Try waiting for vertical sync.
+    try {
+        scr.vsync();
+    } catch (const err& e) {
+        // Disable vertical sync, because it is not supported.
+        vsyncen = false;
+    }
+}
+
+// Flip between two buffers, thus reduce tearing.
 void Fb::flip()
 {
     // Wait for vertical sync before copying.
-    if (vsync) { // Check if vertical sync is enabled.
-        try {
-            // Wait for vertical sync.
-            scr.vsync();
-        } catch (const err& e) {
-            // Disable vertical sync, because it is not supported.
-            vsync = false;
-        }
-    }
+    if (vsyncen) // Check if vertical sync is enabled.
+        vsync();
 
     // Blit by copying the double buffer into the framebuffer.
-    memcpy(fb, dbuf.data(), size);
-
-    //scr.flip();
-    // TODO: Change pointer.
+    if (scr.dbufen) {
+        scr.flip();
+        // TODO: Change pointer.
+    } else {
+        memcpy(fb, dbuf.data(), size);
+    }
 }
 
 // Clear/blacken the entire screen.

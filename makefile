@@ -5,7 +5,7 @@ CXXFLAGS = -std=c++17 -O3 -Wall -Wextra
 # Compile command.
 COMPILE = @$(CXX) $(CXXFLAGS)
 # Set source dependencies for desktop shell.
-SRC      = m.cpp wnd.cpp col.cpp pos.cpp fb.cpp scr.cpp log.cpp res.cpp ev.cpp evm.cpp msys.cpp kbsys.cpp kb.cpp wsys.cpp wd.cpp parse.cpp init.cpp mwnd.cpp rect.cpp 
+SRC      = m.cpp wnd.cpp pix.cpp pos.cpp fb.cpp scr.cpp log.cpp res.cpp ev.cpp evm.cpp msys.cpp kbsys.cpp kb.cpp wsys.cpp wd.cpp parse.cpp init.cpp mwnd.cpp rect.cpp 
 # Set the produced executable binaries.
 BINS     = \
     mtest fbtest tests dpytests \
@@ -43,10 +43,10 @@ scr.o: scr.cpp
 	$(COMPILE) -c $< -o $@
 
 # Tests for the framebuffer file.
-fbtest: fbtest.cpp fb.o col.o scr.o log.o keywait.o
+fbtest: fbtest.cpp fb.o pix.o scr.o log.o keywait.o
 	$(COMPILE) $^ -o $@
 
-wtest: wtest.cpp fb.o col.o scr.o log.o pos.o rect.o res.o keywait.o m.o
+wtest: wtest.cpp fb.o pix.o scr.o log.o pos.o rect.o res.o keywait.o m.o
 	$(COMPILE) $^ -o $@
 
 # Tests for the hacky mouse file.

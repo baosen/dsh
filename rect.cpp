@@ -23,7 +23,7 @@ uint Rect::start(const Scr::varinfo& v) const
 }
 
 // Fill rectangle in framebuffer with the colour c.
-void Rect::fill(const Col& c) // Colour to fill the inside of the rectangle with.
+void Rect::fill(const Pix& c) // Colour to fill the inside of the rectangle with.
                 const 
 {
     // Open framebuffer.
@@ -126,7 +126,7 @@ int Rect::write(const char *buf,  // Buffer of 32-bit unsigned RGBA pixels.
                        g = p[1+x+y+w], // 32-bit green.
                        b = p[2+x+y+w], // 32-bit blue.
                        a = p[3+x+y+w]; // 32-bit alpha-transparency.
-            fb.set(s+x+y*v.xres, Col(r, g, b, a));
+            fb.set(s+x+y*v.xres, Pix(r, g, b, a));
         }
     }
     return 0; // Operation succeeded.

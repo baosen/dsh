@@ -1,10 +1,10 @@
 #pragma once
 #include "types.hpp"
 
-// Pixel color.
-class Col {
+// Colored pixel.
+class Pix {
 public:
-    Col(const uint r,  // Red.
+    Pix(const uint r,  // Red.
         const uint g,  // Green.
         const uint b,  // Blue.
         const uint a); // Alpha.
