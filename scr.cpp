@@ -76,8 +76,11 @@ Scr::fixinfo Scr::finfo()
 void Scr::vsync()
 {
     if (CTL(FBIO_WAITFORVSYNC, 0) < 0) {
-        perror(0);
-        throw err("Failed to wait for vertical synchronization!");
+#ifdef DEBUG
+#   define ERRMSG "Failed to wait for vertical synchronization!";
+        syserror(ERRMSG);
+        throw err(ERRMSG);
+#endif
         // TODO: Notify that vertical sync does not work using its own class.
     }
 }
