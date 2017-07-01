@@ -19,9 +19,8 @@ public:
     // Set color value in the framebuffer.
     void  set(const uint i, const Col& c);
 
-    // Fill a box in the framebuffer.
-    void  boxfill(const char *buf, const uint w, const uint h);
-    void  rowfill(const char *buf, const uint row, const uint len);
+    // Copy provided buffer to this framebuffer.
+    void  copy(const uint i, const char *buf, const size_t len);
     // Clear/blacken the entire screen.
     void  clear();
 
@@ -33,7 +32,7 @@ public:
     // Copy double buffer into the framebuffer.
     void blit();
 
-    Scr   scr;  // The screen to grab the framebuffer.
+    void flip();
 
     // Bit offsets to the position of the color value.
     int   roff, // Red offset.
@@ -41,6 +40,8 @@ public:
           boff, // Blue offset.
           aoff; // Alpha offset.
 private:
+    Scr   scr;  // The screen to grab the framebuffer.
+
     size_t size, // Size in bytes.
            plen; // Size in pixels.
 

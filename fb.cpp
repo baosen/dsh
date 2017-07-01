@@ -15,6 +15,8 @@ Fb::Fb()
 {
     // Get size of framebuffer in bytes.
     size = scr.finfo().smem_len;
+    // TODO: because of the extended virtual screen used a "double buffer", it will be twice.
+
     // Compute number of pixels.
     plen = size / sizeof(u32);
     // Set size of the double buffer to be the same as the framebuffer size in bytes.
@@ -59,27 +61,17 @@ size_t Fb::len() const
     return size;
 }
 
-// TODO: Fill a box in the framebuffer.
-void Fb::boxfill(const char *buf, // Buffer.
-                 const uint  w,   // Width.
-                 const uint  h)   // Height.
-{
-    for (uint i = 0; i < h; ++i)
-        rowfill(buf+i, i, w);
-}
-
-// TODO: Fill a row of pixels.
-void Fb::rowfill(const char *buf, // Buffer.
-                 const uint  row, // The index to the row to fill.
-                 const uint  len) // The length of the row.
-{
-    // TODO: memcpy.
-}
-
 // Get size in pixels of the framebuffer.
 size_t Fb::pixlen() const
 {
     return plen;
+}
+
+// Copy provided buffer to this framebuffer.
+void Fb::copy(const uint i, const char *buf, const size_t len)
+{
+    // TODO: Double buffer.
+    memcpy(fb+i, buf, len);
 }
 
 // Set color value in the framebuffer.
@@ -97,6 +89,13 @@ void Fb::blit()
 
     // Blit!
     memcpy(fb, dbuf.data(), size);
+}
+
+// Flip between buffers.
+void Fb::flip()
+{
+    scr.flip();
+    // TODO: Change pointer.
 }
 
 // Clear/blacken the entire screen.

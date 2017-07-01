@@ -1,7 +1,7 @@
 #pragma once
 #include <linux/fb.h>
 
-// Computer screen.
+// Double-buffered framebuffer screen.
 class Scr {
 public:
     typedef fb_var_screeninfo varinfo;
@@ -19,13 +19,30 @@ public:
 
     // Wait for vertical sync.
     void vsync();
+    // Pan display.
+    void pan(const Scr::varinfo& v);
+
+    // Flip to another buffer.
+    void flip();
 private:
     int fd;                      // Framebuffer file descriptor.
+
+         // Resolution:
     uint w,                      // Width.
          h,                      // Height.
          bpp,                    // Bits per pixel.
+
+         // Pixel offsets:
          roff, goff, boff, aoff, // Offset to pixel in bits. Bitshift to reach it.
-         rl, gl, bl, al;         // Length of pixel in bits.
+
+         // Pixel length:
+         rl,                     // Length of red pixel in bits.
+         gl,                     // Length of green pixel in bits.
+         bl,                     // Length of blue pixel in bits.
+         al,                     // Length of alpha pixel in bits.
+         page;                   // Current buffer page.
+
+    varinfo v;
+
     friend class Fb;
 };
-

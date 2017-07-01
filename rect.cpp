@@ -42,7 +42,7 @@ void Rect::fill(const Col& c) // Colour to fill the inside of the rectangle with
             fb.set(s + x + (y * v.xres), c);
 
     // Show it to the user!
-    fb.blit();
+    fb.flip();
 }
 
 // Get the size/length in bytes of the rectangle.

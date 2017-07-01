@@ -4,16 +4,20 @@
 #include "log.hpp"
 #include "scr.hpp"
 
-// Setup framebuffer screen.
+// Control framebuffer screen.
+#define CTL(req, ...) ioctl(fd, req, __VA_ARGS__)
+
+// Setup double-buffered framebuffer screen.
 Scr::Scr() 
+    : page(0)
 {
     // Open the framebuffer file.
     fd = ::open("/dev/fb0", O_RDWR);
     if (fd < 0)
         throw err("Cannot open /dev/fb0!");
-#ifdef DEBUG
     // Get variable screen information.
-    const auto v = vinfo();
+    v = vinfo();
+#ifdef DEBUG
     // Display screen resolution.
     printf("Screen resolution: %ux%u, %ubpp\n", v.xres, v.yres, v.bits_per_pixel);
     // Display the length in bits of a screen pixel.
@@ -24,6 +28,11 @@ Scr::Scr()
     // Display the offsets to pixel in the RGB value.
     printf("Pixel offset: R%u, G%u, B%u, A%u\n", v.red.offset, v.green.offset, v.blue.offset, v.transp.offset);
 #endif
+    // Setup double buffer by doubling the height of the virtual screen.
+    v.xres_virtual = v.xres;
+    v.yres_virtual = v.yres * 2; // Double the height to have two buffers to flip between.
+    if (CTL(FBIOPUT_VSCREENINFO, &v) < 0)
+        throw err("Failed to setup double buffering!");
 }
 
 // Close framebuffer file.
@@ -32,9 +41,6 @@ Scr::~Scr()
     if (close(fd) < 0)
         die("Failed to close /dev/fb0!");
 }
-
-// Control framebuffer screen.
-#define CTL(req, ...) ioctl(fd, req, __VA_ARGS__)
 
 // Returns framebuffer variable screen info.
 Scr::varinfo Scr::vinfo() 
@@ -59,4 +65,19 @@ void Scr::vsync()
 {
     if (CTL(FBIO_WAITFORVSYNC, 0) < 0)
         throw err("Failed to wait for vertical sync!");
+}
+
+// Pan display.
+void Scr::pan(const Scr::varinfo& v) 
+{
+    if (CTL(FBIOPAN_DISPLAY, v) < 0)
+        throw err("Failed to pan display!");
+}
+
+// Flip to another buffer.
+void Scr::flip()
+{
+    ++page;
+    page %= 2;
+    v.yoffset = page * v.yres;
 }
