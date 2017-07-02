@@ -1,6 +1,11 @@
 #include "config.hpp"
 #include <xf86drm.h>
+#include <xf86drmMode.h>
 #include "types.hpp"
+#include "log.hpp"
+#include "zero.hpp"
+#include "fio.hpp"
+#include "drm.hpp"
 
 // Direct rendering manager-system.
 namespace {
@@ -8,27 +13,29 @@ namespace {
 
     // DRM instance.
     struct Drm {
-        int               fd
-        drmModeRes       *resources;
-        drmModeConnector *connector;
-        drmModeEncoder   *encoder;
-    }
+        int               fd;        // DRM file device.
+        drmModeRes       *resources; // ??
+        drmModeConnector *connector; // Connector.
+        drmModeEncoder   *encoder;   // Encoder.
+        drmModeModeInfo  *mode;      // Mode information.
+    };
 }
 
-// Initialize the direct rendering manager.
+// Initialize the Direct Rendering Manager.
 void drm::init() 
 {
+    // Setup DRM structure.
     Drm drm;
     zero(drm);
-    int i;
+    int i, area;
 
     // Open DRM device file.
-    if (drm.fd = open(CARD0_PATH, O_RDWR) < 0)
+    if ((drm.fd = ::open(CARD0_PATH, O_RDWR)) < 0)
         // TODO: Warn about this error here.
         throw errno; 
 
     // Get DRM mode resources.
-	if (!(drm.resources = drmModeGetResources(drm->fd))) {
+	if (!(drm.resources = drmModeGetResources(drm.fd))) {
         syserror("Failed to get DRM mode resources!");
         throw -1;
     }
@@ -36,67 +43,70 @@ void drm::init()
 	// Find a connected connector.
 	for (i = 0; i < drm.resources->count_connectors; i++) {
         // Is connector connected?
-		if ((drm.connector = drmModeGetConnector(drm->fd, drm.resources->connectors[i])) == DRM_MODE_CONNECTED);
+		drm.connector = drmModeGetConnector(drm.fd, drm.resources->connectors[i]);
+		if (drm.connector->connection == DRM_MODE_CONNECTED)
             break; // Use it.
-		drmModeFreeConnector(connector);
-		drm.connector = NULL;
+		drmModeFreeConnector(drm.connector);
+		drm.connector = nullptr;
 	}
 
     // Is DRM connected?
 	if (!drm.connector) {
 		// TODO: Listen for hotplug events and wait for a connector.
 		syserror("No connected connector!");
-		return -1;
+		throw -1;
 	}
 
 	// Find preferred mode or the highest resolution mode.
-	for (i = 0, area = 0; i < connector->count_modes; i++) {
-		drmModeModeInfo *current_mode = &connector->modes[i];
+	for (i = 0, area = 0; i < drm.connector->count_modes; i++) {
+		drmModeModeInfo *current_mode = &drm.connector->modes[i];
 		if (current_mode->type & DRM_MODE_TYPE_PREFERRED)
-			drm->mode = current_mode;
+			drm.mode = current_mode;
 		const auto current_area = current_mode->hdisplay * current_mode->vdisplay;
 		if (current_area > area) {
-			drm->mode = current_mode;
+			drm.mode = current_mode;
 			area = current_area;
 		}
 	}
 
     // ??.
-	if (!drm->mode) {
+	if (!drm.mode) {
 		syserror("Could not find DRM mode!");
-		return -1;
+        throw -1;
 	}
 
 	// Look for an encoder.
-	for (i = 0; i < resources->count_encoders; i++) {
-		encoder = drmModeGetEncoder(drm->fd, resources->encoders[i]);
-		if (encoder->encoder_id == connector->encoder_id)
+	for (i = 0; i < drm.resources->count_encoders; i++) {
+		drm.encoder = drmModeGetEncoder(drm.fd, drm.resources->encoders[i]);
+		if (drm.encoder->encoder_id == drm.connector->encoder_id)
 			break;
-		drmModeFreeEncoder(encoder);
-		encoder = NULL;
+		drmModeFreeEncoder(drm.encoder);
+		drm.encoder = nullptr;
 	}
 
     // If no encoder was found.
-	if (encoder) {
-		drm->crtc_id = encoder->crtc_id;
-	} else {
-		const auto crtc_id = find_crtc_for_connector(drm, resources, connector);
+	if (drm.encoder)
+		drm.crtc_id = drm.encoder->crtc_id;
+    else {
+    // Encoder was found.
+		const auto crtc_id = find_crtc_for_connector(drm, drm.resources, drm.connector);
 		if (crtc_id == 0) {
-			printf("no crtc found!\n");
-			return -1;
+			syserror("No CRT controller found!");
+			throw -1;
 		}
-		drm->crtc_id = crtc_id;
+		drm.crtc_id = crtc_id;
 	}
 
     // ??.
-	for (i = 0; i < resources->count_crtcs; i++) {
-		if (resources->crtcs[i] == drm->crtc_id) {
-			drm->crtc_index = i;
+	for (i = 0; i < drm.resources->count_crtcs; i++) {
+		if (drm.resources->crtcs[i] == drm.crtc_id) {
+			drm.crtc_index = i;
 			break;
 		}
 	}
+
+    // Cleanup.
 	drmModeFreeResources(drm.resources);
-	drm->connector_id = connector->connector_id;
 }
 
 // Deinitialize the direct rendering manager.
