@@ -28,7 +28,7 @@ vector<string> lsdir(const char *name)
         else
             dirs.push_back(e->d_name);
     } while ((e = readdir(dir)));
-    if (closedir(dir) == -1)
+    if (closedir(dir) < 0)
         throw errno;
     return dirs;
 }

@@ -58,7 +58,7 @@ vector<Mouse> mdcv() {
                 continue;
         }
     } while ((e = readdir(dir)));
-    if (closedir(dir) == -1)
+    if (closedir(dir) < 0)
         throw errno;
     return m;
 }

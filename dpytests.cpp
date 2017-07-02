@@ -9,11 +9,11 @@
 bool create_display() {
     // Create file with user read and user write permissions.
     const auto fd = creat(WORKDIR "dpytest", S_IRUSR | S_IWUSR);
-    if (fd == -1) {
+    if (fd < 0) {
         puts("Failed to create " WORKDIR "dpytest!");
         return false;
     }
-    if (close(fd) == -1) {
+    if (close(fd) < 0) {
         puts("Failed to close " WORKDIR "dpytest!");
         return false;
     }
@@ -23,7 +23,7 @@ bool create_display() {
 // Test controlling the display using ioctl().
 bool control_display() {
     const auto fd = open(WORKDIR "dpytest", O_RDWR);
-    if (fd == -1) {
+    if (fd < 0) {
         puts("Failed to open " WORKDIR "dpytest!");
         return false;
     }
@@ -32,7 +32,7 @@ bool control_display() {
         printf("Failed to control " WORKDIR "dpytest! Errno: %d\n", errno);
         return false;
     }
-    if (close(fd) == -1) {
+    if (close(fd) < 0) {
         puts("Failed to close " WORKDIR "dpytest!");
         return false;
     }
@@ -42,7 +42,7 @@ bool control_display() {
 // Test opening existing display file.
 bool open_display() {
     const auto fd = open(WORKDIR "dpy0", O_RDWR);
-    if (fd == -1) {
+    if (fd < 0) {
         printf("Failed to open " WORKDIR "dpy0! Errno: %d\n", errno);
         return false;
     }
@@ -52,7 +52,7 @@ bool open_display() {
 // Test opening non-existing display file.
 bool open_nonexisting_display() {
     const auto fd = open(WORKDIR "dpy0", O_RDWR);
-    if (fd == -1 && errno == ENOENT) // Failed to open because no entry exists.
+    if (fd < 0 && errno == ENOENT) // Failed to open because no entry exists.
         return true;
     return false;
 }
@@ -60,7 +60,7 @@ bool open_nonexisting_display() {
 // Test opening window file.
 bool open_window() {
     const auto fd = open(WORKDIR "wnd0", O_RDWR);
-    if (fd == -1) {
+    if (fd < 0) {
         puts("Failed to open " WORKDIR "wnd0!");
         return false;
     }

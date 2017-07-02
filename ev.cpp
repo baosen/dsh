@@ -41,7 +41,7 @@ void Ev::close() {
         return;
     // Try closing event device file.
     stringstream ss;
-    if (::close(fd) == -1) {
+    if (::close(fd) < 0) {
         ss << "Cannot close event device file: " << strerror(errno);
         // TODO!
         die(ss.str().c_str());

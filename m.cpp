@@ -41,7 +41,7 @@ void M::close() {
         return;
     // Close "hacky" mouse file.
     stringstream ss;
-    if (::close(fd) == -1) {
+    if (::close(fd) < 0) {
         ss << "Cannot close hacky mouse device file: " << strerror(errno);
         // TODO!
         die(ss.str().c_str());
@@ -53,7 +53,8 @@ M::Ev M::rd() {
     // Read using generic mouse device file.
     char       e[3]; // The read mouse state.
     const auto ret = ::read(fd, &e, sizeof e);
-    if (ret == -1)
+    // Failed to read?
+    if (ret < 0)
         throw errno; // todo.
     if (ret == sizeof e) {
         M::Ev ev;

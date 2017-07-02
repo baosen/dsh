@@ -57,7 +57,7 @@ int main() {
             }
         }
     }
-    if (close(fd) == -1) {
+    if (close(fd) < 0) {
         puts("Failed to close " PATH_TO_EVENT_FILE);
         exit(EXIT_FAILURE);
     }
