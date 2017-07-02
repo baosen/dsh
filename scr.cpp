@@ -21,6 +21,7 @@ Scr::Scr()
     // Get variable screen information.
     v = vinfo();
 
+    // Report screen attributes.
 #ifdef DEBUG
     // Display screen resolution.
     printf("Screen resolution: %ux%u, %ubpp\n", v.xres, v.yres, v.bits_per_pixel);
