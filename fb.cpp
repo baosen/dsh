@@ -18,8 +18,24 @@ Fb::Fb()
     } else { // No double buffer setup for the framebuffer screen.
         // Get size of framebuffer in bytes.
         size = scr.finfo().smem_len;
-        // Set size of the double buffer to be the same as the framebuffer size in bytes.
-        dbuf = make_unique<u8[]>(size);
+        // Try waiting for vertical sync to check if it is available.
+        // TODO: Simplify!
+        this->vsync();
+        if (vsyncen) {
+            // Set size of the double buffer to be the same as the framebuffer size in bytes.
+            dbuf = make_unique<u8[]>(size);
+            // Set function pointers to use the double buffer functions.
+            get8p  = &Fb::dbufget8;
+            get32p = &Fb::dbufget32;
+            flipp  = &Fb::dbufflip;
+            clearp = &Fb::dbufclear;
+        } else {
+            // Set function pointers to use the direct framebuffer manipulation functions.
+            get8p  = &Fb::fbget8;
+            get32p = &Fb::fbget32;
+            flipp  = &Fb::nullflip;
+            clearp = &Fb::fbclear;
+        }
     }
 
     // Compute number of pixels.
@@ -38,9 +54,6 @@ Fb::Fb()
         boff = v.blue.offset;   // Position to blue bits.
     if (v.transp.length)
         aoff = v.transp.offset; // Position to alpha-transparency bits.
-
-    // Try waiting for vertical sync to check if it is available.
-    this->vsync();
 }
 
 // Unmap framebuffer from the system address space.
@@ -74,16 +87,38 @@ size_t Fb::pixlen() const
 // TODO: Set a function pointer rather than check using an if boolean check.
 //
 
+#define CALLMEMBFN(p) (this->*(p))
+
 // Access framebuffer memory 8 bits at a time.
 u8& Fb::get8(const uint i) // Index beginning at 0 indexing a string of framebuffer bytes.
 {
+    return CALLMEMBFN(get8p)(i);
+}
+
+u8& Fb::dbufget8(const uint i) // Index beginning at 0 indexing a string of framebuffer bytes.
+{
     return dbuf[i];
+}
+
+u8& Fb::fbget8(const uint i) // Index beginning at 0 indexing a string of framebuffer bytes.
+{
+    return fb[i];
 }
 
 // Access framebuffer memory 32 bits at a time.
 u32& Fb::get32(const uint i) // Index beginning at 0 indexing a string of framebuffer bytes. 
 {
+    return CALLMEMBFN(get32p)(i);
+}
+
+u32& Fb::dbufget32(const uint i) // Index beginning at 0 indexing a string of framebuffer bytes. 
+{
     return *(rcast<u32*>(&dbuf[0]) + i);
+}
+
+u32& Fb::fbget32(const uint i) // Index beginning at 0 indexing a string of framebuffer bytes. 
+{
+    return *(rcast<u32*>(&fb[0]) + i);
 }
 
 // Copy provided buffer to this framebuffer.
@@ -109,6 +144,12 @@ void Fb::vsync()
 // Flip between two buffers, thus reduce tearing.
 void Fb::flip()
 {
+    CALLMEMBFN(flipp)();
+}
+
+// Double buffer flip.
+void Fb::dbufflip()
+{
     // Blit by copying the double buffer into the framebuffer.
     if (scr.dbufen) {
         scr.flip();
@@ -117,13 +158,28 @@ void Fb::flip()
     }
 
     // Wait for vertical sync before copying.
-    if (vsyncen) // Check if vertical sync is enabled.
-        vsync();
+    this->vsync();
+    // Copy double buffer into the framebuffer.
     memcpy(fb, &dbuf[0], size);
 }
+
+// Do no flip if manipulating directly to framebuffer.
+void Fb::nullflip() {}
 
 // Clear/blacken the entire screen.
 void Fb::clear()
 {
+    CALLMEMBFN(clearp)();
+}
+
+// Double-buffered clear.
+void Fb::dbufclear()
+{
     memset(&dbuf[0], 0, size);
+}
+
+// Clear framebuffer directly.
+void Fb::fbclear()
+{
+    memset(&fb[0], 0, size);
 }

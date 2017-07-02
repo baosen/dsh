@@ -51,5 +51,19 @@ private:
 
     u8*    fb;
 
+    u8&  (Fb::*get8p) (const uint i);
+    u32& (Fb::*get32p)(const uint i);
+    void (Fb::*flipp) ();
+    void (Fb::*clearp)();
+
+    u8&  dbufget8(const uint i);
+    u8&  fbget8(const uint i);
+    u32& dbufget32(const uint i);
+    u32& fbget32(const uint i);
+    void nullflip();
+    void dbufflip();
+    void fbclear();
+    void dbufclear();
+
     friend class Rect;
 };
