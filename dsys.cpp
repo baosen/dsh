@@ -20,6 +20,14 @@ namespace {
 #endif
 }
 
+namespace dsys {
+	// Bit depths of color components.
+	uint red,   // Bit depth of the red component.
+	     green, // Bit depth of the green component.
+	     blue,  // Bit depth of the blue component.
+	     alpha; // Bit depth of the alpha component.
+}
+
 // Initialize display system.
 void dsys::init() 
 {

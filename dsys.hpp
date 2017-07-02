@@ -14,8 +14,8 @@ namespace dsys {
     void deinit();
 
 	// Bit depths of color components.
-	uint red,   // Bit depth of the red component.
-		 green, // Bit depth of the green component.
-		 blue,  // Bit depth of the blue component.
-		 alpha; // Bit depth of the alpha component.
+	extern uint red,   // Bit depth of the red component.
+		        green, // Bit depth of the green component.
+		        blue,  // Bit depth of the blue component.
+		        alpha; // Bit depth of the alpha component.
 }

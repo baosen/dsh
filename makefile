@@ -7,9 +7,8 @@ COMPILE = @$(CXX) $(CXXFLAGS)
 # Set source dependencies for desktop shell.
 SRC      = m.cpp wnd.cpp pix.cpp pos.cpp fb.cpp scr.cpp log.cpp res.cpp ev.cpp evm.cpp msys.cpp kbsys.cpp kb.cpp wsys.cpp wd.cpp parse.cpp init.cpp mwnd.cpp rect.cpp 
 # Set the produced executable binaries.
-BINS     = \
-    mtest fbtest tests dpytests \
-    dsh run dshfs
+BINS     = mtest fbtest tests dpytests \
+           dsh dshfs
 
 # Build everything.
 all: $(BINS)
