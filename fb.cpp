@@ -18,24 +18,8 @@ Fb::Fb()
     } else { // No double buffer setup for the framebuffer screen.
         // Get size of framebuffer in bytes.
         size = scr.finfo().smem_len;
-        // Try waiting for vertical sync to check if it is available.
-        // TODO: Simplify!
-        this->vsync();
-        if (vsyncen) {
-            // Set size of the double buffer to be the same as the framebuffer size in bytes.
-            dbuf = make_unique<u8[]>(size);
-            // Set function pointers to use the double buffer functions.
-            get8p  = &Fb::dbufget8;
-            get32p = &Fb::dbufget32;
-            flipp  = &Fb::dbufflip;
-            clearp = &Fb::dbufclear;
-        } else {
-            // Set function pointers to use the direct framebuffer manipulation functions.
-            get8p  = &Fb::fbget8;
-            get32p = &Fb::fbget32;
-            flipp  = &Fb::nullflip;
-            clearp = &Fb::fbclear;
-        }
+        // Set function pointers for manipulating the framebuffer.
+        setptrs();
     }
 
     // Compute number of pixels.
@@ -54,6 +38,36 @@ Fb::Fb()
         boff = v.blue.offset;   // Position to blue bits.
     if (v.transp.length)
         aoff = v.transp.offset; // Position to alpha-transparency bits.
+}
+
+void Fb::setptrs()
+{
+    // Try waiting for vertical sync to check if it is available.
+    vsyncen = scr.isvsync();
+    if (vsyncen) {
+        // Set size of the double buffer to be the same as the framebuffer size in bytes.
+        dbuf = make_unique<u8[]>(size);
+        // Set function pointers to use the double buffer functions.
+        setdbufptrs();
+    } else
+        // Set function pointers to use the direct framebuffer manipulation functions.
+        setfbptrs();
+}
+
+void Fb::setfbptrs()
+{
+    get8p  = &Fb::fbget8;
+    get32p = &Fb::fbget32;
+    flipp  = &Fb::nullflip;
+    clearp = &Fb::fbclear;
+}
+
+void Fb::setdbufptrs()
+{
+    get8p  = &Fb::dbufget8;
+    get32p = &Fb::dbufget32;
+    flipp  = &Fb::dbufflip;
+    clearp = &Fb::dbufclear;
 }
 
 // Unmap framebuffer from the system address space.
@@ -138,6 +152,7 @@ void Fb::vsync()
     } catch (const err& e) {
         // Disable vertical sync, because it is not supported.
         vsyncen = false;
+        throw;
     }
 }
 

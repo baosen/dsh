@@ -19,6 +19,9 @@ public:
 
     // Wait for vertical sync.
     void vsync();
+    // Check for vertical sync by waiting for it.
+    bool isvsync();
+
     // Pan display.
     void pan(const Scr::varinfo& v);
 

@@ -1,6 +1,6 @@
 #pragma once
 #include <cstring>
-#include "fb.hpp"
+#include "types.hpp"
 
 // Display system.
 namespace dsys {
