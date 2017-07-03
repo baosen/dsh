@@ -40,6 +40,7 @@ Fb::Fb()
         aoff = v.transp.offset; // Position to alpha-transparency bits.
 }
 
+// Set the function pointers to manipulate the framebuffer according to the supported control calls.
 void Fb::setptrs()
 {
     // Try waiting for vertical sync to check if it is available.
@@ -54,6 +55,7 @@ void Fb::setptrs()
         setfbptrs();
 }
 
+// Set framebuffer pointers.
 void Fb::setfbptrs()
 {
     get8p  = &Fb::fbget8;
@@ -62,6 +64,7 @@ void Fb::setfbptrs()
     clearp = &Fb::fbclear;
 }
 
+// Set double buffer pointers.
 void Fb::setdbufptrs()
 {
     get8p  = &Fb::dbufget8;
