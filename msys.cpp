@@ -125,17 +125,21 @@ namespace evm {
     Evm e; // Event mouse device.
 
     // Open mouse event device.
-    static bool init() {
+    static bool init() 
+    {
         return e.open(0);
     }
 
     // Deinitialize event device mouse file.
-    static void deinit() {
+    static void deinit() 
+    {
         e.close();
     }
 
     // Wait for event and get it.
-    static void waitevt(char *buf, const size_t n) {
+    static void waitevt(char        *buf, // Buffer to put event blocks.
+                        const size_t n)   // Number of blocks to put in the buffer.
+    {
         msys::Ev mev;
         for (uint i = 0; i < n; ++i) {
             zero(mev);
@@ -156,11 +160,12 @@ namespace evm {
                 case EV_SYN: // Synchronization events.
                     syn(mev, ev.code);
                     break;
-                default: {   // Ignore unknown events.
+                default: {   // Log and ignore unknown events.
+                    // Warn user about the unknown event.
+                    stringstream ss;
+                    ss << "Unknown type:" << hex << setw(2) << ev.type << endl;
+                    warn(ss.str());
                     continue;
-                    //stringstream ss;
-                    //ss << "Unknown type:" << hex << setw(2) << e.type << endl;
-                    //throw err(ss.str().c_str());
                          }
                 }
             }
