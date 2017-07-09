@@ -27,7 +27,8 @@ void drm::init()
     // Setup DRM structure.
     Drm drm;
     zero(drm);
-    int i, area;
+    int i,    // index.
+        area; // ??.
 
     // Open DRM device file.
     if ((drm.fd = ::open(CARD0_PATH, O_RDWR)) < 0)
