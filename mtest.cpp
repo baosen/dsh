@@ -3,10 +3,11 @@
 using namespace std;
 
 // Mouse tests.
-int main() {
+int main() 
+{
     // Test "hacky" mouse.
     M m(1); // Open mouse1.
-    for (;;) {
+    forever {
         const auto e = m.rd();
         cout << "x: " << e.x << " y: " << e.y << " left: " << e.left << " mid: " << e.mid << " right: " << e.right << endl;
     }

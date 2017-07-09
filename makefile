@@ -52,6 +52,10 @@ wtest: wtest.cpp fb.o pix.o scr.o log.o pos.o rect.o res.o keywait.o m.o
 mtest: mtest.cpp m.o log.o
 	$(COMPILE) $^ -o $@
 
+# Tests for the event mouse device file.
+evmtest: evmtest.cpp evm.o log.o ev.o
+	$(COMPILE) $^ -o $@
+
 dsh: dsh.cpp
 	$(COMPILE) $(SRC) $< -o $@
 
