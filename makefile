@@ -3,12 +3,15 @@ CXX      = g++
 # Set C++ compiler flags.
 CXXFLAGS = -std=c++17 -O3 -Wall -Wextra
 # Compile command.
-COMPILE = @$(CXX) $(CXXFLAGS)
+COMPILE  = @$(CXX) $(CXXFLAGS)
 # Set source dependencies for desktop shell.
 SRC      = m.cpp wnd.cpp pix.cpp pos.cpp fb.cpp scr.cpp log.cpp res.cpp ev.cpp evm.cpp msys.cpp kbsys.cpp kb.cpp wsys.cpp wd.cpp parse.cpp init.cpp mwnd.cpp rect.cpp 
+# Tests.
+TESTS    = mtest fbtest evmtest msystest tests dpytests
+# Executables.
+EXECS    = dsh dshfs
 # Set the produced executable binaries.
-BINS     = mtest fbtest tests dpytests \
-           dsh dshfs
+BINS     = $(TESTS) $(EXECS)
 
 # Build everything.
 all: $(BINS)
