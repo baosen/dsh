@@ -168,71 +168,88 @@ namespace m {
     }
 
     // Deinitialize "hacky" mouse file.
-    static void deinit() {
+    static void deinit() 
+    {
         m.close();
     }
 
-    // Wait for mouse motion event and get it.
-    deque<msys::Ev> evq; // events that has not been given to the upper layer.
+    static void *buf;
+    static void copy(const msys::Ev& mev)
+    {
+        // Copy it!
+        memcpy(buf, &mev, sizeof mev);
+        // Go to next block in the buffer.
+        buf = scast<char*>(buf) + sizeof(mev);
+    }
+
+    deque<msys::Ev> evv;
 
     static uint waitevt(void        *buf, // Buffer to fill.
                         const size_t n)   // Number of events to get.
     {
-        msys::Ev   mev;
-        const auto ev = m.rd();
+        // Nothing call?
+        if (!n)
+            return 0;
 
-        // Add X-axis event.
-        if (ev.x != 0) {
+        int i  = 0;  // TODO: What to do if this becomes negative on overflow?
+        m::buf = buf;
+
+        // Leftovers?
+        while (!evv.empty()) {
+            copy(evv.front());
+            evv.pop_front();
+            i++;
+            if (i >= scast<int>(n))
+                return i;
+        }
+
+        while (scast<int>(n) - i > 0) {
+            // Allocate mouse event.
+            msys::Ev   mev;
+
+            // Wait for input event and read it.
+            const auto ev = m.rd();
+
+#define ADD \
+    if (i < n) { \
+        m::copy(mev); \
+        i++; \
+    } else \
+        m::evv.push_back(mev); \
+
+            // Add X-axis event.
             zero(mev);
             mev.type = msys::Ev::X;
             mev.val  = ev.x;
-            evq.push_back(mev);
-        }
+            ADD
 
-        // Add Y-axis event.
-        if (ev.y != 0) {
+            // Add Y-axis event.
             zero(mev);
             mev.type = msys::Ev::Y;
             mev.val  = ev.y;
-            evq.push_back(mev);
+            ADD
+
+            // Add left button event.
+            zero(mev);
+            mev.type = msys::Ev::LEFT;
+            mev.val  = ev.left;
+            ADD
+
+            // Add middle button event.
+            zero(mev);
+            mev.type = msys::Ev::MID;
+            mev.val  = ev.mid;
+            ADD
+
+            // Add right button event.
+            zero(mev);
+            mev.type = msys::Ev::RIGHT;
+            mev.val  = ev.right;
+            ADD
         }
 
-        // Add left button event.
-        zero(mev);
-        mev.type = msys::Ev::LEFT;
-        mev.val  = ev.left;
-        evq.push_back(mev);
-
-        // Add middle button event.
-        zero(mev);
-        mev.type = msys::Ev::MID;
-        mev.val  = ev.mid;
-        evq.push_back(mev);
-
-        // Add right button event.
-        zero(mev);
-        mev.type = msys::Ev::RIGHT;
-        mev.val  = ev.right;
-        evq.push_back(mev);
-
-        // Copy the mouse events to the buffer to be retrieved by the caller.
-        for (uint i = 0; i < n; ++i) {
-            // Is event queue empty?
-            if (evq.empty())
-                return 0; // Do not add anything new into the buffer.
-
-            // Get mouse event from the front of the queue.
-            mev = evq.front();
-            memcpy(buf, &mev, sizeof mev);
-
-            // Go to next block in the buffer.
-            buf = scast<char*>(buf) + sizeof(mev);
-
-            // Remove it from the front of the queue.
-            evq.pop_front();
-        }
-
-        return 0;
+        // Return the number of processed events.
+        return i;
     }
 }
 
