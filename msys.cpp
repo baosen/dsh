@@ -143,7 +143,10 @@ namespace evm {
         msys::Ev mev;
 
         for (uint i = 0; i < n; ++i) {
+            // Reset and re-use.
             zero(mev);
+
+            // Read input and handle it.
             forever {
                 const auto ev = e.rd();
                 switch (ev.type) {
@@ -175,6 +178,8 @@ namespace evm {
             // Go to next block in the buffer.
             buf = buf+sizeof(mev);
         }
+
+        return 0;
     }
 }
 
@@ -251,6 +256,8 @@ namespace m {
             // Remove it from the front of the queue.
             evq.pop_front();
         }
+
+        return 0;
     }
 }
 
@@ -300,6 +307,7 @@ void msys::init() {
 
 // Deinitialize mouse device.
 void msys::deinit() {
+    // Is a device set to be cleaned up?
     if (devdeinit)
         devdeinit();
 }
