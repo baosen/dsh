@@ -41,6 +41,7 @@ void Ev::close() {
         return;
     // Try closing event device file.
     stringstream ss;
+    // BUG: I'm getting bad file descriptor here.
     if (::close(fd) < 0) {
         ss << "Cannot close event device file: " << strerror(errno);
         // TODO!
