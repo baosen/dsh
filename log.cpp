@@ -10,19 +10,20 @@ void die(const int code)
 }
 
 // Print error and exit.
-void die(const char* e) {
+void die(const char* e)     // Error to print out.
+{
     cerr << e;
     exit(errno);
 }
 
 // Print error.
-void error(const string& s) 
+void error(const string& s) // Error to print out.
 {
     cout << "\033[1;31mError:\033[0m " << s << endl;
 }
 
 // Print error.
-void error(const err& e) 
+void error(const err& e)    // Error to print out.
 {
     cout << "\033[1;31mError:\033[0m " << e << endl;
 }
