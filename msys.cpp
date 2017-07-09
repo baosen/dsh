@@ -142,13 +142,17 @@ namespace evm {
     {
         msys::Ev mev;
 
+        // Put n blocks into the buffer.
         for (uint i = 0; i < n; ++i) {
-            // Reset and re-use.
+            // Reset and re-use mouse event.
             zero(mev);
 
             // Read input and handle it.
             forever {
+                // Read event input.
                 const auto ev = e.rd();
+
+                // Check event type and handle accordingly.
                 switch (ev.type) {
                 case EV_REL: // Relative motion.
                     rel(mev, ev);
