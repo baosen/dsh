@@ -56,6 +56,10 @@ mtest: mtest.cpp m.o log.o
 evmtest: evmtest.cpp evm.o log.o ev.o
 	$(COMPILE) $^ -o $@
 
+# Tests for the mouse subsystem.
+msystest: msystest.cpp msys.o evm.o ev.o m.o log.o
+	$(COMPILE) $^ -o $@
+
 dsh: dsh.cpp
 	$(COMPILE) $(SRC) $< -o $@
 

@@ -37,8 +37,8 @@ namespace msys {
     void deinit();
 
     // Wait for event and get mouse motion.
-    typedef uint (*Mmotion)(char *buf, const size_t n);
+    typedef uint (*Mmotion)(void *buf, const size_t n);
 
     // Current mouse device that is used.
-    extern Mmotion copymot;
+    extern Mmotion getmot;
 }

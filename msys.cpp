@@ -137,7 +137,7 @@ namespace evm {
     }
 
     // Wait for event and get it.
-    static uint waitevt(char        *buf, // Buffer to put event blocks.
+    static uint waitevt(void        *buf, // Buffer to put event blocks.
                         const size_t n)   // Number of blocks to put in the buffer.
     {
         msys::Ev mev;
@@ -177,10 +177,12 @@ namespace evm {
                          }
                 }
             }
+
             // Copy mouse event block over to the buffer.
             memcpy(buf, &mev, sizeof mev);
+
             // Go to next block in the buffer.
-            buf = buf+sizeof(mev);
+            buf = scast<char*>(buf) + sizeof(mev);
         }
 
         return 0;
@@ -204,7 +206,7 @@ namespace m {
     // Wait for mouse motion event and get it.
     deque<msys::Ev> evq; // events that has not been given to the upper layer.
 
-    static uint waitevt(char        *buf, // Buffer to fill.
+    static uint waitevt(void        *buf, // Buffer to fill.
                         const size_t n)   // Number of events to get.
     {
         msys::Ev   mev;
@@ -255,7 +257,7 @@ namespace m {
             memcpy(buf, &mev, sizeof mev);
 
             // Go to next block in the buffer.
-            buf = buf+sizeof(mev);
+            buf = scast<char*>(buf) + sizeof(mev);
 
             // Remove it from the front of the queue.
             evq.pop_front();
@@ -287,7 +289,7 @@ static msys::Mmotion mot[] {
 static void (*devdeinit)() = nullptr;
 
 // Current mouse device that is used.
-msys::Mmotion msys::copymot = nullptr;
+msys::Mmotion msys::getmot = nullptr;
 
 // Initialize and setup mouse.
 void msys::init() {
@@ -298,14 +300,14 @@ void msys::init() {
         // Try initializing the mouse.
         if (minit[i]()) {
             // Set its function to get mouse event.
-            msys::copymot = mot[i];
+            msys::getmot = mot[i];
             // Set its function to clean up mouse.
             devdeinit     = mdeinit[i];
             break;
         }
     }
     // Check if a mouse exists.
-    if (!msys::copymot)
+    if (!msys::getmot)
         die("Failed to find a mouse on the system!");
 }
 
