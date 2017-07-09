@@ -301,14 +301,14 @@ void msys::init()
         // Try initializing the mouse.
         if (minit[i]()) {
             // Set its function to get mouse event.
-            msys::getmot = mot[i];
+            getmot    = mot[i];
             // Set its function to clean up mouse.
-            devdeinit    = mdeinit[i];
+            devdeinit = mdeinit[i];
             break;
         }
     }
     // Check if a mouse exists.
-    if (!msys::getmot)
+    if (!getmot)
         die("Failed to find a mouse on the system!");
 }
 
