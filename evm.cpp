@@ -9,7 +9,8 @@ static constexpr bool bset(const char   b, // Byte to check bits.
 }
 
 // Check if the file opened is a mouse.
-static bool ism(char b[EV_MAX]) {
+static bool ism(char b[EV_MAX]) // le bits.
+{
     bool key = false, // Does the file have keys?
          rel = false; // Does it have a relative axis?
 
