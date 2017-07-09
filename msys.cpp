@@ -7,111 +7,116 @@
 using namespace std;
 
 // Mouse subsystem.
-namespace {
-    deque<msys::Ev> evq; // Queue of mouse events.
+static deque<msys::Ev> evq; // Stored queue of mouse events.
 
-    // Key. Mouse button press or release.
-    void key(msys::Ev& ev, const input_event& e) {
-        switch (e.code) {
-        case BTN_LEFT:    // Left mouse button.
-            ev.type = msys::Ev::LEFT;
-            ev.val = e.value;
-            break;
-        case BTN_RIGHT:   // Right mouse button.
-            ev.type = msys::Ev::RIGHT;
-            ev.val = e.value;
-            break;
-        case BTN_MIDDLE:  // Middle mouse button.
-            ev.type = msys::Ev::MID;
-            ev.val = e.value;
-            break;
-        case BTN_SIDE:    // Side mouse button.
-            ev.type = msys::Ev::SIDE;
-            ev.val = e.value;
-            break;
-        case BTN_EXTRA:   // Extra mouse button?
-            ev.type = msys::Ev::EXTRA;
-            ev.val = e.value;
-            break;
-        case BTN_FORWARD: // Forward button.
-            ev.type = msys::Ev::FORWARD;
-            ev.val = e.value;
-            break;
-        case BTN_BACK:    // Back button (to go backwards in browser?).
-            ev.type = msys::Ev::BACK;
-            ev.val = e.value;
-            break;
-        case BTN_TASK:    // Task button.
-            ev.type = msys::Ev::TASK;
-            ev.val = e.value;
-            break;
-        default:
-            // Unknown.
-            break;
-        }
+// Key. Mouse button press or release.
+static void key(msys::Ev&          ev, // Mouse subsystem mouse event to set.
+                const input_event& e)  // Event mouse device file event.
+{
+    switch (e.code) {
+    case BTN_LEFT:    // Left mouse button.
+        ev.type = msys::Ev::LEFT;
+        ev.val  = e.value;
+        break;
+    case BTN_RIGHT:   // Right mouse button.
+        ev.type = msys::Ev::RIGHT;
+        ev.val  = e.value;
+        break;
+    case BTN_MIDDLE:  // Middle mouse button.
+        ev.type = msys::Ev::MID;
+        ev.val  = e.value;
+        break;
+    case BTN_SIDE:    // Side mouse button.
+        ev.type = msys::Ev::SIDE;
+        ev.val  = e.value;
+        break;
+    case BTN_EXTRA:   // Extra mouse button?
+        ev.type = msys::Ev::EXTRA;
+        ev.val  = e.value;
+        break;
+    case BTN_FORWARD: // Forward button.
+        ev.type = msys::Ev::FORWARD;
+        ev.val  = e.value;
+        break;
+    case BTN_BACK:    // Back button (to go backwards in browser?).
+        ev.type = msys::Ev::BACK;
+        ev.val  = e.value;
+        break;
+    case BTN_TASK:    // Task button.
+        ev.type = msys::Ev::TASK;
+        ev.val  = e.value;
+        break;
+    default:
+        // Unknown event code.
+        break;
     }
-    
-    // Relative axis. Mouse movement.
-    void rel(msys::Ev&          ev, // Event.
-             const input_event& e)  // Mouse input event.
-    {
-        // Mouse movements follows top-left coordinate system, where origo is at the top left of the screen and the positive y-axis points downwards.
-        switch (e.code) {
-        case 0: // x-axis, - left, + right.
-            ev.type = msys::Ev::X;
-            ev.val = e.value;
-            break;
-        case 1: // y-axis, - upwards, + downwards.
-            ev.type = msys::Ev::Y;
-            ev.val = e.value;
-            break;
-        case 8: // wheel scroll, 1 up and -1 down.
-            ev.type = msys::Ev::WHEEL;
-            ev.val = e.value;
-            break;
-        }
+}
+
+// Relative axis. Mouse movement.
+void rel(msys::Ev&          ev, // Mouse subsystem mouse event to set.
+         const input_event& e)  // Mouse input event.
+{
+    // Mouse movements follows top-left coordinate system, where origo is at the top left of the screen and the positive y-axis points downwards.
+    switch (e.code) {
+    case 0: // x-axis, - left, + right.
+        ev.type = msys::Ev::X;
+        ev.val = e.value;
+        break;
+    case 1: // y-axis, - upwards, + downwards.
+        ev.type = msys::Ev::Y;
+        ev.val = e.value;
+        break;
+    case 8: // wheel scroll, 1 up and -1 down.
+        ev.type = msys::Ev::WHEEL;
+        ev.val = e.value;
+        break;
     }
-    
-    // Handle synthetic events.
-    bool syn(msys::Ev&   ev,   // Synthetic event.
-             const __s32 code) // Code reported.
-    {
-        switch (code) {
-        case SYN_REPORT:  // Reported event.
-            return true;
-        case SYN_DROPPED: // Dropped event.
-            // TODO: Throw away all frames between the reports.
-            break; 
-        }
+}
+
+// Handle synthetic events.
+static bool syn(msys::Ev&   ev,   // Synthetic event.
+                const __s32 code) // Code reported.
+{
+    switch (code) {
+    case SYN_REPORT:  // Reported event.
+        return true;
+    case SYN_DROPPED: // Dropped event.
+        // TODO: Throw away all frames between the reports.
+        break; 
+    }
+    return false;
+}
+
+// Fill in event based on its read type.
+static bool fillevt(deque<msys::Ev>&   d, // Mouse subsystem event to set.
+                    const input_event& e) // Event mouse device file.
+{
+    // Zero out event to put into the queue.
+    msys::Ev ev;
+    zero(ev);
+
+    // Check what kind of type was given.
+    switch (e.type) {
+    case EV_REL: // Relative motion.
+        rel(ev, e);
+        d.push_back(ev);
         return false;
-    }
-    
-    // Fill in event based on its read type.
-    bool fillevt(deque<msys::Ev>& d, const input_event& e) {
-        msys::Ev ev;
-        zero(ev);
-        switch (e.type) {
-        case EV_REL: // Relative motion.
-            rel(ev, e);
-            d.push_back(ev);
-            return false;
-        case EV_KEY: // Mouse button press and release.
-            key(ev, e);
-            d.push_back(ev);
-            return false;
-        case EV_ABS: // Absolute motion.
-            // Absolute value to announce touch pad movement speed?
-            return false;
-        case EV_MSC: // Miscellanous?
-            return false;
-        case EV_SYN: // Synchronization events.
-            return syn(ev, e.code);
-        default: {
-            stringstream ss;
-            ss << "Unknown type:" << hex << setw(2) << e.type << endl;
-            throw err(ss.str().c_str());
-                 }
-        }
+    case EV_KEY: // Mouse button press and release.
+        key(ev, e);
+        d.push_back(ev);
+        return false;
+    case EV_ABS: // Absolute motion.
+        // Absolute value to announce touch pad movement speed?
+        return false;
+    case EV_MSC: // Miscellanous?
+        return false;
+    case EV_SYN: // Synchronization events.
+        return syn(ev, e.code);
+    default: {
+        stringstream ss;
+        ss << "Unknown type:" << hex << setw(2) << e.type << endl;
+        throw err(ss.str().c_str());
+             }
     }
 }
 
