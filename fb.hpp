@@ -55,6 +55,7 @@ private:
 
     u8*    fb;
 
+    // Framebuffer methods.
     u8&  (Fb::*get8p) (const uint i);
     u32& (Fb::*get32p)(const uint i);
     void (Fb::*flipp) ();

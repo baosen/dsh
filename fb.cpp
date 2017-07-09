@@ -100,39 +100,39 @@ size_t Fb::pixlen() const
     return plen;
 }
 
-//
-// TODO: Set a function pointer rather than check using an if boolean check.
-//
-
 #define CALLMEMBFN(p) (this->*(p))
 
-// Access framebuffer memory 8 bits at a time.
-u8& Fb::get8(const uint i) // Index beginning at 0 indexing a string of framebuffer bytes.
+// Access the buffer 8 bits/byte at a time.
+u8& Fb::get8(const uint i)       // Index beginning at 0 indexing a string of framebuffer bytes.
 {
     return CALLMEMBFN(get8p)(i);
 }
 
-u8& Fb::dbufget8(const uint i) // Index beginning at 0 indexing a string of framebuffer bytes.
+// Access the double buffer 8 bits/byte at a time.
+u8& Fb::dbufget8(const uint i)   // Index beginning at 0 indexing a string of framebuffer bytes.
 {
     return dbuf[i];
 }
 
+// Access the frame buffer 8 bits/byte at a time.
 u8& Fb::fbget8(const uint i) // Index beginning at 0 indexing a string of framebuffer bytes.
 {
     return fb[i];
 }
 
-// Access framebuffer memory 32 bits at a time.
+// Access memory 32 bits/4 bytes at a time.
 u32& Fb::get32(const uint i) // Index beginning at 0 indexing a string of framebuffer bytes. 
 {
     return CALLMEMBFN(get32p)(i);
 }
 
+// Access the double buffer memory 32 bits/4 bytes at a time.
 u32& Fb::dbufget32(const uint i) // Index beginning at 0 indexing a string of framebuffer bytes. 
 {
     return *(rcast<u32*>(&dbuf[0]) + i);
 }
 
+// Access framebuffer memory 32 bits/4 bytes at a time.
 u32& Fb::fbget32(const uint i) // Index beginning at 0 indexing a string of framebuffer bytes. 
 {
     return *(rcast<u32*>(&fb[0]) + i);
