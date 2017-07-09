@@ -137,10 +137,11 @@ namespace evm {
     }
 
     // Wait for event and get it.
-    static void waitevt(char        *buf, // Buffer to put event blocks.
+    static uint waitevt(char        *buf, // Buffer to put event blocks.
                         const size_t n)   // Number of blocks to put in the buffer.
     {
         msys::Ev mev;
+
         for (uint i = 0; i < n; ++i) {
             zero(mev);
             forever {
@@ -193,9 +194,13 @@ namespace m {
 
     // Wait for mouse motion event and get it.
     deque<msys::Ev> evq; // events that has not been given to the upper layer.
-    static void waitevt(char *buf, const size_t n) {
+
+    static uint waitevt(char        *buf, // Buffer to fill.
+                        const size_t n)   // Number of events to get.
+    {
         msys::Ev   mev;
         const auto ev = m.rd();
+
         // Add X-axis event.
         if (ev.x != 0) {
             zero(mev);
@@ -203,6 +208,7 @@ namespace m {
             mev.val  = ev.x;
             evq.push_back(mev);
         }
+
         // Add Y-axis event.
         if (ev.y != 0) {
             zero(mev);
@@ -210,31 +216,38 @@ namespace m {
             mev.val  = ev.y;
             evq.push_back(mev);
         }
+
         // Add left button event.
         zero(mev);
         mev.type = msys::Ev::LEFT;
         mev.val  = ev.left;
         evq.push_back(mev);
+
         // Add middle button event.
         zero(mev);
         mev.type = msys::Ev::MID;
         mev.val  = ev.mid;
         evq.push_back(mev);
+
         // Add right button event.
         zero(mev);
         mev.type = msys::Ev::RIGHT;
         mev.val  = ev.right;
         evq.push_back(mev);
-        // Copy the mouse events to the buffer.
+
+        // Copy the mouse events to the buffer to be retrieved by the caller.
         for (uint i = 0; i < n; ++i) {
             // Is event queue empty?
             if (evq.empty())
-                return;
+                return 0; // Do not add anything new into the buffer.
+
             // Get mouse event from the front of the queue.
             mev = evq.front();
             memcpy(buf, &mev, sizeof mev);
+
             // Go to next block in the buffer.
             buf = buf+sizeof(mev);
+
             // Remove it from the front of the queue.
             evq.pop_front();
         }
@@ -276,7 +289,7 @@ void msys::init() {
             // Set its function to get mouse event.
             msys::copymot = mot[i];
             // Set its function to clean up mouse.
-            devdeinit    = mdeinit[i];
+            devdeinit     = mdeinit[i];
             break;
         }
     }
