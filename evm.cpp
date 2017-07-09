@@ -1,39 +1,39 @@
 #include "evm.hpp"
 #include "fio.hpp"
 
-namespace {
-    // Is bit set?
-    constexpr bool bset(const char n, const ushort i) {
-        return !!(n & (1 << i));
-    }
-    
-    // Check if the file opened is a mouse.
-    bool ism(char b[EV_MAX]) {
-        bool key = false, // Has key?
-             rel = false; // Has relative axis?
+// Is bit i in byte b set?
+static constexpr bool bset(const char   b, // Byte to check bits.
+                           const ushort i) // The ith bit to check if it is set.
+{
+    return !!(b & (1 << i));
+}
 
-        // Check for key and relative axis.
-        for (ushort i = 0; i < EV_MAX; i++) {
-            // Check if bit i are set.
-            if (bset(b[0], i)) {
-                switch (i) {
-                // Has key buttons?
-                case EV_KEY:
-                    key = true;
-                    break;
-                // Has relative axis?
-                case EV_REL:
-                    rel = true;
-                    break;
-                default:
-                    break;
-                }
+// Check if the file opened is a mouse.
+static bool ism(char b[EV_MAX]) {
+    bool key = false, // Does the file have keys?
+         rel = false; // Does it have a relative axis?
+
+    // Check for key and relative axis.
+    for (ushort i = 0; i < EV_MAX; i++) {
+        // Check if bit i of the byte are set.
+        if (bset(b[0], i)) {
+            switch (i) {
+            // Has key buttons?
+            case EV_KEY:
+                key = true;
+                break;
+            // Has relative axis?
+            case EV_REL:
+                rel = true;
+                break;
+            default:
+                break;
             }
         }
-
-        // If it has both key and relative axis, then it is mouse. If some are missing, it is not a mouse.
-        return key && rel;
     }
+
+    // If it has both key and relative axis, then it is mouse. If some are missing, it is not a mouse.
+    return key && rel;
 }
 
 // Open event mouse device file.
@@ -51,16 +51,19 @@ Evm::Evm(const uint i) // The ith mouse to open.
 }
 
 // Open mouse event device file.
-bool Evm::open(const uint i) {
+bool Evm::open(const uint i) // The ith event mouse device file to open.
+{
     return ev.open(i);
 }
 
 // Close mouse event device file.
-void Evm::close() {
+void Evm::close() 
+{
     ev.close();
 }
 
 // Read event mouse.
-input_event Evm::rd() {
+input_event Evm::rd() 
+{
     return ev.rd();
 }
