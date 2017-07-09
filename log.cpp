@@ -11,7 +11,7 @@ void die(const int code)
 // Print error and exit.
 void die(const char* e)     // Error to print out.
 {
-    cerr << e;
+    cerr << e << endl;
     exit(errno);
 }
 

@@ -60,15 +60,15 @@ void rel(msys::Ev&          ev, // Mouse subsystem mouse event to set.
     switch (e.code) {
     case 0: // x-axis, - left, + right.
         ev.type = msys::Ev::X;
-        ev.val = e.value;
+        ev.val  = e.value;
         break;
     case 1: // y-axis, - upwards, + downwards.
         ev.type = msys::Ev::Y;
-        ev.val = e.value;
+        ev.val  = e.value;
         break;
     case 8: // wheel scroll, 1 up and -1 down.
         ev.type = msys::Ev::WHEEL;
-        ev.val = e.value;
+        ev.val  = e.value;
         break;
     }
 }
@@ -141,9 +141,10 @@ namespace evm {
                         const size_t n)   // Number of blocks to put in the buffer.
     {
         msys::Ev mev;
+        uint     i;
 
         // Put n blocks into the buffer.
-        for (uint i = 0; i < n; ++i) {
+        for (i = 0; i < n; ++i) {
             // Reset and re-use mouse event.
             zero(mev);
 
@@ -176,6 +177,7 @@ namespace evm {
                     continue;
                          }
                 }
+                break;
             }
 
             // Copy mouse event block over to the buffer.
@@ -185,7 +187,7 @@ namespace evm {
             buf = scast<char*>(buf) + sizeof(mev);
         }
 
-        return 0;
+        return i;
     }
 }
 
