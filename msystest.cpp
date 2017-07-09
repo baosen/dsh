@@ -1,8 +1,6 @@
-#include <vector>
-#include <cstdio>
+#include <memory>
 #include <iostream>
 #include "msys.hpp"
-#include "types.hpp"
 using namespace std;
 
 // Test mouse subsystem.
@@ -10,14 +8,14 @@ int main()
 {
     msys::init();
 
-    std::vector<msys::Ev> buf(10);
+    unique_ptr<msys::Ev> e(new msys::Ev);
 
-    uint n;
-    if (!(n = msys::getmot(buf.data(), 1))) {
-        puts("Got no data!");
-        return EXIT_FAILURE;
+    forever {
+        uint n = msys::getmot(&*e, 1);
+        if (!n)
+            continue;
+        cout << e->val << endl;
     }
-    cout << "Got " << n << " events!" << endl;
 
     msys::deinit();
     return EXIT_SUCCESS;

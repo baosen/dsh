@@ -74,49 +74,16 @@ void rel(msys::Ev&          ev, // Mouse subsystem mouse event to set.
 }
 
 // Handle synthetic events.
-static bool syn(msys::Ev&   ev,   // Synthetic event.
-                const __s32 code) // Code reported.
+static void syn(const __s32 code) // Event code reported.
 {
     switch (code) {
-    case SYN_REPORT:  // Reported event.
-        return true;
+    case SYN_REPORT:  // Done reporting an event.
+        // TODO: Do something with this?
+        return;
     case SYN_DROPPED: // Dropped event.
         // TODO: Throw away all frames between the reports.
-        break; 
-    }
-    return false;
-}
-
-// Fill in event based on its read type.
-static bool fillevt(deque<msys::Ev>&   d, // Mouse subsystem event to set.
-                    const input_event& e) // Event mouse device file.
-{
-    // Zero out event to put into the queue.
-    msys::Ev ev;
-    zero(ev);
-
-    // Check what kind of type was given.
-    switch (e.type) {
-    case EV_REL: // Relative motion.
-        rel(ev, e);
-        d.push_back(ev);
-        return false;
-    case EV_KEY: // Mouse button press and release.
-        key(ev, e);
-        d.push_back(ev);
-        return false;
-    case EV_ABS: // Absolute motion.
-        // Absolute value to announce touch pad movement speed?
-        return false;
-    case EV_MSC: // Miscellanous?
-        return false;
-    case EV_SYN: // Synchronization events.
-        return syn(ev, e.code);
-    default: {
-        stringstream ss;
-        ss << "Unknown type:" << hex << setw(2) << e.type << endl;
-        throw err(ss.str().c_str());
-             }
+        warn("SYN_DROPPED not handled.");
+        return; 
     }
 }
 
@@ -167,8 +134,8 @@ namespace evm {
                 case EV_MSC: // Miscellanous?
                     continue;
                 case EV_SYN: // Synchronization events.
-                    syn(mev, ev.code);
-                    break;
+                    syn(ev.code);
+                    continue;
                 default: {   // Log and ignore unknown events.
                     // Warn user about the unknown event.
                     stringstream ss;
