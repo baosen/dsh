@@ -292,7 +292,8 @@ static void (*devdeinit)() = nullptr;
 msys::Mmotion msys::getmot = nullptr;
 
 // Initialize and setup mouse.
-void msys::init() {
+void msys::init() 
+{
     using namespace msys;
 
     // Find and initialize an available mouse.
@@ -302,7 +303,7 @@ void msys::init() {
             // Set its function to get mouse event.
             msys::getmot = mot[i];
             // Set its function to clean up mouse.
-            devdeinit     = mdeinit[i];
+            devdeinit    = mdeinit[i];
             break;
         }
     }
@@ -312,7 +313,8 @@ void msys::init() {
 }
 
 // Deinitialize mouse device.
-void msys::deinit() {
+void msys::deinit() 
+{
     // Is a device set to be cleaned up?
     if (devdeinit)
         devdeinit();
