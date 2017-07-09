@@ -210,8 +210,9 @@ namespace m {
             // Wait for input event and read it.
             const auto ev = m.rd();
 
+// TODO: Potential overflow bug?
 #define ADD \
-    if (i < n) { \
+    if (i < scast<int>(n)) { \
         m::copy(mev); \
         i++; \
     } else \

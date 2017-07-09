@@ -7,7 +7,7 @@ COMPILE  = @$(CXX) $(CXXFLAGS)
 # Set source dependencies for desktop shell.
 SRC      = m.cpp wnd.cpp pix.cpp pos.cpp fb.cpp scr.cpp log.cpp res.cpp ev.cpp evm.cpp msys.cpp kbsys.cpp kb.cpp wsys.cpp wd.cpp parse.cpp init.cpp mwnd.cpp rect.cpp 
 # Tests.
-TESTS    = mtest fbtest evmtest msystest tests dpytests
+TESTS    = mtest fbtest evmtest msystest tests dpytests wtest
 # Executables.
 EXECS    = dsh dshfs
 # Set the produced executable binaries.
@@ -48,6 +48,7 @@ scr.o: scr.cpp
 fbtest: fbtest.cpp fb.o pix.o scr.o log.o keywait.o
 	$(COMPILE) $^ -o $@
 
+# Tests for the window files.
 wtest: wtest.cpp fb.o pix.o scr.o log.o pos.o rect.o res.o keywait.o m.o
 	$(COMPILE) $^ -o $@
 
