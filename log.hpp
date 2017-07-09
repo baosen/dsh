@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include "err.hpp"
 
 // Print message and exist.
@@ -10,5 +11,5 @@ void error(const err&);
 void syserror(const std::string& s);
 
 // Warn user about something happened.
-void warn(const string& s);
+void warn(const std::string& s);
 void warn(const char*);

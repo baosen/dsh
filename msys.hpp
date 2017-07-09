@@ -1,5 +1,6 @@
 #pragma once
 #include <cstring>
+#include "types.hpp"
 
 // Mouse subsystem.
 namespace msys {
