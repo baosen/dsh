@@ -68,6 +68,7 @@ evmtest: evmtest.cpp evm.o log.o ev.o
 msystest: msystest.cpp msys.o evm.o ev.o m.o log.o
 	$(COMPILE) $^ -o $@
 
+# The shell running on top of the filesystem in userspace.
 dsh: dsh.cpp
 	$(COMPILE) $(SRC) $< -o $@
 
