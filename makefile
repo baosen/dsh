@@ -1,3 +1,7 @@
+# Set the number of parallell jobs to be run to be equal to the number of CPU cores.
+#CPUS      ?= $(shell sysctl -n hw.ncpu || echo 1)
+#MAKEFLAGS += --jobs=$(CPUS)
+
 # Set G++ as the C++ compiler.
 CXX      = g++
 # Set C++ compiler flags.
@@ -67,9 +71,13 @@ msystest: msystest.cpp msys.o evm.o ev.o m.o log.o
 dsh: dsh.cpp
 	$(COMPILE) $(SRC) $< -o $@
 
+# File system.
+fs.o: fs.cpp
+	$(COMPILE) -c $^ `pkg-config fuse --cflags --libs` -o $@
+
 # Compile shell file system executable.
-dshfs: dshfs.cpp kb.cpp kbsys.cpp fs.cpp dsys.cpp wndcmd.cpp dpycmd.cpp wsys.cpp ssys.cpp $(SRC)
-	@$(CXX) $^ `pkg-config fuse --cflags --libs` -o $@
+dshfs: dshfs.cpp fs.o log.o kb.o kbsys.o dsys.o wndcmd.o dpycmd.o wsys.o ssys.o msys.o m.o wnd.o fb.o scr.o pix.o rect.o pos.o res.o evm.o ev.o
+	$(COMPILE) $^ `pkg-config fuse --cflags --libs` -o $@
 
 # Compile "do"-program, the beginning program that ask the user what to do.
 do: do.cpp do.hpp
