@@ -8,6 +8,10 @@ using namespace std;
 
 static const char *path = "/dev/input/event1";
 
+//
+// PUBLIC
+//
+
 // Creates an empty keyboard.
 Kb::Kb() 
     : fd(-2) {}
@@ -39,19 +43,8 @@ void Kb::close() {
     }
 }
 
-// Reads the keyboard event that is returned by the operating system when the user interacts with the keyboard.
-input_event Kb::rd() {
-    input_event e;
-    if (::read(fd, &e, sizeof e) < 0) {
-        stringstream ss;
-        ss << "Failed to read keyboard: " << strerror(errno) << endl;
-        throw err(ss.str());
-    }
-    return e;
-}
-
 // Get the pressed keyboard codes from the keyboard queue.
-Kb::Kbc Kb::get() {
+int Kb::get() {
 #ifndef NDEBUG
     // Button state.
     static const char *const state[3] = {
@@ -60,6 +53,7 @@ Kb::Kbc Kb::get() {
         "Repeated:"
     };
 #endif
+
     // Reads the keyboard event from the keyboard.
     input_event e;
     do {
@@ -67,8 +61,31 @@ Kb::Kbc Kb::get() {
         e = rd();
         // Check if key change. If not, continue reading for a key change.
     } while (e.type != EV_KEY || e.value < 0 || e.value > 2);
+
     // Print keyboard code if e is a key change.
     DBG("%s 0x%04x (%d)\n", state[e.value], (int)(e.code), (int)(e.code));
+
     // Returns the USB keyboard code read.
     return e.code;
+}
+
+//
+// PRIVATE
+//
+
+// Reads the keyboard event that is returned by the operating system when the user interacts with the keyboard.
+input_event Kb::rd() {
+    // Check if keyboard is opened yet.
+    if (fd == -2)
+        throw err("No keyboard device file opened yet!");
+
+    // Read keyboard code.
+    // TODO: Why can't you read æøå,.?
+    input_event e;
+    if (::read(fd, &e, sizeof e) < 0) {
+        stringstream ss;
+        ss << "Cannot read keyboard code: " << strerror(errno) << endl;
+        throw err(ss.str());
+    }
+    return e;
 }

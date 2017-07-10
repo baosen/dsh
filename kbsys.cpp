@@ -11,6 +11,8 @@ void kbsys::init() {
     kb.open();
 }
 
+// Cleanup keyboard subsystem.
 void kbsys::deinit() {
+    // Close keyboard file.
     kb.close();
 }

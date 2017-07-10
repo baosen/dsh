@@ -11,7 +11,7 @@ COMPILE  = @$(CXX) $(CXXFLAGS)
 # Set source dependencies for desktop shell.
 SRC      = m.cpp wnd.cpp pix.cpp pos.cpp fb.cpp scr.cpp log.cpp res.cpp ev.cpp evm.cpp msys.cpp kbsys.cpp kb.cpp wsys.cpp wd.cpp parse.cpp init.cpp mwnd.cpp rect.cpp 
 # Tests.
-TESTS    = mtest fbtest evmtest msystest tests dpytests wtest
+TESTS    = mtest fbtest evmtest msystest tests dpytests wtest kbtest
 # Executables.
 EXECS    = dsh dshfs
 # Set the produced executable binaries.
@@ -66,6 +66,10 @@ evmtest: evmtest.cpp evm.o log.o ev.o
 
 # Tests for the mouse subsystem.
 msystest: msystest.cpp msys.o evm.o ev.o m.o log.o
+	$(COMPILE) $^ -o $@
+
+# Tests for keyboard.
+kbtest: kbtest.cpp kb.o
 	$(COMPILE) $^ -o $@
 
 # The shell running on top of the filesystem in userspace.
