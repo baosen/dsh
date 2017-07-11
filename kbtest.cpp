@@ -9,7 +9,7 @@ static void wctest(Kb& kb)
     wchar_t     c[2] = {0};
     input_event k;
     for (;;) {
-        k    = kb.rd();
+        k    = kb.rd1();
         c[0] = towc(k);
         if (c[0] == '\0')
             continue;
@@ -23,7 +23,7 @@ static void asciitest(Kb& kb)
     char c;
     input_event k;
     for (;;) {
-        k = kb.rd();
+        k = kb.rd1();
         c = toc(k);
         if (c == '\0')
             continue;
@@ -32,11 +32,18 @@ static void asciitest(Kb& kb)
     }
 }
 
-static void dbgtest(Kb& kb)
+static void get1(Kb& kb)
 {
     kb.open();
     for (;;)
-        kb.get();
+        kb.get1();
+}
+
+static void get2(Kb& kb)
+{
+    kb.open();
+    for (;;)
+        kb.get2();
 }
 
 int main()
@@ -44,12 +51,20 @@ int main()
     Kb kb;
 
     try {
-        kb.get();
+        kb.rd1();
         cerr << "Failed to catch keyboard exception!" << endl;
         return EXIT_FAILURE;
     } catch (const err& e) {
         cout << "Succeeded catching keyboard exception!" << endl;
     }
 
-    dbgtest(kb);
+    try {
+        kb.rd2();
+        cerr << "Failed to catch keyboard exception!" << endl;
+        return EXIT_FAILURE;
+    } catch (const err& e) {
+        cout << "Succeeded catching keyboard exception!" << endl;
+    }
+
+    get1(kb);
 }

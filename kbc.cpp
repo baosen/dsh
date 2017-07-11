@@ -154,6 +154,7 @@ enum Kbstate {
     REPEATED  // Button is held, and then gets reported repeately.
 };
 
+// Convert keyboard input event to ASCII character.
 char toc(const input_event& e) 
 {
     // Is it a key event?
@@ -175,6 +176,7 @@ char toc(const input_event& e)
     return '\0';
 }
 
+// Convert keyboard input event to Wide character.
 wchar_t towc(const input_event& e)
 {
     // Is it a key event?

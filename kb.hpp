@@ -14,11 +14,18 @@ public:
     // Close keyboard file.
     void close();
 
-    // Get keyboard code pressed.
-    int get();
-    // Get input event from keyboard.
-    input_event rd();
-private:
+    // Get keyboard event from event1.
+    input_event rd1();
+    // Get keyboard event from event2.
+    input_event rd2();
 
-   int fd; // File descriptor to keyboard device file.
+    // DEBUG: Used to test reading from keyboard event file.
+#ifndef NDEBUG
+    void get1();
+    void get2();
+#endif
+
+private:
+   int fdev1, // File descriptor to first keyboard device file representing most of the keys.
+       fdev2; // File descriptor to second keyboard device file representing the rest of the keys.
 };
