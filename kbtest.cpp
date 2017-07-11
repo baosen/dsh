@@ -22,11 +22,26 @@ int main()
         kb.get();
 */
 
-    wchar_t c[2] = {0};
+/*
+    wchar_t     c[2] = {0};
+    input_event k;
     for (;;) {
-        c[0] = towc(kb.rd());
+        k    = kb.rd();
+        c[0] = towc(k);
         if (c[0] == '\0')
             continue;
-        printf("%ls\n", c);
+        printf("code: %02x\n", k.code);
+        printf("char: %ls\n", c);
+    }
+*/
+    char c;
+    input_event k;
+    for (;;) {
+        k = kb.rd();
+        c = toc(k);
+        if (c == '\0')
+            continue;
+        printf("code: %02x\n", k.code);
+        printf("char: %c\n", c);
     }
 }

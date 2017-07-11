@@ -5,6 +5,9 @@
 // Convert keyboard code to ASCII character.
 char    toc(const  __u16 c);
 // Convert keyboard code to Wide character.
+char    toc(const input_event& e);
+
+// Convert keyboard code to Wide character.
 wchar_t towc(const uint c);
 // Convert keyboard input event to Wide character.
 wchar_t towc(const input_event& e);
