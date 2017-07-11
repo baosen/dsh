@@ -57,7 +57,8 @@ int Kb::get() {
         // Read an keyboard event.
         e = rd();
         // Check if key change. If not, continue reading for a key change.
-    } while (e.type != EV_KEY || e.value < 0 || e.value > 2);
+    } while (e.type != EV_KEY ||          // Is it a key event?
+             e.value < 0 || e.value > 2); // Does it contain a valid state?
 
     // Print keyboard code if e is a key change.
     DBG("%s 0x%04x (%d)\n", 
