@@ -27,7 +27,7 @@ Kb::~Kb()
 void Kb::open() 
 {
     // Open first main keyboard device file.
-    fdev1 = ::open(pathev1, O_RDONLY);
+    fdev1 = ::open(pathev1, O_RDONLY); // Blocking. Setting O_NONBLOCK to not block does not seem to work.
     if (fdev1 < 0) {
         stringstream ss;
         ss << "Cannot open " << pathev1 << ": " << strerror(errno) << endl;

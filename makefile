@@ -11,7 +11,7 @@ COMPILE  = @$(CXX) $(CXXFLAGS)
 # Set source dependencies for desktop shell.
 SRC      = m.cpp wnd.cpp pix.cpp pos.cpp fb.cpp scr.cpp log.cpp res.cpp ev.cpp evm.cpp msys.cpp kbsys.cpp kb.cpp wsys.cpp wd.cpp parse.cpp init.cpp mwnd.cpp rect.cpp 
 # Tests.
-TESTS    = mtest fbtest evmtest msystest tests dpytests wtest kbtest
+TESTS    = mtest fbtest evmtest msystest dpytests wtest kbtest
 # Executables.
 EXECS    = dsh dshfs
 # Set the produced executable binaries.
@@ -20,17 +20,9 @@ BINS     = $(TESTS) $(EXECS)
 # Build everything.
 all: $(BINS)
 
-# Test code.
-test: $(BINS)
-	./tests
-
 # Remove built files.
 clean:
 	@rm -rf *.o $(BINS)
-
-# Compile general tests.
-tests: tests.cpp
-	$(COMPILE) $< kb.cpp log.cpp -o $@
 
 # Compile display tests.
 dpytests: dpytests.cpp
