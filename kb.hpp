@@ -16,8 +16,9 @@ public:
 
     // Get keyboard code pressed.
     int get();
+    // Get input event from keyboard.
+    input_event rd();
 private:
-   input_event rd();
 
    int fd; // File descriptor to keyboard device file.
 };

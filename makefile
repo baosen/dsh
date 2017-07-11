@@ -69,7 +69,7 @@ msystest: msystest.cpp msys.o evm.o ev.o m.o log.o
 	$(COMPILE) $^ -o $@
 
 # Tests for keyboard.
-kbtest: kbtest.cpp kb.o
+kbtest: kbtest.cpp kb.o kbc.cpp
 	$(COMPILE) $^ -o $@
 
 # The shell running on top of the filesystem in userspace.

@@ -7,14 +7,11 @@
 using namespace std;
 
 static const char *path = "/dev/input/event1";
-
-//
-// PUBLIC
-//
+static const int  NONE  = -2;
 
 // Creates an empty keyboard.
 Kb::Kb() 
-    : fd(-2) {}
+    : fd(NONE) {}
 
 // Close the keyboard file descriptor.
 Kb::~Kb() {
@@ -34,7 +31,7 @@ void Kb::open() {
 
 // Close keyboard event file.
 void Kb::close() {
-    if (fd == -2)
+    if (fd == NONE)
         return;
     if (::close(fd) < 0) {
         stringstream ss;
@@ -63,23 +60,22 @@ int Kb::get() {
     } while (e.type != EV_KEY || e.value < 0 || e.value > 2);
 
     // Print keyboard code if e is a key change.
-    DBG("%s 0x%04x (%d)\n", state[e.value], (int)(e.code), (int)(e.code));
+    DBG("%s 0x%04x (%d)\n", 
+        state[e.value],      // Show current button state.
+        scast<int>(e.code),  // Show its code in 16-bit hex.
+        scast<int>(e.code)); // Show its code as integer value.
 
     // Returns the USB keyboard code read.
     return e.code;
 }
 
-//
-// PRIVATE
-//
-
 // Reads the keyboard event that is returned by the operating system when the user interacts with the keyboard.
 input_event Kb::rd() {
     // Check if keyboard is opened yet.
-    if (fd == -2)
+    if (fd == NONE)
         throw err("No keyboard device file opened yet!");
 
-    // Read keyboard code.
+    // Read keyboard input event.
     // TODO: Why can't you read æøå,.?
     input_event e;
     if (::read(fd, &e, sizeof e) < 0) {

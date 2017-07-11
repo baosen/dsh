@@ -1,5 +1,6 @@
-#include <iostream>
+#include <cstdio>
 #include "err.hpp"
+#include "kbc.hpp"
 #include "kb.hpp"
 using namespace std;
 
@@ -16,8 +17,16 @@ int main()
     }
 
     kb.open();
+/*
+    for (;;)
+        kb.get();
+*/
 
+    wchar_t c[2] = {0};
     for (;;) {
-        cout << "key: " << kb.get() << endl;
+        c[0] = towc(kb.rd());
+        if (c[0] == '\0')
+            continue;
+        printf("%ls\n", c);
     }
 }
