@@ -12,5 +12,8 @@ public:
     // Set Wide character, assuming type 'char' is ASCII.
     //UTF8char(const wchar_t c);
 private:
-    void resize(size_type n);
+    void set(const byte *s, const size_t n);
+
+    // Hide some inherited public member functions.
+    using std::vector<byte>::resize;
 };
