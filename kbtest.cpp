@@ -68,5 +68,6 @@ int main()
     kb.open();
 
     //get1(kb);
-    asciitest(kb);
+    //asciitest(kb);
+    wctest(kb);
 }

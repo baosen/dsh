@@ -12,11 +12,8 @@ static void resetup()
     init();
 }
 
-// Test keyboard subsystem.
-int main()
+static void asciitest()
 {
-    resetup();
-
     input_event e;
     char        c;
     for (;;) {
@@ -27,6 +24,28 @@ int main()
         printf("code: %02x\n", e.code);
         printf("char: %c\n", c);
     }
+}
+
+static void wctest()
+{
+    wchar_t     c[2] = {0};
+    input_event e;
+    for (;;) {
+        e    = get();
+        c[0] = towc(e);
+        if (c[0] == '\0')
+            continue;
+        printf("code: %02x\n", e.code);
+        printf("char: %ls\n", c);
+    }
+}
+
+// Test keyboard subsystem.
+int main()
+{
+    resetup();
+
+    wctest();
 
     deinit();
     return EXIT_SUCCESS;
