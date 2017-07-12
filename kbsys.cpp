@@ -81,6 +81,7 @@ void kbsys::deinit()
     k1.join(); // TODO: May get stuck because of no user input.
     k2.join(); // TODO: May get stuck because of no user input.
     // BUG: If you time pressing ENTER correctly, you may exit k2.
+
     // Close keyboard file.
     kb.close();
 }
