@@ -65,7 +65,7 @@ kbsystest: kbsystest.cpp kbsys.o kb.o kbc.o evm.o ev.o m.o log.o
 	$(COMPILE) $^ -o $@ -lpthread
 
 # Tests for keyboard.
-kbtest: kbtest.cpp kb.o kbc.cpp
+kbtest: kbtest.cpp kb.o kbc.o utf8.o
 	$(COMPILE) $^ -o $@
 
 # The shell running on top of the filesystem in userspace.

@@ -48,50 +48,49 @@
     };
 
 // Norwegian keyboard map.
-#define NOKBMAP(type, name, size) \
-    type name[size] { \
-        '\0', /* 0x0000 */ \
-        '\0', /* 0x0001 */ \
-        '1',  /* 0x0002 */ \
-        '2',  /* 0x0003 */ \
-        '3',  /* 0x0004 */ \
-        '4',  /* 0x0005 */ \
-        '5',  /* 0x0006 */ \
-        '6',  /* 0x0007 */ \
-        '7',  /* 0x0008 */ \
-        '8',  /* 0x0009 */ \
-        '9',  /* 0x000A */ \
-        '0',  /* 0x000B */ \
-        '+',  /* 0x000C */ \
-        '\\', /* 0x000D */ \
-        '\0', /* 0x000E */ \
-        '\0', /* 0x000F */ \
-        'q',  /* 0x0010 */ \
-        'w',  /* 0x0011 */ \
-        'e',  /* 0x0012 */ \
-        'r',  /* 0x0013 */ \
-        't',  /* 0x0014 */ \
-        'y',  /* 0x0015 */ \
-        'u',  /* 0x0016 */ \
-        'i',  /* 0x0017 */ \
-        'o',  /* 0x0018 */ \
-        'p',  /* 0x0019 */ \
-        'å',  /* 0x001A */ \
-        '}',  /* 0x001B */ \
-        '\n', /* 0x001C */ \
-        '\0', /* 0x001D */ \
-        'a',  /* 0x001E */ \
-        's',  /* 0x001F */ \
-        'd',  /* 0x0020 */ \
-        'f',  /* 0x0021 */ \
-        'g',  /* 0x0022 */ \
-        'h',  /* 0x0023 */ \
-        'j',  /* 0x0024 */ \
-        'k',  /* 0x0025 */ \
-        'l',  /* 0x0026 */ \
-        'ø',  /* 0x0027 */ \
-        'æ',  /* 0x0028 */ \
-    };
+UTF8char kbnor[] {
+        '\0',  /* 0x0000 */
+        '\0',  /* 0x0001 */
+        '1',   /* 0x0002 */
+        '2',   /* 0x0003 */
+        '3',   /* 0x0004 */
+        '4',   /* 0x0005 */
+        '5',   /* 0x0006 */
+        '6',   /* 0x0007 */
+        '7',   /* 0x0008 */
+        '8',   /* 0x0009 */
+        '9',   /* 0x000A */
+        '0',   /* 0x000B */
+        '+',   /* 0x000C */
+        '\\',  /* 0x000D */
+        '\0',  /* 0x000E */
+        '\0',  /* 0x000F */
+        'q',   /* 0x0010 */
+        'w',   /* 0x0011 */
+        'e',   /* 0x0012 */
+        'r',   /* 0x0013 */
+        't',   /* 0x0014 */
+        'y',   /* 0x0015 */
+        'u',   /* 0x0016 */
+        'i',   /* 0x0017 */
+        'o',   /* 0x0018 */
+        'p',   /* 0x0019 */
+      u8"å",   /* 0x001A */
+        '}',   /* 0x001B */
+        '\n',  /* 0x001C */
+        '\0',  /* 0x001D */
+        'a',   /* 0x001E */
+        's',   /* 0x001F */
+        'd',   /* 0x0020 */
+        'f',   /* 0x0021 */
+        'g',   /* 0x0022 */
+        'h',   /* 0x0023 */
+        'j',   /* 0x0024 */
+        'k',   /* 0x0025 */
+        'l',   /* 0x0026 */
+      u8"ø",   /* 0x0027 */
+      u8"æ",   /* 0x0028 */
+};
 
 namespace {
     // Maximum number of keyboard codes.
@@ -100,7 +99,7 @@ namespace {
     // A conversion lookup-table converting a USB keyboard code to an ASCII character.
     USKBMAP(const char, kbascii, NCODES)
     // A conversion lookup-table converting a USB keyboard code to a wide character.
-    NOKBMAP(const wchar_t, kbwide, NCODES)
+    USKBMAP(const wchar_t, kbwide, NCODES)
 
     // Is Caps Lock on?
     bool caps  = false; 
@@ -243,4 +242,26 @@ wchar_t towc(const input_event& e)
     }
 
     return '\0';
+}
+
+// Convert keyboard input event to UTF-8 character.
+UTF8char tou8(const input_event& e)
+{
+    // Is it a key event?
+    if (e.type != EV_KEY)
+        return UTF8char();
+
+    // Handle key event.
+    switch (e.value) {
+    case RELEASED:
+        // TODO!
+    case PRESSED:
+        // TODO!
+    case REPEATED:
+        // TODO!
+    default:
+        break;
+    }
+
+    return UTF8char();
 }

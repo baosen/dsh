@@ -9,6 +9,8 @@ typedef uint32_t       u32;
 typedef int32_t        s32;
 typedef uint8_t        u8;
 typedef int8_t         s8;
+
+static_assert(sizeof(char) == 1, "char is not a single byte on this compiler!");
 typedef char           byte;
 
 #define scast          static_cast
