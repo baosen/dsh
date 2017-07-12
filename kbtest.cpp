@@ -24,6 +24,7 @@ static void asciitest(Kb& kb)
     input_event k;
     for (;;) {
         k = kb.rd1();
+        cout << "Read!" << endl;
         c = toc(k);
         if (c == '\0')
             continue;
@@ -34,14 +35,12 @@ static void asciitest(Kb& kb)
 
 static void get1(Kb& kb)
 {
-    kb.open();
     for (;;)
         kb.get1();
 }
 
 static void get2(Kb& kb)
 {
-    kb.open();
     for (;;)
         kb.get2();
 }
@@ -66,5 +65,8 @@ int main()
         cout << "Succeeded catching keyboard exception!" << endl;
     }
 
-    get1(kb);
+    kb.open();
+
+    //get1(kb);
+    asciitest(kb);
 }

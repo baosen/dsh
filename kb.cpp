@@ -26,6 +26,8 @@ Kb::~Kb()
 // Open keyboard from file path.
 void Kb::open() 
 {
+    // TODO: Check if its already open.
+
     // Open first main keyboard device file.
     fdev1 = ::open(pathev1, O_RDONLY); // Blocking. Setting O_NONBLOCK to not block does not seem to work.
     if (fdev1 < 0) {
@@ -52,11 +54,13 @@ void Kb::close()
         ss << "Cannot close " << pathev1 << ": " << strerror(errno) << endl;
         exit(errno); // TODO! What to do when you fail to handle destructor?
     }
+    fdev1 = NONE;
     if (fdev2 != NONE && ::close(fdev2) < 0) {
         stringstream ss;
         ss << "Cannot close " << pathev2 << ": " << strerror(errno) << endl;
         exit(errno); // TODO! What to do when you fail to handle destructor?
     }
+    fdev2 = NONE;
 }
 
 // DEBUG: Used to test reading from keyboard event file.
