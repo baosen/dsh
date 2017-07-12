@@ -70,7 +70,7 @@ kbtest: kbtest.cpp kb.o kbc.cpp
 
 # The shell running on top of the filesystem in userspace.
 dsh: dsh.cpp
-	$(COMPILE) $(SRC) $< -o $@
+	$(COMPILE) $(SRC) $< -o $@ -lpthread
 
 # File system.
 fs.o: fs.cpp
