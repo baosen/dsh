@@ -12,9 +12,6 @@
 #include "fs.hpp"
 using namespace std;
 
-// TODO: Force O_DIRECT.
-// TODO: Fix read once bug, because of getattr().
-
 // Return codes:
 #define SUCCESS 0 // Operation successful.
 
