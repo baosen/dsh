@@ -1,6 +1,7 @@
 #include <list>
 #include <cstring>
 #include <sstream>
+#include <iostream>
 #include "zero.hpp"
 #include "kbsys.hpp"
 #include "msys.hpp"
@@ -15,19 +16,7 @@ using namespace std;
 #define SUCCESS 0 // Operation successful.
 
 // File entries in the file system.
-namespace {
-    list<string> ents; // List of file entries.
-
-    // Does the file exist in one of the entries?
-    bool exists(const char *name) 
-    {
-        // Find the file in the list of file entries.
-        for (const auto& e : ents)
-            if (!strcmp(name, e.c_str()))
-                return true;
-        return false;
-    }
-}
+static list<string> ents; // List of file entries.
 
 // Do correct file operation according to the file type.
 template<class F, class W, class K, class M> 
@@ -111,12 +100,14 @@ int fs::getattr(const char  *path,  // File path.
 {
     // Prepare stat-buffer.
     zero(*stbuf);
+
     // If caller wants to check the attributes of the backslash directory.
     if (!strcmp(path, "/")) {
         stbuf->st_mode = S_IFDIR | 0755; // Directory and its permission bits.
         stbuf->st_nlink = 0;             // Number of hardlinks that points to this file that exists in the file system.
         return SUCCESS;
     } 
+
     // It is a file entry.
     return doifentry(path, [&]() {
         stbuf->st_mode  = S_IFREG | 0444; // File and its permission bits.
@@ -143,29 +134,17 @@ int fs::readdir(const char            *path,   // File path.
     return SUCCESS;
 }
 
-// Check if the entry name given exist in the file tree.
-#define ENTRYCHK \
-    if (!exists(p)) \
-        return -ENOENT; // No entry found.
-
 // Open the shell file system.
 int fs::open(const char            *path, // Path to file to open.
              struct fuse_file_info *fi)   // Other file info.
              noexcept 
 {
-    return filedo(path, [](const char *p) {
-        ENTRYCHK
-    }, [](const char *p) {
-        ENTRYCHK
-    }, [](const char *p) {
-        ENTRYCHK
-    }, [](const char *p) {
-        ENTRYCHK
+    return doifentry(path, [] {
+        return SUCCESS;
     });
-    return SUCCESS;
 }
 
-// Read file contents.
+// Read file contents. Returns number of bytes read.
 int fs::read(const char            *path, // Pathname of the file to read.
              char                  *buf,  // Buffer to fill with the file contents read.
              size_t                 size, // The amount of bytes to read.
@@ -185,13 +164,15 @@ int fs::read(const char            *path, // Pathname of the file to read.
             return SUCCESS;
         }, [&](const char *name) {                  // Keyboard.
             // Check if the read is not whole (divisible).
-            if ((sizeof(input_event) % size) == 0)
+            if ((sizeof(input_event) % size) != 0)
                 return -EINVAL; // Invalid parameter.
 
-            // Read keyboard input event from keyboard.
+            // TODO: Read keyboard input event from keyboard.
             const auto e = kbsys::get();
             memcpy(buf, &e, sizeof(input_event));
-            return SUCCESS;
+
+            // Return number of bytes read.
+            return (int)sizeof(input_event);
         }, [&](const char *name) {                  // Mouse.
             // Read from mouse.
             if (sizeof(uint)*2 < size)
@@ -278,7 +259,7 @@ static void mklns()
 #define MKFILES(name) \
     static uint i = 0; /* Current index of the keyboard. */ \
     stringstream ss; \
-    ss << "name" << i; \
+    ss << name << i; \
     ents.emplace_back(ss.str()); 
 
 // Make the file that contain the color bit depth per component, which is used for all things graphics.
@@ -296,7 +277,7 @@ static void mkdpys()
     // Initialize graphical output.
     dsys::init();
     // Insert it into filesystem.
-    MKFILES(dpy)
+    MKFILES("dpy")
     // Make file that show the color format.
     mkcfmt();
 }
@@ -307,7 +288,7 @@ static void mkm()
     // Initialize mouse.
     msys::init();
     // Insert it into filesystem.
-    MKFILES(m)
+    MKFILES("m")
 }
 
 // Setup keyboard and make keyboard files.
@@ -316,7 +297,7 @@ static void mkkb()
     // Initialize keyboard.
     kbsys::init();
     // Insert it into filesystem.
-    MKFILES(kb)
+    MKFILES("kb")
 }
 
 // Setup and make sound files.
@@ -325,7 +306,7 @@ static void mksnd()
     // Initialize sound system.
     ssys::init();
     // Insert it into filesystem.
-    MKFILES(snd)
+    MKFILES("snd")
 }
 
 // Setup and make windows.
@@ -334,7 +315,7 @@ static void mkw()
     // Initialize windows.
     wsys::init();
     // Insert it into filesystem.
-    MKFILES(wnd)
+    MKFILES("wnd")
 }
 
 // Cleanup filesystem.
@@ -363,6 +344,7 @@ void fs::setup()
     mklns();
     // Connect keyboards and make keyboard files.
     mkkb();
+
 /*
     // Connect mouse and make mouse files.
     mkm();
