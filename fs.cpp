@@ -1,4 +1,5 @@
 #include <list>
+#include <cstring>
 #include "zero.hpp"
 #include "kbsys.hpp"
 #include "msys.hpp"
@@ -8,6 +9,9 @@
 #include "wsys.hpp"
 #include "fs.hpp"
 using namespace std;
+
+// Return codes:
+#define SUCCESS 0 // Operation successful.
 
 // File entries in the file system.
 namespace {
@@ -82,19 +86,19 @@ int fs::create(const char            *path, // File path.
     return filedo(path, [](const char *p) {
         // TODO: Create new display.
         ents.emplace_back(p);
-        return 0;
+        return SUCCESS;
     }, [](const char *p) {
         // TODO: Create new window.
         ents.emplace_back(p);
-        return 0;
+        return SUCCESS;
     }, [](const char *p) {
         // TODO: Create new keyboard.
         ents.emplace_back(p);
-        return 0;
+        return SUCCESS;
     }, [](const char *p) {
         // TODO: Create new mouse.
         ents.emplace_back(p);
-        return 0;
+        return SUCCESS;
     });
     return -EINVAL; // Invalid path.
 }
@@ -110,14 +114,14 @@ int fs::getattr(const char  *path,  // File path.
     if (!strcmp(path, "/")) {
         stbuf->st_mode = S_IFDIR | 0755; // Directory and its permission bits.
         stbuf->st_nlink = 0;             // Number of hardlinks that points to this file that exists in the file system.
-        return 0;
+        return SUCCESS;
     } 
     // It is a file entry.
     return doifentry(path, [&]() {
         stbuf->st_mode  = S_IFREG | 0444; // File and its permission bits.
         stbuf->st_nlink = 0;              // Hard links.
         stbuf->st_size  = 0;              // uhm... size of file?
-        return 0;
+        return SUCCESS;
     });
 }
 
@@ -135,7 +139,7 @@ int fs::readdir(const char            *path,   // File path.
         if (fill(buf, e.c_str(), 0, 0) == 1) // is buffer full?
             return -ENOBUFS;
     }
-    return 0;
+    return SUCCESS;
 }
 
 // Check if the entry name given exist in the file tree.
@@ -157,7 +161,7 @@ int fs::open(const char            *path, // Path to file to open.
     }, [](const char *p) {
         ENTRYCHK
     });
-    return 0;
+    return SUCCESS;
 }
 
 // Read file contents.
@@ -173,25 +177,28 @@ int fs::read(const char            *path, // Pathname of the file to read.
         return filedo(path, [&](const char *p) { // Display.
             // Read from display.
             dsys::read(p, buf, i, size);
-            return 0;
+            return SUCCESS;
         }, [&](const char *p) {                  // Window.
             // Read from window.
             wsys::read(p, buf, i, size);
-            return 0;
+            return SUCCESS;
         }, [&](const char *p) {                  // Keyboard.
-            // Read key code from keyboard.
-            if (sizeof(Kb::Kbc) < size)
+            // Check if the read is too small.
+            // TODO: Store events?
+            if (sizeof(input_event) > size)
                 return -EINVAL; // Invalid parameter.
-            const auto c = kbsys::kb.get();
-            memcpy(buf, &c, sizeof(Kb::Kbc));
-            return 0;
+
+            // Read keyboard input event from keyboard.
+            const auto e = kbsys::get();
+            memcpy(buf, &e, sizeof(input_event));
+            return SUCCESS;
         }, [&](const char *p) {                  // Mouse.
             // Read from mouse.
             if (sizeof(uint)*2 < size)
                 return -EINVAL; // Invalid parameter.
             // Copy mouse event into the buffer.
             msys::getmot(buf, size);
-            return 0;
+            return SUCCESS;
         });
     });
 }
@@ -208,11 +215,11 @@ int fs::write(const char            *path, // Path to the file to be written to.
         return filedo(path, [&](const char *name) { // Display.
             // Write to display in the display/screen's pixel format.
             dsys::write(name, buf, i, size);
-            return 0;
+            return SUCCESS;
         }, [&](const char *name) {                  // Window.
             // Write to window in the display/screen's pixel format.
             wsys::write(name, buf, i, size);
-            return 0;
+            return SUCCESS;
         }, [](const char *name) {                   // Keyboard.
             // Keyboard is read-only.
             return -EPERM; // Operation not permitted.
