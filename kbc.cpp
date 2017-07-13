@@ -2,8 +2,8 @@
 #include "kbc.hpp"
 
 // US keyboard map.
-#define USKBMAP(type, name, size) \
-    type name[size] { \
+#define USKBMAP(type, name) \
+    type name[] { \
         '\0', /* 0x0000 */ \
         '\0', /* 0x0001 */ \
         '1',  /* 0x0002 */ \
@@ -47,8 +47,13 @@
         '\'', /* 0x0028 */ \
     };
 
+// A conversion lookup-table converting a USB keyboard code to an ASCII character.
+static USKBMAP(const char, kbascii)
+// A conversion lookup-table converting a USB keyboard code to a wide character.
+static USKBMAP(const wchar_t, uskbwide)
+
 // Norwegian keyboard map.
-const wchar_t kbwide[] {
+static const wchar_t nokbwide[] {
     '\0',  /* 0x0000 */
     '\0',  /* 0x0001 */
     '1',   /* 0x0002 */
@@ -147,7 +152,7 @@ const wchar_t kbwide[] {
     '\0',  /* 0x005F */
 };
 
-// Norwegian keyboard map.
+// Norwegian keyboard map for UTF-8.
 //UTF8char kbnor[] {
 //        '\0',  /* 0x0000 */
 //        '\0',  /* 0x0001 */
@@ -193,24 +198,28 @@ const wchar_t kbwide[] {
 //};
 
 namespace {
-    // Maximum number of keyboard codes.
-    const int NCODES = 255;
-
-    // A conversion lookup-table converting a USB keyboard code to an ASCII character.
-    USKBMAP(const char, kbascii, NCODES)
-    // A conversion lookup-table converting a USB keyboard code to a wide character.
-    //USKBMAP(const wchar_t, kbwide, NCODES)
-
     // Is Caps Lock on?
     bool caps  = false; 
     // Is shift held?
     bool shift = false;
+
+    // Current keyboard mapping for wide characters used for laying out the keyboard keys.
+    const wchar_t *curmap = nokbwide;
 }
 
-// Convert keyboard code to ASCII.
-char toc(const __u16 c) 
+// Set keyboard layout.
+void setlayout(Layout l)
 {
-    return kbascii[c];
+    switch (l) {
+    case Layout::US:
+        curmap = uskbwide;
+        break;
+    case Layout::NOR:
+        curmap = nokbwide;
+        break;
+    default:
+        break;
+    }
 }
 
 // Get caps lock state.
@@ -219,22 +228,44 @@ bool getcaps()
     return caps;
 }
 
+// Handle modifiers-keys.
+#define MOD \
+    if (c == KEY_LEFTSHIFT || c == KEY_RIGHTSHIFT) { \
+        shift = true; \
+        return '\0'; \
+    } else if (c == KEY_CAPSLOCK) { \
+        /* Turn on and off caps lock. */ \
+        caps = !caps; \
+        return '\0'; \
+    }
+
+// Convert keyboard code to ASCII.
+char toc(const __u16 c) 
+{
+    // Handle modifiers-keys.
+    MOD
+
+    if (c >= ARRAY_SIZE(kbascii))
+        return '\0';
+    if (shift || caps)
+        return toupper(curmap[c]);
+    return kbascii[c];
+}
+
 // Convert keyboard code to UTF-16 (Wide character).
 wchar_t towc(const uint c) 
 {
-    // Convert the keyboard-code to the corresponding wide character.
-    if (c == KEY_LEFTSHIFT || c == KEY_RIGHTSHIFT) {
-        // Convert to uppercase if the user is holding shift.
-        shift = true;
-    } else if (c == KEY_CAPSLOCK) { // To uppercase if user is caps lock is on.
-        // Turn on and off caps lock.
-        caps = !caps;
-    }
+    // Handle modifiers-keys.
+    MOD
+
+    // TODO: Array size check.
+
+    // Convert to uppercase if the user is holding shift or caps is on.
+    if (shift || caps)
+        return towupper(curmap[c]);
 
     // Convert the keyboard code to the related UTF-16 character and return it.
-    if (shift || caps)
-        return towupper(kbwide[c]);
-    return kbwide[c];
+    return curmap[c];
 }
 
 // Handle released key event.
@@ -257,10 +288,10 @@ static type name(const __u16 code) \
     switch (code) { \
     case KEY_LEFTSHIFT: case KEY_RIGHTSHIFT: \
         shift = true; \
-        break; \
+        return '\0'; \
     case KEY_CAPSLOCK: \
         caps = !caps; \
-        break; \
+        return '\0'; \
     default: \
         break; \
     } \
@@ -270,8 +301,8 @@ static type name(const __u16 code) \
     return r2; \
 }
 
-PRESSED(char, cpressed, toupper(kbascii[code]), kbascii[code])
-PRESSED(wchar_t, wcpressed, towupper(kbwide[code]), kbwide[code])
+PRESSED(char,    cpressed,  toupper(kbascii[code]), kbascii[code])
+PRESSED(wchar_t, wcpressed, towupper(curmap[code]), curmap[code])
 
 // Handle repeated key event.
 #define REPEATED(type, name, r1, r2) \
@@ -280,7 +311,7 @@ static type name(const __u16 code) \
     switch (code) { \
     case KEY_LEFTSHIFT: case KEY_RIGHTSHIFT: \
         shift = true; \
-        break; \
+        return '\0'; \
     default: \
         break; \
     } \
@@ -291,7 +322,7 @@ static type name(const __u16 code) \
 }
 
 REPEATED(char,     crepeated, toupper(kbascii[code]), kbascii[code])
-REPEATED(wchar_t, wcrepeated, towupper(kbwide[code]), kbwide[code])
+REPEATED(wchar_t, wcrepeated, towupper(curmap[code]), curmap[code])
 
 // Keyboard state.
 enum Kbstate {

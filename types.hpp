@@ -19,3 +19,6 @@ typedef char           byte;
 #define forever        for (;;)
 
 using err =            std::runtime_error;
+
+// Get the size of an array.
+#define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))

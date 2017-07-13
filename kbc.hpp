@@ -3,6 +3,14 @@
 #include "types.hpp"
 //#include "utf8.hpp"
 
+enum class Layout {
+    US,  // United States (American).
+    NOR, // Norwegian.
+};
+
+// Set keyboard layout.
+void setlayout(Layout);
+
 // Convert keyboard code to an ASCII character.
 char     toc(const  __u16 c);
 // Convert keyboard input event to an ASCII character.
