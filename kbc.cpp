@@ -1,6 +1,8 @@
 #include <cwctype>
 #include "kbc.hpp"
 
+// Keymappings for keyboard codes.
+
 // US keyboard map.
 #define USKBMAP(type, name) \
     type name[] { \
