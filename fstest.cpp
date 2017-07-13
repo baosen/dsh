@@ -6,6 +6,8 @@
 #include "kbc.hpp"
 using namespace std;
 
+// TODO: Test with no O_DIRECT.
+
 int main()
 {
     const auto fd = ::open("./sh/kb0", O_RDONLY | // Read-only.

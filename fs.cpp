@@ -84,8 +84,9 @@ int fs::create(const char            *path, // File path.
         // TODO: Create new window.
         ents.emplace_back(p);
         return SUCCESS;
-    }, [](const char *p) {
-        // TODO: Create new keyboard.
+    }, [&](const char *p) {
+        // Force O_DIRECT (direct I/O, no caching).
+        fi->direct_io = 1;
         ents.emplace_back(p);
         return SUCCESS;
     }, [](const char *p) {
@@ -142,7 +143,9 @@ int fs::open(const char            *path, // Path to file to open.
              struct fuse_file_info *fi)   // Other file info.
              noexcept 
 {
-    return doifentry(path, [] {
+    return doifentry(path, [&] {
+        // Force O_DIRECT (direct I/O, no caching).
+        fi->direct_io = 1;
         return SUCCESS;
     });
 }
@@ -166,6 +169,7 @@ int fs::read(const char            *path, // Pathname of the file to read.
             wsys::read(name, buf, i, size);
             return SUCCESS;
         }, [&](const char *name) {                  // Keyboard.
+            cout << "size: " << size << endl;
             // Check if the read is not whole (divisible).
             const auto isize = sizeof(input_event);
             if (isize % size != 0)
