@@ -137,7 +137,7 @@ int fs::readdir(const char            *path,   // File path.
     // Fill recursively.
     for (const auto& e : ents) {
         // Build the file entries in the buffer.
-        if (fill(buf, e.c_str(), 0, 0) == 1) // is buffer full?
+        if (fill(buf, e.c_str(), 0, 0) == 1) // Is buffer full?
             return -ENOBUFS;
     }
     return SUCCESS;
@@ -175,28 +175,28 @@ int fs::read(const char            *path, // Pathname of the file to read.
 {
     // Do file read if the asked entry exists.
     return doifentry(path, [&]() {
-        return filedo(path, [&](const char *p) { // Display.
+        return filedo(path, [&](const char *name) { // Display.
             // Read from display.
-            dsys::read(p, buf, i, size);
+            dsys::read(name, buf, i, size);
             return SUCCESS;
-        }, [&](const char *p) {                  // Window.
+        }, [&](const char *name) {                  // Window.
             // Read from window.
-            wsys::read(p, buf, i, size);
+            wsys::read(name, buf, i, size);
             return SUCCESS;
-        }, [&](const char *p) {                  // Keyboard.
-            // Check if the read is too small.
-            // TODO: Store events?
-            if (sizeof(input_event) > size)
+        }, [&](const char *name) {                  // Keyboard.
+            // Check if the read is not whole (divisible).
+            if ((sizeof(input_event) % size) == 0)
                 return -EINVAL; // Invalid parameter.
 
             // Read keyboard input event from keyboard.
             const auto e = kbsys::get();
             memcpy(buf, &e, sizeof(input_event));
             return SUCCESS;
-        }, [&](const char *p) {                  // Mouse.
+        }, [&](const char *name) {                  // Mouse.
             // Read from mouse.
             if (sizeof(uint)*2 < size)
                 return -EINVAL; // Invalid parameter.
+
             // Copy mouse event into the buffer.
             msys::getmot(buf, size);
             return SUCCESS;
@@ -265,15 +265,14 @@ int fs::mknod(const char *path, // File path.
     return create(path, mode, nullptr);
 }
 
-namespace {
-    // Create standard "this" and "parent" links.
-    void mklns() 
-    {
-        // Set link to current directory.
-        ents.emplace_back(".");
-        // Set link to parent directory.
-        ents.emplace_back("..");
-    }
+// Create standard "this" and "parent" links.
+static void mklns() 
+{
+    // Set link to current directory.
+    ents.emplace_back(".");
+    // Set link to parent directory.
+    ents.emplace_back("..");
+}
 
 // Make the default numbered files at start.
 #define MKFILES(name) \
@@ -282,61 +281,60 @@ namespace {
     ss << "name" << i; \
     ents.emplace_back(ss.str()); 
 
-    // Make the file that contain the color bit depth per component, which is used for all things graphics.
-    void mkcfmt() 
-    {
-        ents.emplace_back("r"); // contains color bit depth for red component.
-        ents.emplace_back("g"); // contains color bit depth for green component.
-        ents.emplace_back("b"); // contains color bit depth for blue component.
-        ents.emplace_back("a"); // contains color bit depth for alpha component.
-    }
-    
-    // Setup and initialize displays, and make the files pointing to them.
-    void mkdpys() 
-    {
-        // Initialize graphical output.
-        dsys::init();
-        // Insert it into filesystem.
-        MKFILES(dpy)
-        // Make file that show the color format.
-        mkcfmt();
-    }
-    
-    // Setup mouse and make mouse files.
-    void mkm() 
-    {
-        // Initialize mouse.
-        msys::init();
-        // Insert it into filesystem.
-        MKFILES(m)
-    }
-    
-    // Setup keyboard and make keyboard files.
-    void mkkb() 
-    {
-        // Initialize keyboard.
-        kbsys::init();
-        // Insert it into filesystem.
-        MKFILES(kb)
-    }
+// Make the file that contain the color bit depth per component, which is used for all things graphics.
+static void mkcfmt() 
+{
+    ents.emplace_back("r"); // contains color bit depth for red component.
+    ents.emplace_back("g"); // contains color bit depth for green component.
+    ents.emplace_back("b"); // contains color bit depth for blue component.
+    ents.emplace_back("a"); // contains color bit depth for alpha component.
+}
 
-    // Setup and make sound files.
-    void mksnd() 
-    {
-        // Initialize sound system.
-        ssys::init();
-        // Insert it into filesystem.
-        MKFILES(snd)
-    }
+// Setup and initialize displays, and make the files pointing to them.
+static void mkdpys() 
+{
+    // Initialize graphical output.
+    dsys::init();
+    // Insert it into filesystem.
+    MKFILES(dpy)
+    // Make file that show the color format.
+    mkcfmt();
+}
 
-    // Setup and make windows.
-    void mkw() 
-    {
-        // Initialize windows.
-        wsys::init();
-        // Insert it into filesystem.
-        MKFILES(wnd)
-    }
+// Setup mouse and make mouse files.
+static void mkm() 
+{
+    // Initialize mouse.
+    msys::init();
+    // Insert it into filesystem.
+    MKFILES(m)
+}
+
+// Setup keyboard and make keyboard files.
+static void mkkb() 
+{
+    // Initialize keyboard.
+    kbsys::init();
+    // Insert it into filesystem.
+    MKFILES(kb)
+}
+
+// Setup and make sound files.
+static void mksnd() 
+{
+    // Initialize sound system.
+    ssys::init();
+    // Insert it into filesystem.
+    MKFILES(snd)
+}
+
+// Setup and make windows.
+static void mkw() 
+{
+    // Initialize windows.
+    wsys::init();
+    // Insert it into filesystem.
+    MKFILES(wnd)
 }
 
 // Cleanup filesystem.
