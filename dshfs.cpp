@@ -4,24 +4,26 @@
 #include "fs.hpp"
 
 // Shell file system driver.
-int main(int argc, char *argv[]) {
+int main(const int   argc,   // Number of arguments.
+               char *argv[]) // Pointer to the arguments itself.
+{
     using namespace fs;
 
     // Setup file system operations.
-    static fuse_operations ops = {0};
+    static fuse_operations o = {0};
 
     // Creation-functions:
-    ops.init    = init;      // Initialize file system.
-    ops.create  = create;    // Create file.
-    ops.mknod   = fs::mknod; // Make file node.
+    o.init    = init;      // Initialize the shell file system.
+    o.create  = create;    // Create a file.
+    o.mknod   = fs::mknod; // Make a file node.
     // I/O-functions:
-    ops.getattr = getattr; // Get attributes.
-    ops.readdir = readdir; // Read directory.
-    ops.open    = open;    // Open display to be worked upon.
-    ops.read    = read;    // Read display's contents.
-    ops.write   = write;   // Write to the display's contents.
+    o.getattr = getattr; // Get file attributes.
+    o.readdir = readdir; // Read a directory.
+    o.open    = open;    // Open file
+    o.read    = read;    // Read file contents.
+    o.write   = write;   // Write to the contents of a file.
     // Control-functions:
-    ops.ioctl   = ioctl;   // Control display.
+    o.ioctl   = ioctl;   // Control device.
 
     // Start our engines!
     int ret = EXIT_FAILURE;
@@ -29,17 +31,22 @@ int main(int argc, char *argv[]) {
         // Setup shell.
         setup();
         // Drive user-space file system.
-        ret = fuse_main(argc, argv, &ops, nullptr);
+        ret = fuse_main(argc, argv, &o, nullptr);
+    } catch (const err& e) {
+        error(e.what());
+        ret = EXIT_FAILURE;
     } catch (...) {
-        // TODO: Show more informed error messages.
         error("An exception was caught!");
         ret = EXIT_FAILURE;
     }
+
+    // Cleanup the shell file system.
     try {
-        // Cleanup the shell file system.
         cleanup();
+    } catch (const err& e) {
+        error(e.what());
+        ret = EXIT_FAILURE;
     } catch (...) {
-        // TODO: Show more informed error messages.
         error("An exception caught!");
         ret = EXIT_FAILURE;
     }

@@ -1,5 +1,6 @@
 #include <list>
 #include <cstring>
+#include <sstream>
 #include "zero.hpp"
 #include "kbsys.hpp"
 #include "msys.hpp"
@@ -276,12 +277,12 @@ namespace {
 
 // Make the default numbered files at start.
 #define MKFILES(name) \
-    static uint i = 0; // Current index of the keyboard. \
+    static uint i = 0; /* Current index of the keyboard. */ \
     stringstream ss; \
     ss << "name" << i; \
     ents.emplace_back(ss.str()); 
 
-    // Make file that contain the color bit depth per component, which is used for all things graphics.
+    // Make the file that contain the color bit depth per component, which is used for all things graphics.
     void mkcfmt() 
     {
         ents.emplace_back("r"); // contains color bit depth for red component.
@@ -341,18 +342,20 @@ namespace {
 // Cleanup filesystem.
 void fs::cleanup() 
 {
+    // Cleanup keyboard.
+    kbsys::deinit();
+/*
     // Cleanup display.
     dsys::deinit();
     // Cleanup mouse.
     msys::deinit();
-    // Cleanup keyboard.
-    kbsys::deinit();
     // Cleanup mouse.
     msys::deinit();
     // Cleanup sound.
     ssys::deinit();
     // Cleanup window.
     wsys::deinit();
+*/
 }
 
 // Setup shell.
@@ -362,8 +365,10 @@ void fs::setup()
     mklns();
     // Connect keyboards and make keyboard files.
     mkkb();
+/*
     // Connect mouse and make mouse files.
     mkm();
     // Connect to displays and make them as files.
     mkdpys();
+*/
 }
