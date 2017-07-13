@@ -112,7 +112,7 @@ int fs::getattr(const char  *path,  // File path.
         return SUCCESS;
     } 
 
-    // It is a file entry.
+    // Check if the file system has it as a file entry.
     return doifentry(path, [&]() {
         stbuf->st_mode  = S_IFREG | 0444; // File and its permission bits.
         stbuf->st_nlink = 0;              // Hard links.
@@ -169,13 +169,12 @@ int fs::read(const char            *path, // Pathname of the file to read.
             wsys::read(name, buf, i, size);
             return SUCCESS;
         }, [&](const char *name) {                  // Keyboard.
-            cout << "size: " << size << endl;
             // Check if the read is not whole (divisible).
             const auto isize = sizeof(input_event);
             if (isize % size != 0)
                 return -EINVAL; // Invalid parameter.
 
-            // TODO: Read keyboard input event from keyboard.
+            // Read keyboard input event from keyboard.
             const auto n = isize / size;
             int read = 0;
             for (int i = 0; i < n; ++i) {

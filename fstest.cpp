@@ -28,13 +28,13 @@ int main()
         }
         c = towc(e);
         if (c == '\0') {
-            wcout << L"code: " << hex << e.code << dec << endl;
-            goto exit;
+            //wcout << L"code: " << hex << e.code << dec << endl;
+            //goto exit;
             continue;
         }
         wcout << L"code: " << hex << e.code << dec << L'\n'
               << L"char: " << c << endl;
-        goto exit;
+        //goto exit;
     }
 
 exit:
