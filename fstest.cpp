@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <linux/input.h>
 #include "fio.hpp"
+#include "locale.hpp"
 #include "kbc.hpp"
 using namespace std;
 
@@ -16,6 +17,9 @@ int main()
         puts("Failed to open keyboard file!");
         return EXIT_FAILURE;
     }
+
+    // Set locale to output wide characters in console.
+    setwc();
 
     wchar_t     c;
     input_event e;

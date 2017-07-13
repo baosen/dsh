@@ -206,7 +206,8 @@ namespace {
     bool shift = false;
 
     // Current keyboard mapping for wide characters used for laying out the keyboard keys.
-    const wchar_t *curmap = nokbwide;
+    const wchar_t *curmap = nokbwide;             // Current keyboard mapping.
+    size_t         length = ARRAY_SIZE(nokbwide); // Length of the array that maps the keys.
 }
 
 // Set keyboard layout.
@@ -215,11 +216,14 @@ void setlayout(Layout l)
     switch (l) {
     case Layout::US:
         curmap = uskbwide;
+        length = ARRAY_SIZE(uskbwide);
         break;
     case Layout::NOR:
         curmap = nokbwide;
+        length = ARRAY_SIZE(nokbwide);
         break;
     default:
+        // Unknown keyboard layout.
         break;
     }
 }
@@ -260,7 +264,9 @@ wchar_t towc(const uint c)
     // Handle modifiers-keys.
     MOD
 
-    // TODO: Array size check.
+    // Array size check.
+    if (c > length)
+        return '\0';
 
     // Convert to uppercase if the user is holding shift or caps is on.
     if (shift || caps)
@@ -298,6 +304,9 @@ static type name(const __u16 code) \
         break; \
     } \
 \
+    /* Array size check. */ \
+    if (code > length) \
+        return '\0'; \
     if (shift || caps) \
         return r1; \
     return r2; \
@@ -318,6 +327,9 @@ static type name(const __u16 code) \
         break; \
     } \
 \
+    /* Array size check. */ \
+    if (code > length) \
+        return '\0'; \
     if (shift || caps) \
         return r1; \
     return r2; \

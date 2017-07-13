@@ -61,11 +61,11 @@ msystest: msystest.cpp msys.o evm.o ev.o m.o log.o
 	$(COMPILE) $^ -o $@
 
 # Tests for the keyboard subsystem.
-kbsystest: kbsystest.cpp kbsys.o kb.o kbc.o evm.o ev.o m.o log.o
+kbsystest: kbsystest.cpp kbsys.o kb.o kbc.o evm.o ev.o m.o log.o locale.o
 	$(COMPILE) $^ -o $@ -lpthread
 
 # File system tests.
-fstest: fstest.cpp kbc.o
+fstest: fstest.cpp kbc.o locale.o
 	$(COMPILE) $^ -o $@
 
 # Tests for keyboard.

@@ -3,6 +3,7 @@
 #include <cwchar>
 #include "kbsys.hpp"
 #include "kbc.hpp"
+#include "locale.hpp"
 using namespace std;
 using namespace kbsys;
 
@@ -44,19 +45,6 @@ static void wctest()
         wcout << L"code: " << hex << e.code << dec << L'\n'
               << L"char: " << c << endl;
     }
-}
-
-// Set locale to ALL to enable printing out in wide characters.
-// BEWARE: calling any ASCII print functions like printf sets its back!
-static void setwc()
-{
-    setlocale(LC_ALL, "");
-/*
-    if (fwide(stdout, 1) <= 0) {
-        puts("Could not switch to wide character mode!");
-        exit(EXIT_FAILURE);
-    }
-*/
 }
 
 // Test keyboard subsystem.
