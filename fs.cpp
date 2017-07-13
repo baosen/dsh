@@ -12,6 +12,9 @@
 #include "fs.hpp"
 using namespace std;
 
+// TODO: Force O_DIRECT.
+// TODO: Fix read once bug, because of getattr().
+
 // Return codes:
 #define SUCCESS 0 // Operation successful.
 
@@ -164,15 +167,21 @@ int fs::read(const char            *path, // Pathname of the file to read.
             return SUCCESS;
         }, [&](const char *name) {                  // Keyboard.
             // Check if the read is not whole (divisible).
-            if ((sizeof(input_event) % size) != 0)
+            const auto isize = sizeof(input_event);
+            if (isize % size != 0)
                 return -EINVAL; // Invalid parameter.
 
             // TODO: Read keyboard input event from keyboard.
-            const auto e = kbsys::get();
-            memcpy(buf, &e, sizeof(input_event));
-
+            const auto n = isize / size;
+            int read = 0;
+            for (int i = 0; i < n; ++i) {
+                const auto e = kbsys::get();
+                memcpy(buf, &e, sizeof(input_event));
+                buf  += isize;
+                read += isize;
+            }
             // Return number of bytes read.
-            return (int)sizeof(input_event);
+            return read;
         }, [&](const char *name) {                  // Mouse.
             // Read from mouse.
             if (sizeof(uint)*2 < size)
