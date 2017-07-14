@@ -11,8 +11,8 @@ int main()
     unique_ptr<msys::Ev> e(new msys::Ev);
 
     forever {
-        uint n = msys::getmot(&*e, 1);
-        if (!n)
+        uint nbytes = msys::getmot(&*e, 1);
+        if (!nbytes)
             continue;
         cout << e->val << endl;
     }

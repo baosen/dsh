@@ -184,12 +184,11 @@ int fs::read(const char            *path, // Pathname of the file to read.
             return read;
         }, [&](const char *name) {                  // Mouse.
             // Read from mouse.
-            if (sizeof(uint)*2 < size)
-                return -EINVAL; // Invalid parameter.
+            if (sizeof(msys::Ev) % size != 0)
+                return -EINVAL;
 
             // Copy mouse event into the buffer.
-            msys::getmot(buf, size);
-            return SUCCESS;
+            return msys::getmot(buf, size / sizeof(msys::Ev));
         });
     });
 }
@@ -332,11 +331,12 @@ void fs::cleanup()
 {
     // Cleanup keyboard.
     kbsys::deinit();
+    // Cleanup mouse.
+    msys::deinit();
+
 /*
     // Cleanup display.
     dsys::deinit();
-    // Cleanup mouse.
-    msys::deinit();
     // Cleanup mouse.
     msys::deinit();
     // Cleanup sound.
@@ -353,10 +353,10 @@ void fs::setup()
     mklns();
     // Connect keyboards and make keyboard files.
     mkkb();
-
-/*
     // Connect mouse and make mouse files.
     mkm();
+
+/*
     // Connect to displays and make them as files.
     mkdpys();
 */

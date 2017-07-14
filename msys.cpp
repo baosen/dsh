@@ -104,8 +104,8 @@ namespace evm {
     }
 
     // Wait for event and get it.
-    static uint waitevt(void        *buf, // Buffer to put event blocks.
-                        const size_t n)   // Number of blocks to put in the buffer.
+    static int waitevt(void        *buf, // Buffer to put event blocks.
+                       const size_t n)   // Number of mouse events (events, not bytes) to put in the buffer.
     {
         msys::Ev mev;
         uint     i;
@@ -154,7 +154,7 @@ namespace evm {
             buf = scast<char*>(buf) + sizeof(mev);
         }
 
-        return i;
+        return i*sizeof(mev);
     }
 }
 
@@ -184,8 +184,8 @@ namespace m {
 
     deque<msys::Ev> evv;
 
-    static uint waitevt(void        *buf, // Buffer to fill.
-                        const size_t n)   // Number of events to get.
+    static int waitevt(void        *buf, // Buffer to fill.
+                       const size_t n)   // Number of events (events, not bytes) to put in the buffer.
     {
         // Nothing call?
         if (!n)
@@ -200,7 +200,7 @@ namespace m {
             evv.pop_front();
             i++;
             if (i >= scast<int>(n))
-                return i;
+                return i*sizeof(msys::Ev);
         }
 
         while (scast<int>(n) - i > 0) {
@@ -249,8 +249,8 @@ namespace m {
             ADD
         }
 
-        // Return the number of processed events.
-        return i;
+        // Return the number of processed events in bytes.
+        return i*sizeof(msys::Ev);
     }
 }
 

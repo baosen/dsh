@@ -36,8 +36,8 @@ namespace msys {
     // Deinitialize and setup mouse.
     void deinit();
 
-    // Wait for event and get mouse motion.
-    typedef uint (*Mmotion)(void *buf, const size_t n);
+    // Wait for event and get mouse motion. Returns the number of processed mouse events in bytes.
+    typedef int (*Mmotion)(void *buf, const size_t n);
 
     // Current mouse device that is used.
     extern Mmotion getmot;
