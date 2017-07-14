@@ -341,8 +341,6 @@ void fs::cleanup()
 /*
     // Cleanup display.
     dsys::deinit();
-    // Cleanup mouse.
-    msys::deinit();
     // Cleanup sound.
     ssys::deinit();
     // Cleanup window.
