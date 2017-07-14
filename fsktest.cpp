@@ -31,17 +31,12 @@ int main()
             return EXIT_FAILURE;
         }
         c = towc(e);
-        if (c == '\0') {
-            //wcout << L"code: " << hex << e.code << dec << endl;
-            //goto exit;
+        if (c == '\0')
             continue;
-        }
         wcout << L"code: " << hex << e.code << dec << L'\n'
               << L"char: " << c << endl;
-        //goto exit;
     }
 
-exit:
     if (::close(fd) < 0) {
         puts("Failed to close keyboard file!");
         return EXIT_FAILURE;

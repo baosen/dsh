@@ -9,7 +9,7 @@ using namespace std;
 
 int main()
 {
-    const auto fd = ::open("./sh6/m0", O_RDONLY | // Read-only.
+    const auto fd = ::open("./sh/m0", O_RDONLY | // Read-only.
                                       O_DIRECT); // Bypass freaking cache!
     if (fd < 0) {
         puts("Failed to open mouse file!");
