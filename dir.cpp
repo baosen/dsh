@@ -12,7 +12,7 @@ vector<string> lsdir(const char *name)
 {
     vector<string> dirs; // directories.
     DIR           *dir;  // directory.
-    struct dirent *e;    // directory entry.
+    dirent        *e;    // directory entry.
     // Open directory.
     if (!(dir = opendir(name)))
         throw err("Invalid directory name.");
@@ -28,6 +28,7 @@ vector<string> lsdir(const char *name)
         else
             dirs.push_back(e->d_name);
     } while ((e = readdir(dir)));
+    // Close directory.
     if (closedir(dir) < 0)
         throw errno;
     return dirs;
