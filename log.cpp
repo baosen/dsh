@@ -28,7 +28,7 @@ void error(const err& e)    // Error to print out.
 }
 
 // Print operating system error.
-void syserror(const std::string& s) 
+void syserror(const string& s) 
 {
     error(s);  // TODO: Colorize.
     perror(0);
