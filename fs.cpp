@@ -72,6 +72,9 @@ int fs::create(const char            *path, // File path.
                struct fuse_file_info *fi)   // Other info that is not part of POSIX.
                noexcept
 {
+    // Force O_DIRECT (direct I/O, no caching).
+    fi->direct_io = 1;
+
     // Caller can only create files of type dpy* and wnd*.
     return filedo(path, [](const char *p) {
         // TODO: Create new display.
@@ -82,8 +85,6 @@ int fs::create(const char            *path, // File path.
         ents.emplace_back(p);
         return SUCCESS;
     }, [&](const char *p) {
-        // Force O_DIRECT (direct I/O, no caching).
-        fi->direct_io = 1;
         ents.emplace_back(p);
         return SUCCESS;
     }, [](const char *p) {
@@ -140,9 +141,12 @@ int fs::open(const char            *path, // Path to file to open.
              struct fuse_file_info *fi)   // Other file info.
              noexcept 
 {
+
+    // Force O_DIRECT (direct I/O, no caching).
+    fi->direct_io = 1;
+
+    // Check if a file exist and open it.
     return doifentry(path, [&] {
-        // Force O_DIRECT (direct I/O, no caching).
-        fi->direct_io = 1;
         return SUCCESS;
     });
 }
