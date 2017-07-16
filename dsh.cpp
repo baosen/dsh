@@ -5,7 +5,8 @@
 #include "types.hpp"
 
 // Shell.
-int main(const int argc, const char *argv[]) {
+int main(const int argc, const char *argv[]) 
+{
     try {
         // Parse arguments.
         parse(argc, argv);
