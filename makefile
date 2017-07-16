@@ -9,7 +9,7 @@ CXXFLAGS = -std=c++17 -O3 -Wall -Wextra
 # Compile command.
 COMPILE  = @$(CXX) $(CXXFLAGS)
 # Set source dependencies for desktop shell.
-SRC      = m.cpp wnd.cpp pix.cpp pos.cpp fb.cpp scr.cpp log.cpp res.cpp ev.cpp evm.cpp msys.cpp kbsys.cpp kb.cpp wsys.cpp wd.cpp parse.cpp init.cpp mwnd.cpp rect.cpp 
+SRC      = m.cpp wnd.cpp pix.cpp pos.cpp fb.cpp scr.cpp log.cpp res.cpp ev.cpp evm.cpp msys.cpp kbsys.cpp kb.cpp wsys.cpp wd.cpp parse.cpp init.cpp mwnd.cpp 
 # Tests.
 TESTS    = mtest fbtest evmtest kbsystest msystest dpytests wtest kbtest utf8test fsktest fsmtest
 # Executables.
@@ -45,10 +45,7 @@ fbtest: fbtest.cpp fb.o pix.o scr.o log.o keywait.o
 	$(COMPILE) $^ -o $@
 
 # Tests for the window files.
-wtest: wtest.cpp fb.o pix.o scr.o log.o pos.o rect.o res.o keywait.o m.o
-	$(COMPILE) $^ -o $@
-
-recttest: recttest.cpp rect.o fb.o pix.o scr.o log.o pos.o res.o keywait.o
+wtest: wtest.cpp fb.o pix.o scr.o log.o pos.o wnd.o res.o keywait.o m.o
 	$(COMPILE) $^ -o $@
 
 # Tests for the hacky mouse file.
@@ -92,7 +89,7 @@ fs.o: fs.cpp
 	$(COMPILE) -c $^ `pkg-config fuse --cflags --libs` -o $@
 
 # Compile shell file system executable.
-dshfs: dshfs.cpp fs.o log.o kb.o kbsys.o dsys.o wndcmd.o dpycmd.o wsys.o ssys.o msys.o m.o wnd.o fb.o scr.o pix.o rect.o pos.o res.o evm.o ev.o
+dshfs: dshfs.cpp fs.o log.o kb.o kbsys.o dsys.o wndcmd.o dpycmd.o wsys.o ssys.o msys.o m.o wnd.o fb.o scr.o pix.o pos.o res.o evm.o ev.o
 	$(COMPILE) $^ `pkg-config fuse --cflags --libs` -o $@
 
 # Compile "do"-program, the beginning program that ask the user what to do.

@@ -1,7 +1,6 @@
 #pragma once
 #include <memory>
 #include "pos.hpp"
-#include "rect.hpp"
 #include "pix.hpp"
 #include "scr.hpp"
 #include "dsys.hpp"
@@ -73,6 +72,6 @@ private:
     void nullflip();
     void fbclear();
 
-    friend class Rect;
+    friend class Wnd;
     friend void dsys::init();
 };
