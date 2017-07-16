@@ -11,7 +11,8 @@ using namespace std;
 
 // Setup double-buffered framebuffer screen.
 Scr::Scr() 
-    : page(0), dbufen(true)
+    : page(0),     // Start on page buffer 0.
+      dbufen(true) // Enable double buffering using fbdev by default.
 {
     // Open the framebuffer file.
     fd = ::open("/dev/fb0", O_RDWR);
@@ -89,7 +90,7 @@ void Scr::vsync()
 // Check for vertical sync by waiting for it.
 bool Scr::isvsync()
 {
-    return CTL(FBIO_WAITFORVSYNC, 0) < 0;
+    return CTL(FBIO_WAITFORVSYNC, 0) >= 0;
 }
 
 // Pan display.

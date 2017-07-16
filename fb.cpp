@@ -15,18 +15,20 @@ Fb::Fb()
         size = scr.finfo().smem_len / 2;
         // Do not use any allocated double buffer in the system memory.
         dbuf = nullptr;
-    } else { // No double buffer setup for the framebuffer screen.
+    } else // No double buffer setup for the framebuffer screen.
         // Get size of framebuffer in bytes.
         size = scr.finfo().smem_len;
-        // Set function pointers for manipulating the framebuffer.
-        setptrs();
-    }
+
+    // Set function pointers for manipulating the framebuffer.
+    setptrs();
 
     // Compute number of pixels.
     plen = size / sizeof(u32);
 
     // Map framebuffer to computer's address space.
-    fb = scast<u8*>(mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_SHARED, scr.fd, 0));
+    fb = scast<u8*>(mmap(nullptr, size, 
+                         PROT_READ | PROT_WRITE,  // Read and write access!
+                         MAP_SHARED, scr.fd, 0));
 
     // Set the positions to the color bits.
     const auto v = scr.vinfo();

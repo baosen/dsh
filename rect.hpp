@@ -24,12 +24,13 @@ public:
 
     // Maximize the rectangle to fill the screen.
     void   max();
+    // Minimize the rectangle back to the size before.
+    void   min();
 
     // Read from the picture buffer of the rectangle.
     int    read(char *buf, off_t offset, size_t size) const  noexcept;
     // Write to the picture buffer to the rectangle. Returns exactly the number of bytes written except on error.
     int    write(const char *buf, off_t offset, size_t size) noexcept;
-
 private:
     Pos p; // Position of the rectangle in the framebuffer.
     Res r; // Resolution/size of the rectangle in the framebuffer.

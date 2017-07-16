@@ -173,16 +173,18 @@ int fs::read(const char            *path, // Pathname of the file to read.
     return doifentry(path, [&]() {
         return filedo(path, [&](const char *name) { // Display.
             UNUSED(name);
+
             // Read from display.
             dsys::read(name, buf, i, size);
             return SUCCESS;
         }, [&](const char *name) {                  // Window.
             UNUSED(name);
+
             // Read from window.
-            wsys::read(name, buf, i, size);
-            return SUCCESS;
+            return wsys::read(name, buf, i, size);
         }, [&](const char *name) {                  // Keyboard.
             UNUSED(name);
+
             // Check if the read is not whole (divisible).
             const auto isize = sizeof(input_event);
             if (isize % size != 0)
@@ -201,6 +203,7 @@ int fs::read(const char            *path, // Pathname of the file to read.
             return read;
         }, [&](const char *name) {                  // Mouse.
             UNUSED(name);
+
             // Read from mouse.
             if (sizeof(msys::Ev) % size != 0)
                 return -EINVAL;

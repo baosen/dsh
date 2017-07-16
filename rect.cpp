@@ -33,9 +33,6 @@ void Rect::fill(const Pix& c) // Colour to fill the inside of the rectangle with
     const auto v = fb.scr.vinfo();
     const auto s = start(v); // The start index of the position.
 
-    // Clear/blacken the entire screen.
-    fb.clear();
-
     // Fill the rectangle in Linux framebuffer.
     for (size_t y = 0; y < r.h; ++y)
         for (size_t x = 0; x < r.w; ++x)
@@ -48,7 +45,7 @@ void Rect::fill(const Pix& c) // Colour to fill the inside of the rectangle with
 // Get the size/length in bytes of the rectangle.
 size_t Rect::size() const 
 {
-    return r.h*r.w;
+    return r.h * r.w;
 }
 
 // Resize the rectangle image in the framebuffer.
@@ -65,6 +62,7 @@ void Rect::max()
 {
     // Open framebuffer file.
     Fb         fb;
+
     // Resize the rectangle to fill the entire screen.
     const auto v = fb.scr.vinfo();
     resize(v.xres, v.yres);

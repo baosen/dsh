@@ -48,6 +48,9 @@ fbtest: fbtest.cpp fb.o pix.o scr.o log.o keywait.o
 wtest: wtest.cpp fb.o pix.o scr.o log.o pos.o rect.o res.o keywait.o m.o
 	$(COMPILE) $^ -o $@
 
+recttest: recttest.cpp rect.o fb.o pix.o scr.o log.o pos.o res.o keywait.o
+	$(COMPILE) $^ -o $@
+
 # Tests for the hacky mouse file.
 mtest: mtest.cpp m.o log.o
 	$(COMPILE) $^ -o $@

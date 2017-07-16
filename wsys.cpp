@@ -20,10 +20,10 @@ void wsys::deinit()
 }
 
 // Read from window.
-void wsys::read(const char  *name, // Name of the window.
-                char        *buf,  // Name of the buffer.
-                const off_t  i,    // Offset of the buffer to read from.
-                const size_t size) // The size in bytes to read from the buffer.
+int wsys::read(const char  *name, // Name of the window.
+               char        *buf,  // Name of the buffer.
+               const off_t  i,    // Offset of the buffer to read from.
+               const size_t size) // The size in bytes to read from the buffer.
 {
     // TODO: What happens if it does not exists?
     wnds[name]->read(buf, i, size);
