@@ -11,6 +11,10 @@ static void test1()
     keywait();
     r2.fill(Pix(255, 0, 255, 255));
     keywait();
+
+    r2.max();
+    r2.fill(Pix(0, 0, 255, 255));
+    keywait();
 }
 
 // Test "hacky" mouse combined with window rectangle.

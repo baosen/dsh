@@ -24,7 +24,7 @@ uint Wnd::start(const Scr::varinfo& v) const
 
 // Fill the rectangular window in the framebuffer with the colour c.
 void Wnd::fill(const Pix& c) // Colour to fill the inside of the rectangle with.
-                const 
+               const 
 {
     // Open framebuffer.
     Fb fb;
@@ -49,7 +49,7 @@ size_t Wnd::size() const
 }
 
 // Resize the rectangular window image in the framebuffer.
-void Wnd::resize(const Res& newr)
+void Wnd::resize(const Res& newr) // The new window resolution to resize to.
 {
     rcur = newr;
 }
@@ -57,11 +57,15 @@ void Wnd::resize(const Res& newr)
 // Maximize the rectangular window image to fill the screen.
 void Wnd::max() 
 {
+    // Save old positions before maximizing.
+    save();
+
     // Open framebuffer file.
     Fb fb;
 
     // Resize the window to fill the entire screen.
     const auto v = fb.scr.vinfo();
+    pcur = Pos(0, 0);
     resize(Res(v.xres, v.yres));
 }
 
