@@ -168,6 +168,7 @@ int fs::read(const char            *path, // Pathname of the file to read.
              noexcept 
 {
     UNUSED(fi);
+
     // Do file read if the asked entry exists.
     return doifentry(path, [&]() {
         return filedo(path, [&](const char *name) { // Display.
@@ -219,6 +220,7 @@ int fs::write(const char            *path, // Path to the file to be written to.
               noexcept 
 {
     UNUSED(fi);
+
     return doifentry(path, [&]() {
         return filedo(path, [&](const char *name) { // Display.
             // Write to display in the display/screen's pixel format.
@@ -254,6 +256,7 @@ int fs::ioctl(const char            *path,  // Path of the file to control.
     UNUSED(fi);
     UNUSED(flags);
     UNUSED(data);
+
     // Do if path entry exist in the file entries.
     return doifentry(path, [&]() {
         return filedo(path, [&](const char *name) { // Display.
@@ -281,6 +284,7 @@ int fs::mknod(const char *path, // File path.
               noexcept 
 {
     UNUSED(dev);
+
     return create(path, mode, nullptr);
 }
 
