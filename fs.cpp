@@ -63,6 +63,7 @@ auto doifentry(const char *path, // Path of the file.
 // Initialize shell file system.
 void* fs::init(struct fuse_conn_info *conn) noexcept 
 {
+    UNUSED(conn);
     return nullptr;
 }
 
@@ -72,6 +73,9 @@ int fs::create(const char            *path, // File path.
                struct fuse_file_info *fi)   // Other info that is not part of POSIX.
                noexcept
 {
+    // TODO: Store mode and set it.
+    UNUSED(mode);
+
     // Force O_DIRECT (direct I/O, no caching).
     fi->direct_io = 1;
 
@@ -127,6 +131,10 @@ int fs::readdir(const char            *path,   // File path.
                 struct fuse_file_info *fi)     // Other info about the file.
                 noexcept
 {
+    UNUSED(path);
+    UNUSED(offset);
+    UNUSED(fi);
+
     // Fill recursively.
     for (const auto& e : ents) {
         // Build the file entries in the buffer.
@@ -159,17 +167,21 @@ int fs::read(const char            *path, // Pathname of the file to read.
              struct fuse_file_info *fi)   // Other info about the file read.
              noexcept 
 {
+    UNUSED(fi);
     // Do file read if the asked entry exists.
     return doifentry(path, [&]() {
         return filedo(path, [&](const char *name) { // Display.
+            UNUSED(name);
             // Read from display.
             dsys::read(name, buf, i, size);
             return SUCCESS;
         }, [&](const char *name) {                  // Window.
+            UNUSED(name);
             // Read from window.
             wsys::read(name, buf, i, size);
             return SUCCESS;
         }, [&](const char *name) {                  // Keyboard.
+            UNUSED(name);
             // Check if the read is not whole (divisible).
             const auto isize = sizeof(input_event);
             if (isize % size != 0)
@@ -178,7 +190,7 @@ int fs::read(const char            *path, // Pathname of the file to read.
             // Read keyboard input event from keyboard.
             const auto n = isize / size;
             int read = 0;
-            for (int i = 0; i < n; ++i) {
+            for (uint i = 0; i < n; ++i) {
                 const auto e = kbsys::get();
                 memcpy(buf, &e, sizeof(input_event));
                 buf  += isize;
@@ -187,6 +199,7 @@ int fs::read(const char            *path, // Pathname of the file to read.
             // Return number of bytes read.
             return read;
         }, [&](const char *name) {                  // Mouse.
+            UNUSED(name);
             // Read from mouse.
             if (sizeof(msys::Ev) % size != 0)
                 return -EINVAL;
@@ -205,19 +218,23 @@ int fs::write(const char            *path, // Path to the file to be written to.
               struct fuse_file_info *fi)   // Other info about the file read.
               noexcept 
 {
+    UNUSED(fi);
     return doifentry(path, [&]() {
         return filedo(path, [&](const char *name) { // Display.
             // Write to display in the display/screen's pixel format.
             dsys::write(name, buf, i, size);
             return SUCCESS;
         }, [&](const char *name) {                  // Window.
+            UNUSED(name);
             // Write to window in the display/screen's pixel format.
             wsys::write(name, buf, i, size);
             return SUCCESS;
         }, [](const char *name) {                   // Keyboard.
+            UNUSED(name);
             // Keyboard is read-only.
             return -EPERM; // Operation not permitted.
         }, [](const char *name) {
+            UNUSED(name);
             // Mouse is read-only.
             return -EPERM; // Operation not permitted.
         });
@@ -233,16 +250,24 @@ int fs::ioctl(const char            *path,  // Path of the file to control.
               void                  *data)  // ??
               noexcept                      // This function cannot throw an exception.
 {
+    UNUSED(arg);
+    UNUSED(fi);
+    UNUSED(flags);
+    UNUSED(data);
     // Do if path entry exist in the file entries.
     return doifentry(path, [&]() {
         return filedo(path, [&](const char *name) { // Display.
+            UNUSED(name);
             return dpycmd(cmd);
         }, [&](const char *name) {                  // Window.
+            UNUSED(name);
             return wndcmd(cmd);
         }, [](const char *name) {                   // Keyboard.
+            UNUSED(name);
             // No commands for keyboards.
             return -EINVAL;
         }, [](const char *name) {
+            UNUSED(name);
             // TODO: Currently no commands for keyboards.
             return -EINVAL;
         });
@@ -255,6 +280,7 @@ int fs::mknod(const char *path, // File path.
               dev_t       dev)  // Optional device provided.
               noexcept 
 {
+    UNUSED(dev);
     return create(path, mode, nullptr);
 }
 
