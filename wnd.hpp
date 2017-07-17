@@ -17,6 +17,8 @@ public:
     uint   i()    const;
     // Returns the window (rectangle) area size.
     size_t size() const;
+    // Returns the window's current position.
+    Pos    pos() const;
 
     // Move window to new position.
     void   move(const Pos& p);

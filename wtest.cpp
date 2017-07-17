@@ -22,9 +22,13 @@ int main()
 {
     test1();
 
-    M m(1);
+    M   m(1);
     int px = 0, 
         py = 0;
+
+    Wnd r(Pos(px, py), Res(100, 100));
+    r.fill(Pix(255, 255, 255, 255));
+
     for (;;) {
         const auto e = m.rd();
         px += e.x;
@@ -36,5 +40,6 @@ int main()
         Wnd r(Pos(px, py), Res(100, 100));
         r.fill(Pix(255, 255, 255, 255));
     }
-    return 0;
+
+    return EXIT_SUCCESS;
 }

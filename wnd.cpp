@@ -48,6 +48,12 @@ size_t Wnd::size() const
     return rcur.h * rcur.w;
 }
 
+// Returns the window's current position.
+Pos Wnd::pos() const
+{
+    return pcur;
+}
+
 // Resize the rectangular window image in the framebuffer.
 void Wnd::resize(const Res& newr) // The new window resolution to resize to.
 {
