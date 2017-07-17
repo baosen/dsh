@@ -93,9 +93,9 @@ void Wnd::max()
 }
 
 // Read from the image buffer of the rectangular window.
-int Wnd::read(char  *buf,  // Buffer of 32-bit unsigned RGBA pixels.
-              off_t  i,    // Offset to write to framebuffer.
-              size_t size) // The size in bytes to write.
+int Wnd::read(void        *buf,  // Buffer of 32-bit unsigned RGBA pixels.
+              const off_t  i,    // Offset to write to framebuffer.
+              const size_t size) // The size in bytes to write.
               const 
               noexcept
 {
@@ -106,8 +106,13 @@ int Wnd::read(char  *buf,  // Buffer of 32-bit unsigned RGBA pixels.
     // Open framebuffer file.
     Fb         fb;
 
-    // Copy the image to the application.
-    memcpy(buf, &fb.get8(i), size);
+    // Get screen attributes.
+    const auto v = fb.scr.vinfo(); // Get "variable" screen info.
+    const auto s = start(v);       // Compute the start index of the window position.
+
+    // Copy row by row.
+    for (uint y = 0; y < rcur.h; ++y)
+        memcpy(rcast<u32*>(buf) + (y * rcur.w), &fb.get32(s + i + (y * v.xres)), rcur.w * sizeof(u32));
 
 /*
     // Get screen attributes.
@@ -129,9 +134,9 @@ int Wnd::read(char  *buf,  // Buffer of 32-bit unsigned RGBA pixels.
 }
 
 // Write to the picture buffer to the rectangle. Returns exactly the number of bytes written except on error.
-int Wnd::write(const char *buf,  // Buffer of 32-bit unsigned RGBA pixels.
-               off_t       i,    // Offset to write to framebuffer.
-               size_t      size) // The size in bytes to write.
+int Wnd::write(const void  *buf,  // Buffer of 32-bit unsigned RGBA pixels.
+               const off_t  i,    // Offset to write to framebuffer.
+               const size_t size) // The size in bytes to write.
                noexcept
 {
     // Check if size of the image to be written is larger than the image itself.

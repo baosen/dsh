@@ -162,7 +162,7 @@ int fs::open(const char            *path, // Path to file to open.
 
 // Read file contents. Returns number of elements read.
 int fs::read(const char            *path, // Pathname of the file to read.
-             char                  *buf,  // Buffer to fill with the file contents read.
+             char                  *buf,  // Buffer to fill with the file contents read. Acts as a void*.
              size_t                 size, // The amount of elements to read.
              off_t                  i,    // The offset to read the data from.
              struct fuse_file_info *fi)   // Other info about the file read.
@@ -217,7 +217,7 @@ int fs::read(const char            *path, // Pathname of the file to read.
 
 // Write to file. Returns exactly the number of elements written except on error.
 int fs::write(const char            *path, // Path to the file to be written to.
-              const char            *buf,  // The buffer containing the data to write.
+              const char            *buf,  // The buffer containing the data to write. Acts as a void*.
               size_t                 size, // The size in elements to write.
               off_t                  i,    // The offset to write to.
               struct fuse_file_info *fi)   // Other info about the file read.
@@ -232,15 +232,18 @@ int fs::write(const char            *path, // Path to the file to be written to.
             return SUCCESS;
         }, [&](const char *name) {                  // Window.
             UNUSED(name);
+
             // Write to window in the display/screen's pixel format.
             wsys::write(name, buf, i, size);
             return SUCCESS;
         }, [](const char *name) {                   // Keyboard.
             UNUSED(name);
+
             // Keyboard is read-only.
             return -EPERM; // Operation not permitted.
         }, [](const char *name) {
             UNUSED(name);
+
             // Mouse is read-only.
             return -EPERM; // Operation not permitted.
         });

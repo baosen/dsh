@@ -26,7 +26,7 @@ void wsys::deinit()
 
 // Read from window.
 int wsys::read(const char  *name, // Name of the window.
-               char        *buf,  // Name of the buffer.
+               void        *buf,  // Name of the buffer.
                const off_t  i,    // Offset of the buffer to read from.
                const size_t size) // The size in bytes to read from the buffer.
 {
@@ -36,7 +36,7 @@ int wsys::read(const char  *name, // Name of the window.
 
 // Write to window.
 void wsys::write(const char  *name, // Name of the window.
-                 const char  *buf,  // Name of the buffer.
+                 const void  *buf,  // Name of the buffer.
                  const off_t  i,    // Offset of the buffer to write to.
                  const size_t size) // The size in bytes to write to the buffer.
 {

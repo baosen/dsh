@@ -29,7 +29,7 @@ static void test2()
     const auto  o = w.off();
     vector<u32> v(w.size());
     fill(begin(v), end(v), Pix(255, 255, 255, 255).val(o));
-    w.write((byte*)v.data(), 0, v.size()*sizeof(u32));
+    w.write(v.data(), 0, v.size());
 }
 
 static void movetest()
