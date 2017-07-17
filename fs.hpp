@@ -15,7 +15,7 @@ namespace fs {
     int open(const char *path, struct fuse_file_info *fi) noexcept;
     // Read file contents.
     int read(const char *path, char *buf, size_t size, off_t offset, struct fuse_file_info *fi) noexcept;
-    // Write to display. Returns exactly the number of bytes written except on error.
+    // Write to display. Returns exactly the number of elements written except on error.
     int write(const char *path, const char *buf, size_t size, off_t offset, struct fuse_file_info *fi) noexcept;
     // Control files in shell file system.
     int ioctl(const char *path, int cmd, void *arg, struct fuse_file_info *fi, unsigned int flags, void *data) noexcept;

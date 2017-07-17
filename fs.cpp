@@ -159,10 +159,10 @@ int fs::open(const char            *path, // Path to file to open.
     });
 }
 
-// Read file contents. Returns number of bytes read.
+// Read file contents. Returns number of elements read.
 int fs::read(const char            *path, // Pathname of the file to read.
              char                  *buf,  // Buffer to fill with the file contents read.
-             size_t                 size, // The amount of bytes to read.
+             size_t                 size, // The amount of elements to read.
              off_t                  i,    // The offset to read the data from.
              struct fuse_file_info *fi)   // Other info about the file read.
              noexcept 
@@ -199,7 +199,7 @@ int fs::read(const char            *path, // Pathname of the file to read.
                 buf  += isize;
                 read += isize;
             }
-            // Return number of bytes read.
+            // Return number of elements read.
             return read;
         }, [&](const char *name) {                  // Mouse.
             UNUSED(name);
@@ -214,10 +214,10 @@ int fs::read(const char            *path, // Pathname of the file to read.
     });
 }
 
-// Write to file. Returns exactly the number of bytes written except on error.
+// Write to file. Returns exactly the number of elements written except on error.
 int fs::write(const char            *path, // Path to the file to be written to.
               const char            *buf,  // The buffer containing the data to write.
-              size_t                 size, // The size in bytes to write.
+              size_t                 size, // The size in elements to write.
               off_t                  i,    // The offset to write to.
               struct fuse_file_info *fi)   // Other info about the file read.
               noexcept 
