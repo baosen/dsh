@@ -32,9 +32,16 @@ public:
     void   min();
 
     // Read from the image buffer of the rectangular window.
-    int    read(void *buf, const off_t offset, const size_t size) const  noexcept;
+    int    read(void        *buf, // Buffer to read to.
+                const off_t  i,   // Offset in elements to read from.
+                const size_t n)   // Number of elements to read.
+                const
+                noexcept;
+
     // Write to the image buffer of the rectangular window. Returns exactly the number of elements written except on error.
-    int    write(const void *buf, const off_t offset, const size_t size) noexcept;
+    int    write(const void  *buf, 
+                 const off_t  i, 
+                 const size_t n) noexcept;
 protected:
     // Window position:
     Pos pcur, // Current position of the rectangle in the framebuffer. 

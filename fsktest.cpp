@@ -25,7 +25,7 @@ int main()
     input_event e;
     int         n;
     for (;;) {
-        n = ::read(fd, &e, 1);
+        n = ::read(fd, &e, sizeof(e));
         if (n < 0) {
             puts("Failed to read keyboard file!");
             return EXIT_FAILURE;

@@ -160,12 +160,12 @@ int fs::open(const char            *path, // Path to file to open.
     });
 }
 
-// Read file contents. Returns number of elements read.
-int fs::read(const char            *path, // Pathname of the file to read.
-             char                  *buf,  // Buffer to fill with the file contents read. Acts as a void*.
-             const size_t           n,    // The amount of elements to read.
-             const off_t            i,    // The offset to read the data from.
-             struct fuse_file_info *fi)   // Other info about the file read.
+// Read file contents. Returns number of bytes read.
+int fs::read(const char            *path,   // Pathname of the file to read.
+             char                  *buf,    // Buffer to fill with the file contents read.
+             const size_t           nbytes, // The number of bytes to read.
+             const off_t            i,      // The offset to read the data from.
+             struct fuse_file_info *fi)     // Other info about the file read.
              noexcept 
 {
     UNUSED(fi);
@@ -176,39 +176,50 @@ int fs::read(const char            *path, // Pathname of the file to read.
             UNUSED(name);
 
             // Read from display.
-            dsys::read(name, buf, i, n);
+            dsys::read(name, buf, i, nbytes);
             return SUCCESS;
         }, [&](const char *name) {                  // Window.
             UNUSED(name);
 
             // Read from window.
-            return wsys::read(name, buf, i, n);
+            return wsys::read(name, buf, i, nbytes);
         }, [&](const char *name) {                  // Keyboard.
             UNUSED(name);
 
+            // Check if the read is not whole (divisible).
+            const auto isize = sizeof(input_event);
+            if (isize % nbytes != 0)
+                return -EINVAL; // Invalid parameter.
+
             // Read keyboard input event from keyboard.
+            const auto n = isize / nbytes;
             int read = 0;
             for (uint i = 0; i < n; ++i) {
                 *rcast<input_event*>(buf) = kbsys::get();
-                buf += sizeof(input_event);
-                ++read;
+                buf  += isize;
+                read += isize;
             }
 
-            // Return number of elements read.
+            // Return number of bytes read.
             return read;
         }, [&](const char *name) {                  // Mouse.
             UNUSED(name);
+            // Read from mouse.
+
+            // Check if divisible.
+            if (sizeof(msys::Ev) % nbytes != 0)
+                return -EINVAL;
 
             // Copy mouse event into the buffer.
-            return msys::getmot(buf, n);
+            return msys::getmot(buf, nbytes / sizeof(msys::Ev));
         });
     });
 }
 
-// Write to file. Returns exactly the number of elements written except on error.
+// Write to file. Returns exactly the number of bytes written, except on error.
 int fs::write(const char            *path, // Path to the file to be written to.
-              const char            *buf,  // The buffer containing the data to write. Acts as a void*.
-              const size_t           size, // The size in elements to write.
+              const char            *buf,  // The buffer containing the data to write.
+              const size_t           size, // The number of bytes to write.
               const off_t            i,    // The offset to write to.
               struct fuse_file_info *fi)   // Other info about the file read.
               noexcept 

@@ -17,19 +17,19 @@ namespace fs {
     // Open the desktop shell file system.
     int open(const char *path, struct fuse_file_info *fi) noexcept;
 
-    // Read file contents. Returns number of elements read.
-    int read(const char            *path, 
-             char                  *buf,   // Acts as a void*.
-             const size_t           n, 
-             const off_t            offset, 
+    // Read file. Returns exactly the number of bytes read, except on error.
+    int read(const char            *path,   // File path.
+             char                  *buf,    // Buffer to read to.
+             const size_t           nbytes, // The number of bytes to read.
+             const off_t            offset, // Offset/index in byte to read from.
              struct fuse_file_info *fi) 
              noexcept;
 
-    // Write to file. Returns exactly the number of elements written except on error.
-    int write(const char            *path, 
-              const char            *buf,   // Act as a void*.
-              const size_t           n, 
-              const off_t            offset, 
+    // Write to file. Returns exactly the number of bytes written, except on error.
+    int write(const char            *path,   // File path.
+              const char            *buf,    // Buffer with bytes to write.
+              const size_t           nbytes, // The number of bytes to write.
+              const off_t            offset, // Offset/index in byte to write to.
               struct fuse_file_info *fi) 
               noexcept;
 
