@@ -1,6 +1,14 @@
 #pragma once
 #include "types.hpp"
 
+// Offsets to the pixel bits.
+struct Off {
+    int roff, // Red offset.
+        goff, // Green offset.
+        boff, // Blue offset.
+        aoff; // Alpha offset.
+};
+
 // Colored pixel.
 class Pix {
 public:
@@ -15,6 +23,8 @@ public:
             const int boff, // Blue offset.
             const int aoff) // Alpha offset.
             const;
+
+    u32 val(const Off& o) const;
 private:
     uint r, // Red.
          g, // Green.

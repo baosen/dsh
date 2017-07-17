@@ -25,3 +25,17 @@ u32 Pix::val(const int roff, // Red bit position.
         pix |= a << aoff;
     return pix;
 }
+
+u32 Pix::val(const Off& o) const
+{
+    u32 pix = 0;
+    if (o.roff >= 0)
+        pix |= r << o.roff;
+    if (o.goff >= 0)
+        pix |= g << o.goff;
+    if (o.boff >= 0)
+        pix |= b << o.boff;
+    if (o.aoff >= 0)
+        pix |= a << o.aoff;
+    return pix;
+}

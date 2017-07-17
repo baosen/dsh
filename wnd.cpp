@@ -22,6 +22,23 @@ uint Wnd::start(const Scr::varinfo& v) const
     return pcur.x + pcur.y * v.xres; // The start index of the position.
 }
 
+Off Wnd::off() const
+{
+    // Set the positions to the color bits.
+    Fb fb;
+    const auto v = fb.scr.vinfo();
+    Off o;
+    if (v.red.length)
+        o.roff = v.red.offset;    // Position to red bits.
+    if (v.green.length)
+        o.goff = v.green.offset;  // Position to green bits.
+    if (v.blue.length)
+        o.boff = v.blue.offset;   // Position to blue bits.
+    if (v.transp.length)
+        o.aoff = v.transp.offset; // Position to alpha-transparency bits.
+    return o;
+}
+
 // Fill the rectangular window in the framebuffer with the colour c.
 void Wnd::fill(const Pix& c) // Colour to fill the inside of the rectangle with.
                const 
@@ -42,7 +59,7 @@ void Wnd::fill(const Pix& c) // Colour to fill the inside of the rectangle with.
     fb.flip();
 }
 
-// Get the size/length in bytes of the rectangle.
+// Get the size/length in bytes of the rectangular window.
 size_t Wnd::size() const 
 {
     return rcur.h * rcur.w;
@@ -130,7 +147,7 @@ int Wnd::write(const char *buf,  // Buffer of 32-bit unsigned RGBA pixels.
 
     // Copy row by row.
     for (uint y = 0; y < rcur.h; ++y)
-        memcpy(&fb.get8(s + i + (y * v.xres)), buf + (y * rcur.w), rcur.w);
+        memcpy(&fb.get32(s + i + (y * v.xres)), rcast<const u32*>(buf) + (y * rcur.w), rcur.w*sizeof(u32));
 
 /*
     // Convert pixels in the given buffer and write it to the framebuffer file.

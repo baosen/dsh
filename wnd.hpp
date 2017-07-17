@@ -20,6 +20,8 @@ public:
     // Returns the window's current position.
     Pos    pos() const;
 
+    Off    off() const;
+
     // Move window to new position.
     void   move(const Pos& p);
     // Resize window.

@@ -1,6 +1,9 @@
+#include <vector>
+#include <cstring>
 #include "wnd.hpp"
 #include "m.hpp"
 #include "keywait.hpp"
+using namespace std;
 
 static void test1()
 {
@@ -21,6 +24,12 @@ static void test2()
 {
     Wnd w(Pos(0, 0), Res(100, 100));
     w.fill(Pix(255, 0, 255, 255));
+    keywait();
+
+    const auto  o = w.off();
+    vector<u32> v(w.size());
+    fill(begin(v), end(v), Pix(255, 255, 255, 255).val(o));
+    w.write((byte*)v.data(), 0, v.size()*sizeof(u32));
 }
 
 static void movetest()
@@ -49,7 +58,7 @@ static void movetest()
 int main() 
 {
     //test1();
-    //test2();
+    test2();
 
     return EXIT_SUCCESS;
 }
