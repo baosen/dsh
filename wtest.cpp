@@ -23,11 +23,8 @@ static void test2()
     w.fill(Pix(255, 0, 255, 255));
 }
 
-// Test "hacky" mouse combined with window rectangle.
-int main() 
+static void movetest()
 {
-    test1();
-
     M   m(1);
     int px = 0, 
         py = 0;
@@ -46,6 +43,13 @@ int main()
         Wnd r(Pos(px, py), Res(100, 100));
         r.fill(Pix(255, 255, 255, 255));
     }
+}
+
+// Test "hacky" mouse combined with window rectangle.
+int main() 
+{
+    //test1();
+    //test2();
 
     return EXIT_SUCCESS;
 }

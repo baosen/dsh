@@ -118,20 +118,21 @@ int Wnd::write(const char *buf,  // Buffer of 32-bit unsigned RGBA pixels.
                noexcept
 {
     // Check if size of the image to be written is larger than the image itself.
-    if (size > this->size())
-        return -EINVAL; // Invalid parameter.
+    //if (size > this->size())
+        //return -EINVAL; // Invalid parameter.
 
     // Open framebuffer file.
-    Fb         fb;
+    Fb fb;
 
-    // Copy the buffer provided into the framebuffer.
-    memcpy(&fb.get8(i), buf, size);
-
-/*
     // Get screen attributes.
     const auto v = fb.scr.vinfo(); // Get "variable" screen info.
-    const auto s = start(v);       // Compute the start index of the position.
+    const auto s = start(v);       // Compute the start index of the window position.
 
+    // Copy row by row.
+    for (uint y = 0; y < rcur.h; ++y)
+        memcpy(&fb.get8(s + i + (y * v.xres)), buf + (y * rcur.w), rcur.w);
+
+/*
     // Convert pixels in the given buffer and write it to the framebuffer file.
     const auto w = this->rcur.w;
     for (uint y = 0; y < rcur.h; ++y) {
@@ -146,6 +147,9 @@ int Wnd::write(const char *buf,  // Buffer of 32-bit unsigned RGBA pixels.
         }
     }
 */
+
+    // Show it to the user!
+    fb.flip();
 
     // Indicate success!
     return 0; // Operation succeeded.
