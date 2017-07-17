@@ -107,9 +107,9 @@ int fs::getattr(const char  *path,  // File path.
     // Prepare stat-buffer.
     zero(*stbuf);
 
-    // If caller wants to check the attributes of the backslash directory.
+    // If caller wants to check the attributes of the root directory of the file system (backslash directory).
     if (!strcmp(path, "/")) {
-        stbuf->st_mode = S_IFDIR | 0755; // Directory and its permission bits.
+        stbuf->st_mode = S_IFDIR | 0755; // Is a directory ORed with the permission bits.
         stbuf->st_nlink = 0;             // Number of hardlinks that points to this file that exists in the file system.
         return SUCCESS;
     } 
@@ -120,12 +120,14 @@ int fs::getattr(const char  *path,  // File path.
         stbuf->st_nlink = 0;              // Hard links.
         stbuf->st_size  = 0;              // uhm... size of file?
         return SUCCESS;
-    });
+    }); // else no file entry found.
 }
 
-// Read current tree of the mounted directory.
+#define BUFFULL 1 // Is buffer full?
+
+// Read the current file tree of the directory of the mounted file system.
 int fs::readdir(const char            *path,   // File path.
-                void                  *buf,    // The returned buffer to fill the file entries.
+                void                  *buf,    // The returned buffer to fill with file entries.
                 fuse_fill_dir_t        fill,   // Function to call to fill the provided buffer with entries.
                 off_t                  offset, // Offset to place??
                 struct fuse_file_info *fi)     // Other info about the file.
@@ -135,12 +137,12 @@ int fs::readdir(const char            *path,   // File path.
     UNUSED(offset);
     UNUSED(fi);
 
-    // Fill recursively.
-    for (const auto& e : ents) {
+    // Fill buffer with file entries.
+    for (const auto& e : ents)
         // Build the file entries in the buffer.
-        if (fill(buf, e.c_str(), 0, 0) == 1) // Is buffer full?
+        if (fill(buf, e.c_str(), 0, 0) == BUFFULL) // Is buffer full?
             return -ENOBUFS;
-    }
+
     return SUCCESS;
 }
 
@@ -149,7 +151,6 @@ int fs::open(const char            *path, // Path to file to open.
              struct fuse_file_info *fi)   // Other file info.
              noexcept 
 {
-
     // Force O_DIRECT (direct I/O, no caching).
     fi->direct_io = 1;
 
