@@ -20,16 +20,16 @@ namespace fs {
     // Read file contents. Returns number of elements read.
     int read(const char            *path, 
              char                  *buf,   // Acts as a void*.
-             size_t                 size, 
-             off_t                  offset, 
+             const size_t           n, 
+             const off_t            offset, 
              struct fuse_file_info *fi) 
              noexcept;
 
     // Write to file. Returns exactly the number of elements written except on error.
     int write(const char            *path, 
               const char            *buf,   // Act as a void*.
-              size_t                 size, 
-              off_t                  offset, 
+              const size_t           n, 
+              const off_t            offset, 
               struct fuse_file_info *fi) 
               noexcept;
 
