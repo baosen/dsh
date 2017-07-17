@@ -13,8 +13,9 @@ public:
     // Release framebuffer.
     ~Fb();
 
-    // Get 32-bit color value from the framebuffer memory.
+    // Get 8-bit color value from the framebuffer memory. Indexing in bytes.
     u8&   get8(const uint i);
+    // Get 32-bit color value from the framebuffer memory. Indexing 32-bits/4 bytes at a time.
     u32&  get32(const uint i);
 
     // Set color value in the framebuffer.

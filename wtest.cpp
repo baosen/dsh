@@ -17,6 +17,12 @@ static void test1()
     keywait();
 }
 
+static void test2()
+{
+    Wnd w(Pos(0, 0), Res(100, 100));
+    w.fill(Pix(255, 0, 255, 255));
+}
+
 // Test "hacky" mouse combined with window rectangle.
 int main() 
 {

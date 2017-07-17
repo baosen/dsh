@@ -75,7 +75,7 @@ void Wnd::max()
     resize(Res(v.xres, v.yres));
 }
 
-// Read from the picture buffer of the rectangular window.
+// Read from the image buffer of the rectangular window.
 int Wnd::read(char  *buf,  // Buffer of 32-bit unsigned RGBA pixels.
               off_t  i,    // Offset to write to framebuffer.
               size_t size) // The size in bytes to write.
@@ -89,21 +89,25 @@ int Wnd::read(char  *buf,  // Buffer of 32-bit unsigned RGBA pixels.
     // Open framebuffer file.
     Fb         fb;
 
+    // Copy the image to the application.
+    memcpy(buf, &fb.get8(i), size);
+
+/*
     // Get screen attributes.
     const auto v = fb.scr.vinfo();
     const auto s = pcur.x + pcur.y * v.xres;
 
-    // TODO: Read framebuffer, convert and copy pixels to the buffer provided by the caller.
     // Get width of the rectangle to read.
     const auto w = this->rcur.w;
 
-    // Read and convert all pixels into the buffer.
+    // TODO: Read framebuffer, convert and copy the pixels into the buffer provided by the caller.
     for (size_t y = 0; y < rcur.h; ++y) {
         for (size_t x = 0; x < rcur.w; ++x) {
             u32* p = rcast<u32*>(buf);
             // TODO: Convert framebuffer pixel into 32-bit RGBA pixel.
         }
     }
+*/
     return 0; // Operation succeeded.
 }
 
@@ -113,13 +117,17 @@ int Wnd::write(const char *buf,  // Buffer of 32-bit unsigned RGBA pixels.
                size_t      size) // The size in bytes to write.
                noexcept
 {
-    // Check if size of write is out of range.
+    // Check if size of the image to be written is larger than the image itself.
     if (size > this->size())
         return -EINVAL; // Invalid parameter.
 
     // Open framebuffer file.
     Fb         fb;
 
+    // Copy the buffer provided into the framebuffer.
+    memcpy(&fb.get8(i), buf, size);
+
+/*
     // Get screen attributes.
     const auto v = fb.scr.vinfo(); // Get "variable" screen info.
     const auto s = start(v);       // Compute the start index of the position.
@@ -137,6 +145,7 @@ int Wnd::write(const char *buf,  // Buffer of 32-bit unsigned RGBA pixels.
             fb.set(s+x+y*v.xres, Pix(r, g, b, a));
         }
     }
+*/
 
     // Indicate success!
     return 0; // Operation succeeded.
