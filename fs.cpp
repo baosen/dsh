@@ -189,8 +189,7 @@ int fs::read(const char            *path, // Pathname of the file to read.
             // Read keyboard input event from keyboard.
             int read = 0;
             for (uint i = 0; i < n; ++i) {
-                const auto e = kbsys::get();
-                memcpy(buf, &e, sizeof(input_event));
+                *rcast<input_event*>(buf) = kbsys::get();
                 buf += sizeof(input_event);
                 ++read;
             }
