@@ -17,7 +17,7 @@ using namespace std;
 #define SUCCESS 0 // Operation successful.
 
 // File tree.
-static ent ft {
+static ent root {
     "/",            // Root directory.
     S_IFDIR | 0755, // Is a directory ORed with the permission bits.
     { 
@@ -143,7 +143,7 @@ int fs::getattr(const char  *path,  // File path.
     // Prepare stat-buffer.
     zero(*stbuf);
 
-    // If caller wants to check the attributes of the root directory of the file system (backslash directory).
+    // If caller wants to check the attributes of the root (main) directory of the file system (backslash directory).
     if (!strcmp(path, "/")) {
         stbuf->st_mode = S_IFDIR | 0755; // Is a directory ORed with the permission bits.
         stbuf->st_nlink = 0;             // Number of hardlinks that points to this file that exists in the file system.
