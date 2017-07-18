@@ -9,20 +9,40 @@
 #include "cmds.hpp"
 #include "dsys.hpp"
 #include "wsys.hpp"
+#include "ent.hpp"
 #include "fs.hpp"
 using namespace std;
 
 // Return codes:
 #define SUCCESS 0 // Operation successful.
 
-// File entry.
-struct entry {
-    string  name;  // File name.
-    mode_t  mode;  // Mode of file.
-    nlink_t nlink; // Number of hard links.
-
-    entry  *files; // If it is a directory, it can contain files.
-    int     n;     // The number of files the directory contain.
+// File tree.
+static ent ft {
+    "/",            // Root directory.
+    S_IFDIR | 0755, // Is a directory ORed with the permission bits.
+    { 
+        { 
+            "kb", 
+             S_IFDIR | 0755,
+             { 
+                { "0", S_IFREG | 0444 }
+             }
+        },
+        { 
+            "m", 
+            S_IFDIR | 0755,
+            { 
+                { "0", S_IFREG | 0444 }
+            }
+        },
+        {
+            "wnd",
+            S_IFDIR | 0755,
+            {
+                { "0", S_IFREG | 0444 }
+            }
+        }
+    }
 };
 
 // File entries in the file system.
@@ -37,7 +57,9 @@ auto filedo(const char *path, // Path of the file.
             M           mf)   // Function to call when the path points to a mouse file.
 {
     // Check path for what kind of file is opened.
-    const char *bs = path+1, *s;
+    const char *bs = path+1, // Skip /-character.
+               *s;
+
     // Is a display?
     if ((s = strstr(bs, "dpy")))
         // Call display function.
