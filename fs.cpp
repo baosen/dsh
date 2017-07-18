@@ -61,17 +61,22 @@ auto doifentry(const char *path, // Path of the file.
 }
 
 // Initialize shell file system.
-void* fs::init(struct fuse_conn_info *conn) noexcept 
+void* fs::init(struct fuse_conn_info *conn)  
 {
     UNUSED(conn);
     return nullptr;
+}
+
+void fs::destroy(void* p) 
+{
+    UNUSED(p);
+    cleanup();
 }
 
 // Create shell file.
 int fs::create(const char            *path, // File path.
                mode_t                 mode, // Create mode.
                struct fuse_file_info *fi)   // Other info that is not part of POSIX.
-               noexcept
 {
     // TODO: Store mode and set it.
     UNUSED(mode);
@@ -102,7 +107,6 @@ int fs::create(const char            *path, // File path.
 // Get file attributes of a file in the shell file system.
 int fs::getattr(const char  *path,  // File path.
                 struct stat *stbuf) // Buffer to fill the file attributes information.
-                noexcept
 {
     // Prepare stat-buffer.
     zero(*stbuf);
@@ -131,7 +135,6 @@ int fs::readdir(const char            *path,   // File path.
                 fuse_fill_dir_t        fill,   // Function to call to fill the provided buffer with entries.
                 off_t                  offset, // Offset to place??
                 struct fuse_file_info *fi)     // Other info about the file.
-                noexcept
 {
     UNUSED(path);
     UNUSED(offset);
@@ -149,7 +152,6 @@ int fs::readdir(const char            *path,   // File path.
 // Open the shell file system.
 int fs::open(const char            *path, // Path to file to open.
              struct fuse_file_info *fi)   // Other file info.
-             noexcept 
 {
     // Force O_DIRECT (direct I/O, no caching).
     fi->direct_io = 1;
@@ -166,7 +168,6 @@ int fs::read(const char            *path,   // Pathname of the file to read.
              const size_t           nbytes, // The number of bytes to read.
              const off_t            i,      // The offset to read the data from.
              struct fuse_file_info *fi)     // Other info about the file read.
-             noexcept 
 {
     UNUSED(fi);
 
@@ -222,7 +223,6 @@ int fs::write(const char            *path, // Path to the file to be written to.
               const size_t           size, // The number of bytes to write.
               const off_t            i,    // The offset to write to.
               struct fuse_file_info *fi)   // Other info about the file read.
-              noexcept 
 {
     UNUSED(fi);
 
@@ -258,7 +258,6 @@ int fs::ioctl(const char            *path,  // Path of the file to control.
               struct fuse_file_info *fi,    // Other info.
               unsigned int           flags, // File flags ??
               void                  *data)  // ??
-              noexcept                      // This function cannot throw an exception.
 {
     UNUSED(arg);
     UNUSED(fi);
@@ -289,7 +288,6 @@ int fs::ioctl(const char            *path,  // Path of the file to control.
 int fs::mknod(const char *path, // File path.
               mode_t      mode, // Mode to set the newly created file node.
               dev_t       dev)  // Optional device provided.
-              noexcept 
 {
     UNUSED(dev);
 
@@ -371,6 +369,13 @@ static void mkw()
 // Cleanup filesystem.
 void fs::cleanup() 
 {
+    // Has it been called once?
+    static bool called = false;
+
+    // Check if cleanup has been called once.
+    if (called)
+        return;
+
     // Cleanup keyboard.
     kbsys::deinit();
     // Cleanup mouse.
@@ -384,6 +389,8 @@ void fs::cleanup()
     // Cleanup window.
     wsys::deinit();
 */
+
+    called = true;
 }
 
 // Setup shell.
