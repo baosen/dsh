@@ -3,26 +3,26 @@
 using namespace std;
 
 // Create an empty rectangular window in the framebuffer.
-Wnd::Wnd() {}
+wnd::wnd() {}
 
 // Create a rectangular window in the framebuffer.
-Wnd::Wnd(const Pos& p, // The position to place the rectangle in the framebuffer.
-         const Res& r) // The resolution of the rectangle in the framebuffer.
+wnd::wnd(const pos& p, // The position to place the rectangle in the framebuffer.
+         const res& r) // The resolution of the rectangle in the framebuffer.
     : pcur(p), rcur(r) {}
 
 // Computes the index of its position in the framebuffer.
-uint Wnd::i() const 
+uint wnd::i() const 
 {
     return pcur.i(rcur.w);
 }
 
 // Compute start index position.
-uint Wnd::start(const Scr::varinfo& v) const
+uint wnd::start(const Scr::varinfo& v) const
 {
     return pcur.x + pcur.y * v.xres; // The start index of the position.
 }
 
-Off Wnd::off() const
+Off wnd::off() const
 {
     // Set the positions to the color bits.
     Fb fb;
@@ -40,7 +40,7 @@ Off Wnd::off() const
 }
 
 // Fill the rectangular window in the framebuffer with the colour c.
-void Wnd::fill(const Pix& c) // Colour to fill the inside of the rectangle with.
+void wnd::fill(const Pix& c) // Colour to fill the inside of the rectangle with.
                const 
 {
     // Open framebuffer.
@@ -60,25 +60,25 @@ void Wnd::fill(const Pix& c) // Colour to fill the inside of the rectangle with.
 }
 
 // Get the size/length in bytes of the rectangular window.
-size_t Wnd::size() const 
+size_t wnd::size() const 
 {
     return rcur.h * rcur.w;
 }
 
 // Returns the window's current position.
-Pos Wnd::pos() const
+pos wnd::p() const
 {
     return pcur;
 }
 
 // Resize the rectangular window image in the framebuffer.
-void Wnd::resize(const Res& newr) // The new window resolution to resize to.
+void wnd::resize(const res& newr) // The new window resolution to resize to.
 {
     rcur = newr;
 }
 
 // Maximize the rectangular window image to fill the screen.
-void Wnd::max() 
+void wnd::max() 
 {
     // Save old positions before maximizing.
     save();
@@ -88,12 +88,12 @@ void Wnd::max()
 
     // Resize the window to fill the entire screen.
     const auto v = fb.scr.vinfo();
-    pcur = Pos(0, 0);
-    resize(Res(v.xres, v.yres));
+    pcur = pos(0, 0);
+    resize(res(v.xres, v.yres));
 }
 
 // Read from the image buffer of the rectangular window.
-int Wnd::read(void        *buf,  // Buffer of 32-bit unsigned RGBA pixels.
+int wnd::read(void        *buf,  // Buffer of 32-bit unsigned RGBA pixels.
               const off_t  i,    // Offset to write to framebuffer.
               const size_t size) // The size in bytes to write.
               const 
@@ -134,11 +134,13 @@ int Wnd::read(void        *buf,  // Buffer of 32-bit unsigned RGBA pixels.
 }
 
 // Write to the picture buffer to the rectangle. Returns exactly the number of bytes written except on error.
-int Wnd::write(const void  *buf,  // Buffer of 32-bit unsigned RGBA pixels.
+int wnd::write(const void  *buf,  // Buffer of 32-bit unsigned RGBA pixels.
                const off_t  i,    // Offset to write to framebuffer.
                const size_t size) // The size in bytes to write.
                noexcept
 {
+    UNUSED(size);
+
     // Check if size of the image to be written is larger than the image itself.
     //if (size > this->size())
         //return -EINVAL; // Invalid parameter.
@@ -178,7 +180,7 @@ int Wnd::write(const void  *buf,  // Buffer of 32-bit unsigned RGBA pixels.
 }
 
 // Save old pos and res of old window.
-void Wnd::save() 
+void wnd::save() 
 {
     // Save current rectangle.
     rold = rcur;

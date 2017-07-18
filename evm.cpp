@@ -38,33 +38,33 @@ static bool ism(char b[EV_MAX]) // le bits.
 }
 
 // Open event mouse device file.
-Evm::Evm() {}
+evm::evm() {}
 
 // Find a "event" mouse and open it.
-Evm::Evm(const uint i) // The ith mouse to open.
-    : ev(i) // Open the ith event file.
+evm::evm(const uint i) // The ith mouse to open.
+    : e(i) // Open the ith event file.
 {
     // Check if input device given has mouse capabilities.
     char b[EV_MAX];
-    ev.evbits(b);
+    e.evbits(b);
     if (!ism(b))
         throw err("No mouse capabilities in this event device.");
 }
 
 // Open mouse event device file.
-bool Evm::open(const uint i) // The ith event mouse device file to open.
+bool evm::open(const uint i) // The ith event mouse device file to open.
 {
-    return ev.open(i);
+    return e.open(i);
 }
 
 // Close mouse event device file.
-void Evm::close() 
+void evm::close() 
 {
-    ev.close();
+    e.close();
 }
 
 // Read event mouse.
-input_event Evm::rd() 
+input_event evm::rd() 
 {
-    return ev.rd();
+    return e.rd();
 }

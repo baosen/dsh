@@ -16,7 +16,7 @@ int main()
         return EXIT_FAILURE;
     }
 
-    msys::Ev e;
+    msys::ev e;
     int      n;
     cout << "sizeof: " << sizeof(e) << endl;
     for (;;) {

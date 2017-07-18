@@ -3,12 +3,12 @@
 #include "types.hpp"
 
 // Event-driven input using event* device file.
-class Ev {
+class ev {
 public:
     // Create empty event input device file.
-    Ev();
+    ev();
     // Open event device file.
-    Ev(const uint i);
+    ev(const uint i);
 
     // Open device file.
     bool open(const uint i);
@@ -23,7 +23,7 @@ public:
     void evbits(char*);
 
     // Close event device file.
-    ~Ev();
+    ~ev();
 private:
     int fd; // event device file descriptor.
 };

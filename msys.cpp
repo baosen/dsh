@@ -7,43 +7,43 @@
 using namespace std;
 
 // Mouse subsystem.
-static deque<msys::Ev> evq; // Stored queue of mouse events.
+static deque<msys::ev> evq; // Stored queue of mouse events.
 
 // Key. Mouse button press or release.
-static void key(msys::Ev&          ev, // Mouse subsystem mouse event to set.
+static void key(msys::ev&          ev, // Mouse subsystem mouse event to set.
                 const input_event& e)  // Event mouse device file event.
 {
     switch (e.code) {
     case BTN_LEFT:    // Left mouse button.
-        ev.type = msys::Ev::LEFT;
+        ev.type = msys::ev::LEFT;
         ev.val  = e.value;
         break;
     case BTN_RIGHT:   // Right mouse button.
-        ev.type = msys::Ev::RIGHT;
+        ev.type = msys::ev::RIGHT;
         ev.val  = e.value;
         break;
     case BTN_MIDDLE:  // Middle mouse button.
-        ev.type = msys::Ev::MID;
+        ev.type = msys::ev::MID;
         ev.val  = e.value;
         break;
     case BTN_SIDE:    // Side mouse button.
-        ev.type = msys::Ev::SIDE;
+        ev.type = msys::ev::SIDE;
         ev.val  = e.value;
         break;
     case BTN_EXTRA:   // Extra mouse button?
-        ev.type = msys::Ev::EXTRA;
+        ev.type = msys::ev::EXTRA;
         ev.val  = e.value;
         break;
     case BTN_FORWARD: // Forward button.
-        ev.type = msys::Ev::FORWARD;
+        ev.type = msys::ev::FORWARD;
         ev.val  = e.value;
         break;
     case BTN_BACK:    // Back button (to go backwards in browser?).
-        ev.type = msys::Ev::BACK;
+        ev.type = msys::ev::BACK;
         ev.val  = e.value;
         break;
     case BTN_TASK:    // Task button.
-        ev.type = msys::Ev::TASK;
+        ev.type = msys::ev::TASK;
         ev.val  = e.value;
         break;
     default:
@@ -53,21 +53,21 @@ static void key(msys::Ev&          ev, // Mouse subsystem mouse event to set.
 }
 
 // Relative axis. Mouse movement.
-void rel(msys::Ev&          ev, // Mouse subsystem mouse event to set.
+void rel(msys::ev&          ev, // Mouse subsystem mouse event to set.
          const input_event& e)  // Mouse input event.
 {
     // Mouse movements follows top-left coordinate system, where origo is at the top left of the screen and the positive y-axis points downwards.
     switch (e.code) {
     case 0: // x-axis, - left, + right.
-        ev.type = msys::Ev::X;
+        ev.type = msys::ev::X;
         ev.val  = e.value;
         break;
     case 1: // y-axis, - upwards, + downwards.
-        ev.type = msys::Ev::Y;
+        ev.type = msys::ev::Y;
         ev.val  = e.value;
         break;
     case 8: // wheel scroll, 1 up and -1 down.
-        ev.type = msys::Ev::WHEEL;
+        ev.type = msys::ev::WHEEL;
         ev.val  = e.value;
         break;
     }
@@ -88,8 +88,8 @@ static void syn(const __s32 code) // Event code reported.
 }
 
 // Window functions for event device mouse.
-namespace evm {
-    Evm e; // Event mouse device.
+namespace evtm {
+    evm e; // Event mouse device.
 
     // Open mouse event device.
     static bool init() 
@@ -107,7 +107,7 @@ namespace evm {
     static int waitevt(void        *buf, // Buffer to put event blocks.
                        const size_t n)   // Number of mouse events (events, not bytes) to put in the buffer.
     {
-        msys::Ev mev;
+        msys::ev mev;
         uint     i;
 
         // Put n blocks into the buffer.
@@ -159,8 +159,8 @@ namespace evm {
 }
 
 // Window functions for "hacky" device mouse.
-namespace m {
-    M m; // "Hacky" mouse.
+namespace hacky {
+    m m; // "Hacky" mouse.
 
     // Initialize and setup "hacky" mouse.
     static bool init() {
@@ -174,7 +174,7 @@ namespace m {
     }
 
     static void *buf;
-    static void copy(const msys::Ev& mev)
+    static void copy(const msys::ev& mev)
     {
         // Copy it!
         memcpy(buf, &mev, sizeof mev);
@@ -182,7 +182,7 @@ namespace m {
         buf = scast<char*>(buf) + sizeof(mev);
     }
 
-    deque<msys::Ev> evv;
+    deque<msys::ev> evv;
 
     static int waitevt(void        *buf, // Buffer to fill.
                        const size_t n)   // Number of events (events, not bytes) to put in the buffer.
@@ -192,7 +192,7 @@ namespace m {
             return 0;
 
         int i  = 0;  // TODO: What to do if this becomes negative on overflow?
-        m::buf = buf;
+        hacky::buf = buf;
 
         // Leftovers?
         while (!evv.empty()) {
@@ -200,12 +200,12 @@ namespace m {
             evv.pop_front();
             i++;
             if (i >= scast<int>(n))
-                return i*sizeof(msys::Ev);
+                return i*sizeof(msys::ev);
         }
 
         while (scast<int>(n) - i > 0) {
             // Allocate mouse event.
-            msys::Ev   mev;
+            msys::ev   mev;
 
             // Wait for input event and read it.
             const auto ev = m.rd();
@@ -213,70 +213,70 @@ namespace m {
 // TODO: Potential overflow bug?
 #define ADD \
     if (i < scast<int>(n)) { \
-        m::copy(mev); \
+        hacky::copy(mev); \
         i++; \
     } else \
-        m::evv.push_back(mev); \
+        hacky::evv.push_back(mev); \
 
             // Add X-axis event.
             zero(mev);
-            mev.type = msys::Ev::X;
+            mev.type = msys::ev::X;
             mev.val  = ev.x;
             ADD
 
             // Add Y-axis event.
             zero(mev);
-            mev.type = msys::Ev::Y;
+            mev.type = msys::ev::Y;
             mev.val  = ev.y;
             ADD
 
             // Add left button event.
             zero(mev);
-            mev.type = msys::Ev::LEFT;
+            mev.type = msys::ev::LEFT;
             mev.val  = ev.left;
             ADD
 
             // Add middle button event.
             zero(mev);
-            mev.type = msys::Ev::MID;
+            mev.type = msys::ev::MID;
             mev.val  = ev.mid;
             ADD
 
             // Add right button event.
             zero(mev);
-            mev.type = msys::Ev::RIGHT;
+            mev.type = msys::ev::RIGHT;
             mev.val  = ev.right;
             ADD
         }
 
         // Return the number of processed events in bytes.
-        return i*sizeof(msys::Ev);
+        return i * sizeof(msys::ev);
     }
 }
 
 // Initialize mouse.
 bool (*minit[])() {
-    &evm::init, // Event mouse initialization.
-    &m::init,   // "hacky" mouse initialization.
+    &evtm::init,   // Event mouse initialization.
+    &hacky::init,  // "hacky" mouse initialization.
 };
 
 // Deinitialize mouse.
 void (*mdeinit[])() {
-    &evm::deinit, // Deinitialize event mouse device file.
-    &m::deinit,   // Deinitialize mouse device file.
+    &evtm::deinit,   // Deinitialize event mouse device file.
+    &hacky::deinit,  // Deinitialize mouse device file.
 };
 
 // Wait for event and get mouse motion.
-static msys::Mmotion mot[] {
-    &evm::waitevt, // Get event mouse motion.
-    &m::waitevt    // Get "hacky" mouse motion.
+static msys::mmot mot[] {
+    &evtm::waitevt,  // Get event mouse motion.
+    &hacky::waitevt  // Get "hacky" mouse motion.
 };
 
 // The deinitialize for the current mouse device that is used.
 static void (*devdeinit)() = nullptr;
 
 // Current mouse device that is used.
-msys::Mmotion msys::getmot = nullptr;
+msys::mmot msys::getmot = nullptr;
 
 // Initialize and setup mouse.
 void msys::init() 

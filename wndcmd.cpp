@@ -1,7 +1,8 @@
 #include "wcmds.hpp"
 
 // Do window command.
-int wndcmd(const int cmd) {
+int wndcmd(const int cmd) 
+{
     switch (cmd) {
     case Wndcmd::max:   // User wants to maximize window.
         return 0;

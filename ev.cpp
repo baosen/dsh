@@ -7,20 +7,23 @@
 using namespace std;
 
 // Create empty event input device file.
-Ev::Ev() : fd(-2) {}
+ev::ev() : fd(-2) {}
 
 // Open event device file.
-Ev::Ev(const uint i) {
+ev::ev(const uint i) 
+{
     open(i);
 }
 
 // Close event device file.
-Ev::~Ev() {
+ev::~ev() 
+{
     close();
 }
 
 // Open device file.
-bool Ev::open(const uint i) {
+bool ev::open(const uint i) 
+{
     // Try opening the event device file.
     stringstream ss;
     ss << "/dev/input/event" << i;
@@ -35,7 +38,8 @@ bool Ev::open(const uint i) {
 }
 
 // Close device file.
-void Ev::close() {
+void ev::close() 
+{
     // If no event device file is opened yet.
     if (fd == -2)
         return;
@@ -50,19 +54,23 @@ void Ev::close() {
 }
 
 // Get event bits.
-void Ev::evbits(char b[EV_MAX]) {
+void ev::evbits(char b[EV_MAX]) 
+{
     int n;
     if ((n = ioctl(fd, EVIOCGBIT(0, EV_MAX), b)) < 0)
         throw err("Could not get event types.");
 }
 
 // Read from event file.
-input_event Ev::rd() {
+input_event ev::rd() 
+{
     input_event e;
+
     if (::read(fd, &e, sizeof e) < 0) {
         stringstream ss;
         ss << "Failed to read event file: " << strerror(errno) << endl;
         throw err(ss.str());
     }
+
     return e;
 }

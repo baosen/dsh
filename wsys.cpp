@@ -8,14 +8,14 @@ using namespace std;
 
 namespace {
     // Windows managed by the windowing subsystem.
-    unordered_map<string, unique_ptr<Wnd>> wnds;
+    unordered_map<string, unique_ptr<wnd>> wnds;
 }
 
 // Initialize and setup window system.
 void wsys::init() 
 {
     // TODO: For testing purposes.
-    wnds["wnd0"] = unique_ptr<Wnd>(new Wnd());
+    wnds["wnd0"] = unique_ptr<wnd>(new wnd());
 }
 
 // Deinitialize the window system.

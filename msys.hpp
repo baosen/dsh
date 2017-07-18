@@ -5,7 +5,7 @@
 // Mouse subsystem.
 namespace msys {
     // Mouse event.
-    struct Ev {
+    struct ev {
         // Type of mouse event.
         enum {
             X,       // X motion.
@@ -22,6 +22,7 @@ namespace msys {
             BACK,    // Back button.
             TASK,    // Task button.
         } type;
+
         // Data describing the event.
         // Mouse move in the mirrored y cartesian axis. 
         // Y-axis is mirrored to act the same as the axis of a framebuffer usually found in graphical devices.
@@ -37,8 +38,8 @@ namespace msys {
     void deinit();
 
     // Wait for event and get mouse motion. Returns the number of processed mouse events in bytes.
-    typedef int (*Mmotion)(void *buf, const size_t n);
+    typedef int (*mmot)(void *buf, const size_t n);
 
     // Current mouse device that is used.
-    extern Mmotion getmot;
+    extern mmot getmot;
 }

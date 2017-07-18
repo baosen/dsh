@@ -73,6 +73,6 @@ private:
     void nullflip();
     void fbclear();
 
-    friend class Wnd;
-    friend void dsys::init();
+    friend class wnd;
+    friend void  dsys::init();
 };

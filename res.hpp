@@ -1,12 +1,12 @@
 #pragma once
 #include "types.hpp"
 
-class Res {
+class res {
 public:
-    Res();
-    Res(const uint w, const uint h);
-    const Res& operator=(const Res& r);
+    res();
+    res(const uint w, const uint h);
+    const res& operator=(const res& r);
 
-    uint w, // width.
-         h; // height.
+    uint w, // Width of the resolution.
+         h; // Height of the resolution.
 };

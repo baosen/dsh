@@ -5,7 +5,7 @@ Mwnd::Mwnd() {}
 Mwnd::Mwnd(const uint size) : mem(size) {}
 
 // Handle window click.
-void Mwnd::click(const Pos& p) {
+void Mwnd::click(const pos& p) {
 }
 
 // Access pixel.

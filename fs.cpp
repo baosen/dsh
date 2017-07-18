@@ -15,6 +15,16 @@ using namespace std;
 // Return codes:
 #define SUCCESS 0 // Operation successful.
 
+// File entry.
+struct entry {
+    string  name;  // File name.
+    mode_t  mode;  // Mode of file.
+    nlink_t nlink; // Number of hard links.
+
+    entry  *files; // If it is a directory, it can contain files.
+    int     n;     // The number of files the directory contain.
+};
+
 // File entries in the file system.
 static list<string> ents; // List of file entries.
 
@@ -208,11 +218,11 @@ int fs::read(const char            *path,   // Pathname of the file to read.
             // Read from mouse.
 
             // Check if divisible.
-            if (sizeof(msys::Ev) % nbytes != 0)
+            if (sizeof(msys::ev) % nbytes != 0)
                 return -EINVAL;
 
             // Copy mouse event into the buffer.
-            return msys::getmot(buf, nbytes / sizeof(msys::Ev));
+            return msys::getmot(buf, nbytes / sizeof(msys::ev));
         });
     });
 }

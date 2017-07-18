@@ -7,8 +7,8 @@ using namespace std;
 
 static void test1()
 {
-    Wnd r1(Pos(400, 400), Res(100, 100)),
-        r2(Pos(200, 200), Res(100, 100));
+    wnd r1(pos(400, 400), res(100, 100)),
+        r2(pos(200, 200), res(100, 100));
 
     r1.fill(Pix(255, 255, 255, 255));
     keywait();
@@ -22,7 +22,7 @@ static void test1()
 
 static void test2()
 {
-    Wnd w(Pos(0, 0), Res(100, 100));
+    wnd w(pos(0, 0), res(100, 100));
     w.fill(Pix(255, 0, 255, 255));
     keywait();
 
@@ -34,11 +34,11 @@ static void test2()
 
 static void movetest()
 {
-    M   m(1);
+    m   m(1);
     int px = 0, 
         py = 0;
 
-    Wnd r(Pos(px, py), Res(100, 100));
+    wnd r(pos(px, py), res(100, 100));
     r.fill(Pix(255, 255, 255, 255));
 
     for (;;) {
@@ -49,7 +49,7 @@ static void movetest()
             px = 0;
         if (py < 0)
             py = 0;
-        Wnd r(Pos(px, py), Res(100, 100));
+        wnd r(pos(px, py), res(100, 100));
         r.fill(Pix(255, 255, 255, 255));
     }
 }

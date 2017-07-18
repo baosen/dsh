@@ -8,7 +8,7 @@ int main()
 {
     msys::init();
 
-    unique_ptr<msys::Ev> e(new msys::Ev);
+    unique_ptr<msys::ev> e(new msys::ev);
 
     forever {
         uint nbytes = msys::getmot(&*e, 1);

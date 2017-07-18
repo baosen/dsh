@@ -2,17 +2,17 @@
 #include "types.hpp"
 
 // Position.
-class Pos {
+class pos {
 public:
     // Create blank position positioned at (0, 0).
-    Pos();
+    pos();
     // Set x and y of position.
-    Pos(const uint x, const uint y);
+    pos(const uint x, const uint y);
 
     // Get index computed from width.
     uint               i(const uint stride) const;
     // Assign position.
-    const Pos& operator=(const Pos&);
+    const pos& operator=(const pos&);
 
     uint x, y;
 };

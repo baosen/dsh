@@ -1,11 +1,11 @@
 #include "ev.hpp"
 
 // Mouse input from mouse event device file.
-class Evm {
+class evm {
 public:
-    Evm();
+    evm();
     // Open event device file for mouse.
-    Evm(const uint i);
+    evm(const uint i);
 
     // Open mouse event device file.
     bool open(const uint i);
@@ -15,5 +15,5 @@ public:
     // Read input event from the mouse event device.
     input_event rd();
 private:
-    Ev ev;
+    ev e;
 };

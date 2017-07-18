@@ -6,10 +6,10 @@
 using namespace std;
 
 // Open an empty "hacky" mouse.
-M::M() : fd(-2) {}
+m::m() : fd(-2) {}
 
 // Open the "hacky" mouse input device file.
-M::M(const uint i) 
+m::m(const uint i) 
 {
     if (open(i))
         return;
@@ -22,12 +22,12 @@ M::M(const uint i)
 }
 
 // Close mouse input device file.
-M::~M() {
+m::~m() {
     close();
 }
 
 // Open "hacky" mouse.
-bool M::open(const uint i) {
+bool m::open(const uint i) {
     // Generic input using mouse* device file.
     stringstream ss;
     ss << "/dev/input/mouse" << i;
@@ -35,7 +35,7 @@ bool M::open(const uint i) {
 }
 
 // Close "hacky" mouse.
-void M::close() {
+void m::close() {
     // If empty "hacky" mouse.
     if (fd == -2)
         return;
@@ -49,7 +49,7 @@ void M::close() {
 }
 
 // Read mouse input from mouse device file.
-M::Ev M::rd() {
+m::ev m::rd() {
     // Read using generic mouse device file.
     char       e[3]; // The read mouse state.
     const auto ret = ::read(fd, &e, sizeof e);
@@ -57,13 +57,13 @@ M::Ev M::rd() {
     if (ret < 0)
         throw errno; // todo.
     if (ret == sizeof e) {
-        M::Ev ev;
-        ev.x     = e[1];              // x.
-        ev.y     = e[2];              // y.
-        ev.left  = (e[0] & 1);        // 1 bit is left mouse button pressed?
-        ev.right = ((e[0] >> 1) & 1); // 2 bit is right mouse button pressed?
-        ev.mid   = ((e[0] >> 2) & 1); // 3 bit is middle mouse button pressed?
-        return ev;
+        m::ev evt;
+        evt.x     = e[1];              // x.
+        evt.y     = e[2];              // y.
+        evt.left  = (e[0] & 1);        // 1 bit is left mouse button pressed?
+        evt.right = ((e[0] >> 1) & 1); // 2 bit is right mouse button pressed?
+        evt.mid   = ((e[0] >> 2) & 1); // 3 bit is middle mouse button pressed?
+        return evt;
     }
     throw err("Error reading /dev/input/mouse0");
 }
