@@ -11,7 +11,7 @@ public:
     wnd(const pos& p, const res& r);
 
     // Fill window with a colour.
-    void   fill(const Pix& c) const;
+    void   fill(const pix& c) const;
 
     // Returns the index to its position in the framebuffer.
     uint   i()    const;
@@ -20,7 +20,7 @@ public:
     // Returns the window's current position.
     pos    p()    const;
     // Returns the window's offsets to the color bits.
-    Off    off()  const;
+    off    o()  const;
 
     // Move window to new position.
     void   move(const pos& p);
@@ -53,7 +53,8 @@ protected:
 
 private:
     // Compute start index position.
-    uint start(const Scr::varinfo& v) const;
+    uint start(const scr::varinfo& v) const;
+
     // Save old window state.
     void save();
 };

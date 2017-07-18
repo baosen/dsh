@@ -18,7 +18,7 @@ int main()
 
     msys::ev e;
     int      n;
-    cout << "sizeof: " << sizeof(e) << endl;
+
     for (;;) {
         n = ::read(fd, &e, sizeof(e));
         if (n < 0) {

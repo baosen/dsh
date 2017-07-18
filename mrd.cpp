@@ -2,13 +2,15 @@
 using namespace std;
 
 // Return number of device files.
-//static uint nfiles() {
+//static uint nfiles() 
+//{
 //    return 3;
 //}
 
 /*
 // Discover generic "hacked" mouse.
-static int discgen() {
+static int discgen() 
+{
     int fd, n = nfiles();
     stringstream s;
     for (int i = 0; i < n; ++i) {
@@ -23,7 +25,8 @@ static int discgen() {
 
 /*
 // Discover mouse event file.
-static int discevt() {
+static int discevt() 
+{
     int fd, n = nfiles();
     stringstream s;
     for (int i = 0; i < n; ++i) {

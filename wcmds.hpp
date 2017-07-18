@@ -2,7 +2,7 @@
 #include "types.hpp"
 
 // Window commands/opcodes.
-enum Wndcmd : s8 {
+enum wndcmd : s8 {
     max,   // User wants to maximize window.
     min,   // User wants to minimize window.
     click, // User clicks somewhere on the window.

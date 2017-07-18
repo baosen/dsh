@@ -10,7 +10,7 @@ using namespace std;
 #define CTL(req, ...) ioctl(fd, req, __VA_ARGS__)
 
 // Setup double-buffered framebuffer screen.
-Scr::Scr() 
+scr::scr() 
     : page(0),     // Start on page buffer 0.
       dbufen(true) // Enable double buffering using fbdev by default.
 {
@@ -50,14 +50,14 @@ Scr::Scr()
 }
 
 // Close framebuffer file.
-Scr::~Scr() 
+scr::~scr() 
 {
     if (close(fd) < 0)
         die("Failed to close /dev/fb0!");
 }
 
 // Returns framebuffer variable screen info.
-Scr::varinfo Scr::vinfo() 
+scr::varinfo scr::vinfo() 
 {
     varinfo v;
     if (CTL(FBIOGET_VSCREENINFO, &v) < 0)
@@ -66,7 +66,7 @@ Scr::varinfo Scr::vinfo()
 }
 
 // Returns framebuffer fixed screen info.
-Scr::fixinfo Scr::finfo() 
+scr::fixinfo scr::finfo() 
 {
     fixinfo f;
     if (CTL(FBIOGET_FSCREENINFO, &f) < 0)
@@ -75,7 +75,7 @@ Scr::fixinfo Scr::finfo()
 }
 
 // Wait for vertical sync.
-void Scr::vsync()
+void scr::vsync()
 {
     if (isvsync()) {
 #ifdef DEBUG
@@ -88,20 +88,20 @@ void Scr::vsync()
 }
 
 // Check for vertical sync by waiting for it.
-bool Scr::isvsync()
+bool scr::isvsync()
 {
     return CTL(FBIO_WAITFORVSYNC, 0) >= 0;
 }
 
 // Pan display.
-void Scr::pan(const Scr::varinfo& v) 
+void scr::pan(const scr::varinfo& v) 
 {
     if (CTL(FBIOPAN_DISPLAY, v) < 0)
         throw err("Failed to pan display!");
 }
 
 // Flip to another buffer.
-void Scr::flip()
+void scr::flip()
 {
     page = (page + 1) % 2;
     v.yoffset = page * v.yres;

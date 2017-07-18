@@ -4,7 +4,7 @@
 #include "kb.hpp"
 using namespace std;
 
-static void wctest(Kb& kb)
+static void wctest(kb& kb)
 {
     wchar_t     c[2] = {0};
     input_event k;
@@ -18,7 +18,7 @@ static void wctest(Kb& kb)
     }
 }
 
-static void asciitest(Kb& kb)
+static void asciitest(kb& kb)
 {
     char c;
     input_event k;
@@ -33,13 +33,13 @@ static void asciitest(Kb& kb)
     }
 }
 
-static void get1(Kb& kb)
+static void get1(kb& kb)
 {
     for (;;)
         kb.get1();
 }
 
-static void get2(Kb& kb)
+static void get2(kb& kb)
 {
     for (;;)
         kb.get2();
@@ -47,7 +47,7 @@ static void get2(Kb& kb)
 
 int main()
 {
-    Kb kb;
+    kb kb;
 
     try {
         kb.rd1();

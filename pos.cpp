@@ -9,7 +9,7 @@ pos::pos(const uint x, const uint y)
 {}
 
 // Get index computed from width.
-uint pos::i(const uint stride) // stride.
+uint pos::i(const uint stride) // stride is width.
             const 
 {
     return x + (y * stride);

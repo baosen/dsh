@@ -17,17 +17,18 @@ uint wnd::i() const
 }
 
 // Compute start index position.
-uint wnd::start(const Scr::varinfo& v) const
+uint wnd::start(const scr::varinfo& v) const
 {
     return pcur.x + pcur.y * v.xres; // The start index of the position.
 }
 
-Off wnd::off() const
+off wnd::o() const
 {
     // Set the positions to the color bits.
-    Fb fb;
-    const auto v = fb.scr.vinfo();
-    Off o;
+    fb         fb;
+    const auto v = fb.sc.vinfo();
+    off        o;
+
     if (v.red.length)
         o.roff = v.red.offset;    // Position to red bits.
     if (v.green.length)
@@ -40,14 +41,14 @@ Off wnd::off() const
 }
 
 // Fill the rectangular window in the framebuffer with the colour c.
-void wnd::fill(const Pix& c) // Colour to fill the inside of the rectangle with.
+void wnd::fill(const pix& c) // Colour to fill the inside of the rectangle with.
                const 
 {
     // Open framebuffer.
-    Fb fb;
+    fb fb;
 
     // Compute pixel color and position.
-    const auto v = fb.scr.vinfo();
+    const auto v = fb.sc.vinfo();
     const auto s = start(v); // The start index of the position.
 
     // Fill the rectangle in Linux framebuffer.
@@ -84,17 +85,17 @@ void wnd::max()
     save();
 
     // Open framebuffer file.
-    Fb fb;
+    fb fb;
 
     // Resize the window to fill the entire screen.
-    const auto v = fb.scr.vinfo();
+    const auto v = fb.sc.vinfo();
     pcur = pos(0, 0);
     resize(res(v.xres, v.yres));
 }
 
 // Read from the image buffer of the rectangular window.
 int wnd::read(void        *buf,  // Buffer of 32-bit unsigned RGBA pixels.
-              const off_t  i,    // Offset to write to framebuffer.
+              const off_t  i,    // offset to write to framebuffer.
               const size_t size) // The size in bytes to write.
               const 
               noexcept
@@ -104,10 +105,10 @@ int wnd::read(void        *buf,  // Buffer of 32-bit unsigned RGBA pixels.
         return -EINVAL; // Invalid parameter.
 
     // Open framebuffer file.
-    Fb         fb;
+    fb         fb;
 
     // Get screen attributes.
-    const auto v = fb.scr.vinfo(); // Get "variable" screen info.
+    const auto v = fb.sc.vinfo(); // Get "variable" screen info.
     const auto s = start(v);       // Compute the start index of the window position.
 
     // Copy row by row.
@@ -116,7 +117,7 @@ int wnd::read(void        *buf,  // Buffer of 32-bit unsigned RGBA pixels.
 
 /*
     // Get screen attributes.
-    const auto v = fb.scr.vinfo();
+    const auto v = fb.sc.vinfo();
     const auto s = pcur.x + pcur.y * v.xres;
 
     // Get width of the rectangle to read.
@@ -135,7 +136,7 @@ int wnd::read(void        *buf,  // Buffer of 32-bit unsigned RGBA pixels.
 
 // Write to the picture buffer to the rectangle. Returns exactly the number of bytes written except on error.
 int wnd::write(const void  *buf,  // Buffer of 32-bit unsigned RGBA pixels.
-               const off_t  i,    // Offset to write to framebuffer.
+               const off_t  i,    // offset to write to framebuffer.
                const size_t size) // The size in bytes to write.
                noexcept
 {
@@ -146,11 +147,11 @@ int wnd::write(const void  *buf,  // Buffer of 32-bit unsigned RGBA pixels.
         //return -EINVAL; // Invalid parameter.
 
     // Open framebuffer file.
-    Fb fb;
+    fb fb;
 
     // Get screen attributes.
-    const auto v = fb.scr.vinfo(); // Get "variable" screen info.
-    const auto s = start(v);       // Compute the start index of the window position.
+    const auto v = fb.sc.vinfo(); // Get "variable" screen info.
+    const auto s = start(v);      // Compute the start index of the window position.
 
     // Copy row by row.
     for (uint y = 0; y < rcur.h; ++y)

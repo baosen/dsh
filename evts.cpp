@@ -7,7 +7,8 @@
 #define test_bit(n, p) !!(n & (1u << p))
 #define PATH_TO_EVENT_FILE "/dev/input/event0"
 
-int main() {
+int main() 
+{
     int fd;
     if ((fd = open(PATH_TO_EVENT_FILE, O_RDONLY)) < 0)
         exit(EXIT_FAILURE);

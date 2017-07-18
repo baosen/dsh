@@ -16,7 +16,7 @@ namespace {
     // TODO: Use DRM graphical output.
 #elif defined(FB)
     // Use framebuffer graphical output.
-    Fb *fb;
+    fb *f;
 #endif
 }
 
@@ -33,12 +33,12 @@ void dsys::init()
     drm::init();
 #elif defined(FB)
     // Allocate framebuffer.
-    fb    = new Fb();
+    f    = new fb();
     // Set color bit depths.
-    red   = fb->roff;
-    green = fb->goff;
-    blue  = fb->boff;
-    alpha = fb->aoff;
+    red   = f->roff;
+    green = f->goff;
+    blue  = f->boff;
+    alpha = f->aoff;
 #endif
 }
 
@@ -47,10 +47,9 @@ void dsys::write(const char  *name, // Name of the display screen.
                  const char  *buf,  // Buffer to write to the display screen.
                  const off_t  i,    // Offset of the display.
                  const size_t size) // How much in bytes to write to the display screen.
-                 noexcept
 {
 #ifdef FB
-    memcpy(&fb->get8(i), buf, size);
+    memcpy(&f->get8(i), buf, size);
 #elif DRM
 #   error Write unimplemented for DRM.
 #endif
@@ -61,10 +60,9 @@ void dsys::read(const char  *name, // Name of the display screen.
                 char        *buf,  // Buffer to read to.
                 const off_t  i,    // Offset to read from.
                 const size_t size) // How much in bytes to read from the display screen.
-                noexcept
 {
 #ifdef FB
-    memcpy(buf, &fb->get8(i), size);
+    memcpy(buf, &f->get8(i), size);
 #elif DRM
 #   error Read unimplemented for DRM.
 #endif
@@ -73,7 +71,7 @@ void dsys::read(const char  *name, // Name of the display screen.
 // De-initialize display system.
 void dsys::deinit() {
 #ifdef FB
-    delete fb;
+    delete f;
     red = green = blue = alpha = 0;
 #elif DRM
     drm::deinit();

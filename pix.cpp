@@ -1,14 +1,14 @@
 #include "pix.hpp"
 
 // The color of a pixel.
-Pix::Pix(const uint r, // Red.
+pix::pix(const uint r, // Red.
          const uint g, // Green.
          const uint b, // Blue.
          const uint a) // Alpha.
     : r(r), g(g), b(b), a(a) {}
 
 // Compute pixel formatted to the framebuffer's pixel format.
-u32 Pix::val(const int roff, // Red bit position.
+u32 pix::val(const int roff, // Red bit position.
              const int goff, // Green bit position.
              const int boff, // Blue bit position.
              const int aoff) // Alpha-transparency bit position.
@@ -26,7 +26,7 @@ u32 Pix::val(const int roff, // Red bit position.
     return pix;
 }
 
-u32 Pix::val(const Off& o) const
+u32 pix::val(const off& o) const
 {
     u32 pix = 0;
     if (o.roff >= 0)

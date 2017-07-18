@@ -13,12 +13,15 @@ vector<string> lsdir(const char *name)
     vector<string> dirs; // directories.
     DIR           *dir;  // directory.
     dirent        *e;    // directory entry.
+
     // Open directory.
     if (!(dir = opendir(name)))
         throw err("Invalid directory name.");
+
     // Read directory.
     if (!(e = readdir(dir)))
         throw err("Cannot read directory.");
+
     // List files.
     do {
         // Is entry a directory?
@@ -28,9 +31,11 @@ vector<string> lsdir(const char *name)
         else
             dirs.push_back(e->d_name);
     } while ((e = readdir(dir)));
+
     // Close directory.
     if (closedir(dir) < 0)
         throw errno;
+
     return dirs;
 }
 // based upon: http://stackoverflow.com/questions/8436841/how-to-recursively-list-directories-in-c-on-linux.

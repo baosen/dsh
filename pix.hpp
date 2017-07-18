@@ -2,17 +2,17 @@
 #include "types.hpp"
 
 // Offsets to the pixel bits.
-struct Off {
+struct off {
     int roff, // Red offset.
         goff, // Green offset.
         boff, // Blue offset.
         aoff; // Alpha offset.
 };
 
-// Colored pixel.
-class Pix {
+// Colored screen pixel.
+class pix {
 public:
-    Pix(const uint r,  // Red.
+    pix(const uint r,  // Red.
         const uint g,  // Green.
         const uint b,  // Blue.
         const uint a); // Alpha.
@@ -24,7 +24,7 @@ public:
             const int aoff) // Alpha offset.
             const;
 
-    u32 val(const Off& o) const;
+    u32 val(const off& o) const;
 private:
     uint r, // Red.
          g, // Green.

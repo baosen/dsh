@@ -3,6 +3,7 @@
 
 // Keyboard subsystem for file system.
 namespace kbsys {
+
     // Initialize keyboard subsystem.
     void init();
     // Deinitialize keyboard subsystem.

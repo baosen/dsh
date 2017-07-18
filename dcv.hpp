@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "mouse.hpp"
+#include "m.hpp"
 
 // Discover mouse input devices in the system.
-std::vector<Mouse> mdcv();
+std::vector<m> mdcv();

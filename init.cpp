@@ -3,7 +3,8 @@
 #include "kbsys.hpp"
 
 // Initialize shell.
-void init() {
+void init() 
+{
     // Setup mouse.
     msys::init();
     // Setup keyboard.

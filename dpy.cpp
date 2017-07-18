@@ -6,7 +6,8 @@
 using namespace std;
 
 // Open a display directory specified by the given path.
-Dpy::Dpy(const string& path) {
+dpy::dpy(const string& path) 
+{
     // Create display directory containing all window and rectangle files.
     static uint i = 0;
     // TODO: Parse and traverse path.
@@ -18,6 +19,7 @@ Dpy::Dpy(const string& path) {
 }
 
 // Disconnect from the display.
-Dpy::~Dpy() {
+dpy::~dpy() 
+{
     die("TODO: Implement closing display.");
 }

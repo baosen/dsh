@@ -9,10 +9,12 @@ namespace {
 }
 
 // Parse the arguments provided by the user.
-void parse(const int argc, const char *argv[]) {
+void parse(const int argc, const char *argv[]) 
+{
     // If argument provided.
     for (int i = 1; i < argc; ++i) {
         const auto s = argv[i];
+
         // Set working directory for window files.
         if (!strcmp(s, "-dir")) {
             char *path = nullptr;
@@ -20,6 +22,7 @@ void parse(const int argc, const char *argv[]) {
                 die("Invalid parameter.");
             dsh::wd = path;
         }
+
         // Set which "hacky" mouse to use.
         if (!strcmp(s, "-m")) 
             if (sscanf(s, "%d", &mousenum) < 0)

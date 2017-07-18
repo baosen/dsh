@@ -6,12 +6,14 @@
 #include "dcv.hpp"
 using namespace std;
 
-static constexpr bool bitset(char n, ushort p) {
+static constexpr bool bitset(char n, ushort p) 
+{
     return !!(n & (1u << p));
 }
 
 // Check if it is a mouse.
-static bool ism(char b[EV_MAX]) {
+static bool ism(char b[EV_MAX]) 
+{
     bool key = false, rel = false;
     for (ushort i = 0; i < EV_MAX; i++) {
         if (bitset(b[0], i)) {
@@ -31,8 +33,9 @@ static bool ism(char b[EV_MAX]) {
 }
 
 // Discover mice connected to the system.
-vector<Mouse> mdcv() {
-    vector<Mouse> m;
+vector<m> mdcv() 
+{
+    vector<m> m;
     // Iterate through devices.
     DIR           *dir; // directory.
     struct dirent *e;   // directory entry.
@@ -53,7 +56,7 @@ vector<Mouse> mdcv() {
             char b[EV_MAX];
             i.evbits(b);
             if (ism(b))
-                m.push_back(Mouse(i));
+                m.push_back(m(i));
             else
                 continue;
         }

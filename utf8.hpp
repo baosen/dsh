@@ -2,15 +2,15 @@
 #include "types.hpp"
 
 // UTF-8 character.
-class UTF8char : public std::vector<byte> {
+class utf8c : public std::vector<byte> {
 public:
-    UTF8char();
+    utf8c();
     // Set string of bytes containing an UTF-8 character.
-    UTF8char(const byte *s);
+    utf8c(const byte *s);
     // Set ASCII character, assuming type 'char' is ASCII.
-    UTF8char(const char c);
+    utf8c(const char c);
     // Set Wide character, assuming type 'char' is ASCII.
-    //UTF8char(const wchar_t c);
+    //utf8c(const wchar_t c);
 private:
     void set(const byte *s, const size_t n);
 

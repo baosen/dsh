@@ -19,6 +19,7 @@ static void asciitest()
 {
     input_event e;
     char        c;
+
     for (;;) {
         e = get();
         c = toc(e);
@@ -33,6 +34,7 @@ static void wctest()
 {
     wchar_t     c;
     input_event e;
+
     for (;;) {
         e = get();
         c = towc(e);

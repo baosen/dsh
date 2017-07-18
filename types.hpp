@@ -22,5 +22,6 @@ using err =            std::runtime_error;
 
 // Get the size of an array.
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
+
 // Tell the compiler which variables is unused.
 #define UNUSED(expr) do { (void)(expr); } while (0)

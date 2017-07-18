@@ -3,17 +3,18 @@
 #include "wnd.hpp"
 
 // Window stored in resizable memory.
-class Mwnd : public wnd {
+class mwnd : public wnd {
 public:
     // Construct window stored in resizable memory.
-    Mwnd();
-    Mwnd(const uint size);
+    mwnd();
+    mwnd(const uint size);
 
-    // Access pixel.
+    // Access pixel at index i.
     u8& operator[](const uint i);
-    // Access pixel.
+    // Access pixel at (x, y).
     u8& operator()(const uint x, const uint y);
 
+    // Mouse click!
     virtual void click(const pos& p);
 private:
     std::vector<u8> mem;

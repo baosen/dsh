@@ -8,7 +8,7 @@ using namespace std;
 // Keyboard subsystem for file system.
 namespace {
     // User's keyboard:
-    Kb                 kb;            // A handle to the keyboard itself.
+    kb                 k;             // A handle to the keyboard itself.
 
     // Threads reading from both keyboard event files:
     thread             k1,            // Handling keyboard file event1.
@@ -59,17 +59,17 @@ input_event kbsys::get()
 void kbsys::init() 
 {
     // Open keyboard file.
-    kb.open();
+    k.open();
 
     // Setup keyboard threads.
     kexit = false;
     k1 = thread([](){
         while (!kexit) // TODO: If set, thread won't exit before user has pressed a key, because of blocking.
-            append(kb.rd1()); // Blocks.
+            append(k.rd1()); // Blocks.
     });
     k2 = thread([](){
         while (!kexit) // TODO: If set, thread won't exit before user has pressed a key, because of blocking.
-            append(kb.rd2()); // Blocks.
+            append(k.rd2()); // Blocks.
     });
 }
 
@@ -83,5 +83,5 @@ void kbsys::deinit()
     // BUG: If you time pressing ENTER correctly, you may exit k2.
 
     // Close keyboard file.
-    kb.close();
+    k.close();
 }

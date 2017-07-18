@@ -6,10 +6,19 @@
 namespace dsys {
 	// Initialize display system.
     void init();
+
 	// Read from display.
-    void read(const char* name, char *buf, const off_t i, const size_t size) noexcept;
+    void read(const char  *name, 
+              char        *buf, 
+              const off_t  i, 
+              const size_t size);
+
 	// Write to display.
-    void write(const char* name, const char *buf, const off_t i, const size_t size) noexcept;
+    void write(const char  *name, 
+               const char  *buf, 
+               const off_t  i, 
+               const size_t size);
+
 	// Deinitialize display system.
     void deinit();
 

@@ -11,19 +11,19 @@ static const char *pathev2  = "/dev/input/event2";
 static const int  NONE      = -2;
 
 // Creates an empty keyboard that is not opened yet.
-Kb::Kb()
+kb::kb()
     : fdev1(NONE), // Set it to not opened.
       fdev2(NONE)  // Set it to not opened.
 {}
 
 // Close the keyboard file descriptor.
-Kb::~Kb() 
+kb::~kb() 
 {
     close();
 }
 
 // Open keyboard from file path.
-void Kb::open() 
+void kb::open() 
 {
     // TODO: Check if its already open.
 
@@ -46,7 +46,7 @@ void Kb::open()
 }
 
 // Close keyboard event file.
-void Kb::close() 
+void kb::close() 
 {
     if (fdev1 != NONE && ::close(fdev1) < 0) {
         stringstream ss;
@@ -72,7 +72,7 @@ static const char *const state[3] = {
 };
 
 #define GET(rd, name) \
-void Kb::name() \
+void kb::name() \
 { \
     /* Reads the keyboard event from the keyboard. */ \
     input_event e; \
@@ -98,7 +98,7 @@ GET(rd2, get2)
 
 // Get the keyboard event that is returned by the operating system when the user interacts with the keyboard.
 #define RD(name, fd) \
-input_event Kb::name() \
+input_event kb::name() \
 { \
     /* Check if keyboard is opened yet. */ \
     if (fd == NONE) \

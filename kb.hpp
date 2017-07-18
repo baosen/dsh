@@ -2,12 +2,12 @@
 #include <linux/input.h>
 
 // USB keyboard event file.
-class Kb {
+class kb {
 public:
     // Open keyboard event file.
-    Kb();
+    kb();
     // Close USB keyboard event file.
-    ~Kb();
+    ~kb();
 
     // Open keyboard file.
     void open();

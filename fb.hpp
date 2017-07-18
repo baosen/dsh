@@ -5,13 +5,13 @@
 #include "scr.hpp"
 #include "dsys.hpp"
 
-// Framebuffer.
-class Fb {
+// Linux framebuffer.
+class fb {
 public:
     // Grab framebuffer.
-    Fb();
+    fb();
     // Release framebuffer.
-    ~Fb();
+    ~fb();
 
     // Get 8-bit color value from the framebuffer memory. Indexing in bytes.
     u8&   get8(const uint i);
@@ -19,7 +19,7 @@ public:
     u32&  get32(const uint i);
 
     // Set color value in the framebuffer.
-    void  set(const uint i, const Pix& c);
+    void  set(const uint i, const pix& c);
 
     // Copy provided buffer to this framebuffer.
     void  copy(const uint i, const char *buf, const size_t len);
@@ -39,7 +39,7 @@ private:
     void setdbufptrs();
     void vsync();
 
-    Scr    scr;  // The screen to grab the framebuffer.
+    scr    sc;  // The screen to grab the framebuffer.
 
     size_t size, // Size in bytes.
            plen; // Size in pixels.
@@ -53,13 +53,13 @@ private:
     std::unique_ptr<u8[]> dbuf;    // Double buffer for tear-free framebuffer manipulation.
     bool                  vsyncen; // Is vertical sync enabled.
 
-    u8*    fb;
+    u8*    fbp;
 
     // Framebuffer methods.
-    u8&  (Fb::*get8p) (const uint i);
-    u32& (Fb::*get32p)(const uint i);
-    void (Fb::*flipp) ();
-    void (Fb::*clearp)();
+    u8&  (fb::*get8p) (const uint i);
+    u32& (fb::*get32p)(const uint i);
+    void (fb::*flipp) ();
+    void (fb::*clearp)();
 
     // Double buffer methods.
     u8&  dbufget8(const uint i);

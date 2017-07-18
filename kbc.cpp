@@ -211,14 +211,14 @@ namespace {
 }
 
 // Set keyboard layout.
-void setlayout(Layout l)
+void setlayout(const layout l)
 {
     switch (l) {
-    case Layout::US:
+    case layout::US:
         curmap = uskbwide;
         length = ARRAY_SIZE(uskbwide);
         break;
-    case Layout::NOR:
+    case layout::NOR:
         curmap = nokbwide;
         length = ARRAY_SIZE(nokbwide);
         break;

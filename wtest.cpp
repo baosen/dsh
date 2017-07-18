@@ -10,25 +10,25 @@ static void test1()
     wnd r1(pos(400, 400), res(100, 100)),
         r2(pos(200, 200), res(100, 100));
 
-    r1.fill(Pix(255, 255, 255, 255));
+    r1.fill(pix(255, 255, 255, 255));
     keywait();
-    r2.fill(Pix(255, 0, 255, 255));
+    r2.fill(pix(255, 0, 255, 255));
     keywait();
 
     r2.max();
-    r2.fill(Pix(0, 0, 255, 255));
+    r2.fill(pix(0, 0, 255, 255));
     keywait();
 }
 
 static void test2()
 {
     wnd w(pos(0, 0), res(100, 100));
-    w.fill(Pix(255, 0, 255, 255));
+    w.fill(pix(255, 0, 255, 255));
     keywait();
 
-    const auto  o = w.off();
+    const auto  o = w.o();
     vector<u32> v(w.size());
-    fill(begin(v), end(v), Pix(255, 255, 255, 255).val(o));
+    fill(begin(v), end(v), pix(255, 255, 255, 255).val(o));
     w.write(v.data(), 0, v.size());
 }
 
@@ -39,7 +39,7 @@ static void movetest()
         py = 0;
 
     wnd r(pos(px, py), res(100, 100));
-    r.fill(Pix(255, 255, 255, 255));
+    r.fill(pix(255, 255, 255, 255));
 
     for (;;) {
         const auto e = m.rd();
@@ -50,7 +50,7 @@ static void movetest()
         if (py < 0)
             py = 0;
         wnd r(pos(px, py), res(100, 100));
-        r.fill(Pix(255, 255, 255, 255));
+        r.fill(pix(255, 255, 255, 255));
     }
 }
 

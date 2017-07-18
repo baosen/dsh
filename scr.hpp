@@ -2,15 +2,15 @@
 #include <linux/fb.h>
 
 // Double-buffered framebuffer screen.
-class Scr {
+class scr {
 public:
     typedef fb_var_screeninfo varinfo;
     typedef fb_fix_screeninfo fixinfo;
 
     // Open framebuffer file.
-    Scr();
+    scr();
     // Close framebuffer file.
-    ~Scr();
+    ~scr();
 
     // Get variable screen info.
     varinfo vinfo();
@@ -23,7 +23,7 @@ public:
     bool isvsync();
 
     // Pan display.
-    void pan(const Scr::varinfo& v);
+    void pan(const scr::varinfo& v);
 
     // Flip to another buffer.
     void flip();
@@ -48,5 +48,5 @@ private:
     varinfo v;
     bool    dbufen;              // Is double buffer enabled?
 
-    friend class Fb;
+    friend class fb;
 };
