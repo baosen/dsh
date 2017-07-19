@@ -5,7 +5,9 @@ using namespace std;
 // Return codes:
 #define SUCCESS 0 // Operation successful.
 
-ent::ent() {}
+ent::ent() 
+    : mode(0), nlink(0) 
+{}
 
 ent::ent(const mode_t mode)
     : mode(mode), nlink(0) 
@@ -76,17 +78,20 @@ done:
 // Get directory entry if it exists.
 shared_ptr<ent> ent::getdir(const char* const path)
 {
-    const char     *s = path;
-    shared_ptr<ent> e = make_shared<ent>(*this), 
-                    found;
+    const char     *s     = path;
+    shared_ptr<ent> e     = make_shared<ent>(*this), 
+                    found = make_shared<ent>();
 
     // Is root directory?
     if (!strcmp(path, "/") && this->name == "/")
         return e;
 
+    if (path[0] == '/')
+        ++s;
+
     // Traverse file tree.
     do {
-        e = find(e, &(++s));
+        e = find(e, &s);
         if (*e)
             found = e;
     } while (*s != '\0' && *e);
@@ -97,9 +102,9 @@ shared_ptr<ent> ent::getdir(const char* const path)
 // Get file entry if it exists.
 shared_ptr<ent> ent::getfile(const char* const path)
 {
-    const char     *s = path;
-    shared_ptr<ent> e = make_shared<ent>(*this), 
-                    found;
+    const char     *s     = path;
+    shared_ptr<ent> e     = make_shared<ent>(*this), 
+                    found = make_shared<ent>();
 
     if (!strcmp(path, "/"))
         return make_shared<ent>();
@@ -119,9 +124,9 @@ shared_ptr<ent> ent::getfile(const char* const path)
 // Get entry if it exists.
 shared_ptr<ent> ent::getent(const char* const path)
 {
-    const char     *s = path;
-    shared_ptr<ent> e = make_shared<ent>(*this), 
-                    found;
+    const char     *s     = path;
+    shared_ptr<ent> e     = make_shared<ent>(*this), 
+                    found = make_shared<ent>();
 
     if (!strcmp(path, "/") && this->name == "/")
         return e;

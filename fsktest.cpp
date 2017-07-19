@@ -11,7 +11,7 @@ using namespace std;
 
 int main()
 {
-    const auto fd = ::open("./sh/kb/0", O_RDONLY | // Read-only.
+    const auto fd = ::open("./sh/kb/1", O_RDONLY | // Read-only.
                                         O_DIRECT); // Bypass freaking cache!
     if (fd < 0) {
         puts("Failed to open keyboard file!");
