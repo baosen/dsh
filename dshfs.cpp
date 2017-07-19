@@ -26,16 +26,13 @@ int main(const int   argc,   // Number of arguments.
     o.ioctl   = ioctl;   // Control device.
 
     // Start our engines!
-    int ret = EXIT_FAILURE;
     try {
         // Drive user-space file system.
-        ret = fuse_main(argc, argv, &o, nullptr);
+        return fuse_main(argc, argv, &o, nullptr);
     } catch (const err& e) {
         error(e.what());
-        ret = EXIT_FAILURE;
     } catch (...) {
-        error("An exception was caught!");
-        ret = EXIT_FAILURE;
+        error("An exception from the file system was caught!");
     }
 
     // Cleanup the shell file system.
@@ -43,10 +40,8 @@ int main(const int   argc,   // Number of arguments.
         cleanup();
     } catch (const err& e) {
         error(e.what());
-        ret = EXIT_FAILURE;
     } catch (...) {
-        error("An exception caught!");
-        ret = EXIT_FAILURE;
+        error("An exception on cleanup was caught!");
     }
-    return ret;
+    return EXIT_FAILURE;
 }
