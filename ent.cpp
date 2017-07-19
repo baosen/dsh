@@ -36,7 +36,7 @@ bool ent::dir() const
 }
 
 // Get directory entry if it exists.
-ent ent::getdir(const char *path)
+ent ent::getdir(const char* const path)
 {
     const char *s = path;
     ent         e = *this,

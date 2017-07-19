@@ -23,7 +23,7 @@ public:
     bool dir() const;
 
     // Get directory entry if it exists.
-    ent getdir(const char *path);
+    ent getdir(const char* const path);
 
     // Read from file.
     virtual int read(char *buf, const off_t i, const size_t nbytes);
