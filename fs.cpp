@@ -9,7 +9,7 @@
 #include "cmds.hpp"
 #include "dsys.hpp"
 #include "wsys.hpp"
-#include "ent.hpp"
+#include "dir.hpp"
 #include "fs.hpp"
 using namespace std;
 
@@ -17,27 +17,23 @@ using namespace std;
 #define SUCCESS 0 // Operation successful.
 
 // File tree.
-static ent root {
+static dir root {
     "/",            // Root directory.
-    S_IFDIR | 0755, // Is a directory ORed with the permission bits.
     { 
-        { 
+        dir { 
             "kb", 
-             S_IFDIR | 0755,
              { 
                 { "0", S_IFREG | 0444 }
              }
         },
-        { 
+        dir { 
             "m", 
-            S_IFDIR | 0755,
             { 
                 { "0", S_IFREG | 0444 }
             }
         },
-        {
+        dir {
             "wnd",
-            S_IFDIR | 0755,
             {
                 { "0", S_IFREG | 0444 }
             }

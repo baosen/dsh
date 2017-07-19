@@ -1,34 +1,31 @@
 #include <iostream>
-#include "ent.hpp"
+#include "dir.hpp"
+#include "file.hpp"
 using namespace std;
 
 // File tree.
-static ent root {
-    "/",            // Root directory.
-    S_IFDIR | 0755, // Is a directory ORed with the permission bits.
+static dir root {
+    "/", // Root directory.
     { 
-        { 
+        dir { 
             "kb", 
-             S_IFDIR | 0755,
              { 
-                { "0", S_IFREG | 0444 },
-                { "1", S_IFREG | 0444 },
-                { "2", S_IFREG | 0444 },
-                { "3", S_IFREG | 0444 },
+                file { "0" },
+                file { "1" },
+                file { "2" },
+                file { "3" },
              }
         },
-        { 
+        dir { 
             "m", 
-            S_IFDIR | 0755,
             { 
-                { "0", S_IFREG | 0444 }
+                file { "0" }
             }
         },
-        {
+        dir {
             "wnd",
-            S_IFDIR | 0755,
             {
-                { "0", S_IFREG | 0444 }
+                file { "0" }
             }
         }
     }

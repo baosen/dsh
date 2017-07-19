@@ -3,6 +3,10 @@ using namespace std;
 
 ent::ent() {}
 
+ent::ent(const mode_t mode)
+    : mode(mode), nlink(0) 
+{}
+
 ent::ent(const mode_t mode, const nlink_t nlink)
     : mode(mode), nlink(nlink) 
 {}

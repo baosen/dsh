@@ -10,6 +10,7 @@
 class ent {
 public:
     ent();
+    ent(const mode_t mode);
     ent(const mode_t mode, const nlink_t nlink);
     ent(const std::string name, const mode_t mode);
     ent(const std::string name, const mode_t mode, const std::initializer_list<ent>& files);

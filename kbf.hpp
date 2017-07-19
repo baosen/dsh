@@ -1,7 +1,7 @@
 #pragma once
 
 // Keyboard file.
-class kbf : ent {
+class kbf : public ent {
 public:
     virtual int read(const char *buf, const off_t i, const size_t nbytes)
     {

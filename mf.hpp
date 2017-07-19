@@ -1,7 +1,7 @@
 #pragma once
 
 // Mouse file.
-class mf : ent {
+class mf : public ent {
 public:
     virtual int read(const char *buf, const off_t i, const size_t nbytes)
     {

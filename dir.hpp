@@ -1,12 +1,20 @@
 #pragma once
+#include "ent.hpp"
 
 // Directory entry.
-struct dir : ent {
+class dir : public ent {
+public:
     dir() 
-        : ent(S_IFDIR | 0755, 0)
+        : ent(DIRMODE)
     {}
 
-    dir(const std::string name, const std::initializer_list<ent>& files)
-        : ent(name, S_IFDIR | 0755, 0, files) 
+    dir(const std::string& name) 
+        : ent(name, DIRMODE)
     {}
+
+    dir(const std::string& name, const std::initializer_list<ent>& files)
+        : ent(name, DIRMODE, 0, files) 
+    {}
+private:
+    static const mode_t DIRMODE = S_IFDIR | 0755;
 };
