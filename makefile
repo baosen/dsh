@@ -8,8 +8,12 @@ CXX      = g++
 CXXFLAGS = -std=c++17 -O3 -Wall -Wextra
 # Compile command.
 COMPILE  = @$(CXX) $(CXXFLAGS)
+# FUSE libraries.
+FUSELIBS = `pkg-config fuse --cflags --libs`
+
 # Set source dependencies for desktop shell.
 SRC      = m.cpp wnd.cpp pix.cpp pos.cpp fb.cpp scr.cpp log.cpp res.cpp ev.cpp evm.cpp msys.cpp kbsys.cpp kb.cpp wsys.cpp wd.cpp parse.cpp init.cpp mwnd.cpp 
+
 # Tests.
 TESTS    = mtest fbtest evmtest kbsystest msystest dpytests wtest kbtest utf8test fsktest fsmtest enttest
 # Executables.
@@ -72,8 +76,8 @@ fsktest: fsktest.cpp kbc.o locale.o
 fsmtest: fsmtest.cpp
 	$(COMPILE) $^ -o $@
 
-enttest: enttest.cpp ent.cpp
-	$(COMPILE) $^ -o $@
+enttest: enttest.cpp ent.cpp dir.o file.o
+	$(COMPILE) $^ $(FUSELIBS) -o $@
 
 # Tests for keyboard.
 kbtest: kbtest.cpp kb.o kbc.o utf8.o
@@ -89,19 +93,19 @@ dsh: dsh.cpp
 
 # File system.
 fs.o: fs.cpp fs.hpp
-	$(COMPILE) -c $< `pkg-config fuse --cflags --libs` -o $@
+	$(COMPILE) -c $< $(FUSELIBS) -o $@
 
 # File system entries.
 ent.o: ent.cpp ent.hpp
-	$(COMPILE) -c $< `pkg-config fuse --cflags --libs` -o $@
+	$(COMPILE) -c $< $(FUSELIBS) -o $@
 
 # File entries.
 file.o: file.cpp file.hpp
-	$(COMPILE) -c $< `pkg-config fuse --cflags --libs` -o $@
+	$(COMPILE) -c $< $(FUSELIBS) -o $@
 
 # Directory entries.
 dir.o: dir.cpp dir.hpp
-	$(COMPILE) -c $< `pkg-config fuse --cflags --libs` -o $@
+	$(COMPILE) -c $< $(FUSELIBS) -o $@
 
 # Compile shell file system executable.
 dshfs: dshfs.cpp fs.o log.o kb.o kbsys.o dsys.o wndcmd.o dpycmd.o wsys.o ssys.o msys.o m.o wnd.o fb.o scr.o pix.o pos.o res.o evm.o ev.o ent.o dir.o file.o
