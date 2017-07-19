@@ -1,9 +1,11 @@
 #pragma once
-#include "ent.hpp"
+#include "file.hpp"
 
 // Keyboard file.
-class kbf : public ent {
+class kbf : public file {
 public:
+    kbf(const std::string name);
+
     // Read linux keyboard input events.
     virtual int read(char *buf, const off_t i, const size_t nbytes);
 

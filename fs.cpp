@@ -10,8 +10,10 @@
 #include "dsys.hpp"
 #include "wsys.hpp"
 #include "file.hpp"
-#include "fs.hpp"
 #include "dir.hpp"
+#include "kbf.hpp"
+#include "mf.hpp"
+#include "fs.hpp"
 using namespace std;
 
 // Return codes:
@@ -24,13 +26,13 @@ static dir root { // TODO: Remove root directory, which I think is unnecessary.
         dir { 
             "kb", 
              { 
-                file { "0" }
+                kbf { "0" }
              }
         },
         dir { 
             "m", 
             { 
-                file { "0" }
+                mf { "0" }
             }
         },
         dir {
@@ -311,7 +313,20 @@ static void mkw()
 }
 */
 
-// Cleanup filesystem.
+// Setup shell file system.
+void fs::setup() 
+{
+    // Initialize keyboard.
+    kbsys::init();
+    // Initialize mouse.
+    msys::init();
+/*
+    // Connect to displays and make them as files.
+    mkdpys();
+*/
+}
+
+// Cleanup shell file system.
 void fs::cleanup() 
 {
     // Has it been called once?
@@ -320,12 +335,11 @@ void fs::cleanup()
     // Check if cleanup has been called once.
     if (called)
         return;
-/*
+
     // Cleanup keyboard.
     kbsys::deinit();
     // Cleanup mouse.
     msys::deinit();
-*/
 
 /*
     // Cleanup display.
@@ -337,18 +351,4 @@ void fs::cleanup()
 */
 
     called = true;
-}
-
-// Setup shell.
-void fs::setup() 
-{
-/*
-    // Connect keyboards and make keyboard files.
-    mkkb();
-    // Connect mouse and make mouse files.
-    mkm();
-
-    // Connect to displays and make them as files.
-    mkdpys();
-*/
 }

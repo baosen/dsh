@@ -3,8 +3,14 @@
 #include "kbsys.hpp"
 #include "kbf.hpp"
 
+kbf::kbf(const std::string name)
+    : file(name)
+{}
+
 int kbf::read(char *buf, const off_t i, const size_t nbytes)
 {
+    UNUSED(i);
+
     // Check if the read is not whole (divisible).
     const auto isize = sizeof(input_event);
     if (isize % nbytes != 0)

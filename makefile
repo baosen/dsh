@@ -107,8 +107,16 @@ file.o: file.cpp file.hpp
 dir.o: dir.cpp dir.hpp
 	$(COMPILE) -c $< $(FUSELIBS) -o $@
 
+# Keyboard file.
+kbf.o: kbf.cpp kbf.hpp
+	$(COMPILE) -c $< $(FUSELIBS) -o $@
+
+# Mouse file.
+mf.o: mf.cpp mf.hpp
+	$(COMPILE) -c $< $(FUSELIBS) -o $@
+
 # Compile shell file system executable.
-dshfs: dshfs.cpp fs.o log.o kb.o kbsys.o dsys.o wndcmd.o dpycmd.o wsys.o ssys.o msys.o m.o wnd.o fb.o scr.o pix.o pos.o res.o evm.o ev.o ent.o dir.o file.o
+dshfs: dshfs.cpp fs.o log.o kb.o kbsys.o dsys.o wndcmd.o dpycmd.o wsys.o ssys.o msys.o m.o wnd.o fb.o scr.o pix.o pos.o res.o evm.o ev.o ent.o dir.o file.o kbf.o mf.o
 	$(COMPILE) $^ `pkg-config fuse --cflags --libs` -o $@
 
 # Compile "do"-program, the beginning program that ask the user what to do.
