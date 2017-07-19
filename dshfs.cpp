@@ -28,8 +28,6 @@ int main(const int   argc,   // Number of arguments.
     // Start our engines!
     int ret = EXIT_FAILURE;
     try {
-        // Setup shell.
-        setup();
         // Drive user-space file system.
         ret = fuse_main(argc, argv, &o, nullptr);
     } catch (const err& e) {

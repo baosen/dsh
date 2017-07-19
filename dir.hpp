@@ -4,17 +4,9 @@
 // Directory entry.
 class dir : public ent {
 public:
-    dir() 
-        : ent(DIRMODE)
-    {}
-
-    dir(const std::string& name) 
-        : ent(name, DIRMODE)
-    {}
-
-    dir(const std::string& name, const std::initializer_list<ent>& files)
-        : ent(name, DIRMODE, 0, files) 
-    {}
+    dir();
+    dir(const std::string& name);
+    dir(const std::string& name, const std::initializer_list<ent>& files);
 private:
-    static const mode_t DIRMODE = S_IFDIR | 0755;
+    void init();
 };

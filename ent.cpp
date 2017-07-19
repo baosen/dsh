@@ -1,5 +1,9 @@
+#include <cstring>
 #include "ent.hpp"
 using namespace std;
+
+// Return codes:
+#define SUCCESS 0 // Operation successful.
 
 ent::ent() {}
 
@@ -39,38 +43,15 @@ bool ent::dir() const
     return (mode & S_IFDIR) == S_IFDIR;
 }
 
-// Get directory entry if it exists.
-ent ent::getdir(const char* const path)
+// Is a file?
+bool ent::file() const
 {
-    const char *s = path;
-    ent         e = *this,
-                found;
-
-    do {
-        e = find(e, &(++s));
-        if (e)
-            found = e;
-    } while (*s != '\0' && e);
-
-    return found.dir() ? found : ent();
+    return (mode & S_IFREG) == S_IFREG;
 }
 
-// Read from file.
-int ent::read(const char *buf, const off_t i, const size_t nbytes)
+void ent::push(const std::string name, const mode_t mode)
 {
-    UNUSED(buf);
-    UNUSED(i);
-    UNUSED(nbytes);
-    return -EPERM; // Operation not permitted.
-}
-
-// Write to file.
-int ent::write(char *buf, const off_t i, const size_t nbytes)
-{
-    UNUSED(buf);
-    UNUSED(i);
-    UNUSED(nbytes);
-    return -EPERM; // Operation not permitted.
+    files.push_back(ent(name, mode));
 }
 
 // Find entry pointed by s.
@@ -89,6 +70,76 @@ ent find(const ent& e, const char **s)
             return f;
 done: 
     return ent();
+}
+
+// Get directory entry if it exists.
+ent ent::getdir(const char* const path)
+{
+    const char *s = path;
+    ent         e = *this,
+                found;
+
+    // Is root directory?
+    if (!strcmp(path, "/") && this->name == "/")
+        return *this;
+
+    do {
+        e = find(e, &(++s));
+        if (e)
+            found = e;
+    } while (*s != '\0' && e);
+
+    return found.dir() ? found : ent();
+}
+
+// Get file entry if it exists.
+ent ent::getfile(const char* const path)
+{
+    const char *s = path;
+    ent         e = *this,
+                found;
+
+    do {
+        e = find(e, &(++s));
+        if (e)
+            found = e;
+    } while (*s != '\0' && e);
+
+    return found.file() ? found : ent();
+}
+
+// Get entry if it exists.
+ent ent::getent(const char* const path)
+{
+    const char *s = path;
+    ent         e = *this,
+                found;
+
+    do {
+        e = find(e, &(++s));
+        if (e)
+            found = e;
+    } while (*s != '\0' && e);
+
+    return found;
+}
+
+// Read from file to buffer.
+int ent::read(char *buf, const off_t i, const size_t nbytes)
+{
+    UNUSED(buf);
+    UNUSED(i);
+    UNUSED(nbytes);
+    return -EPERM; // Operation not permitted.
+}
+
+// Write to file.
+int ent::write(const char *buf, const off_t i, const size_t nbytes)
+{
+    UNUSED(buf);
+    UNUSED(i);
+    UNUSED(nbytes);
+    return -EPERM; // Operation not permitted.
 }
 
 // Output name of the file entry.

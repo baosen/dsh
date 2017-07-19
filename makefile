@@ -88,11 +88,23 @@ dsh: dsh.cpp
 	$(COMPILE) $(SRC) $< -o $@ -lpthread
 
 # File system.
-fs.o: fs.cpp
-	$(COMPILE) -c $^ `pkg-config fuse --cflags --libs` -o $@
+fs.o: fs.cpp fs.hpp
+	$(COMPILE) -c $< `pkg-config fuse --cflags --libs` -o $@
+
+# File system entries.
+ent.o: ent.cpp ent.hpp
+	$(COMPILE) -c $< `pkg-config fuse --cflags --libs` -o $@
+
+# File entries.
+file.o: file.cpp file.hpp
+	$(COMPILE) -c $< `pkg-config fuse --cflags --libs` -o $@
+
+# Directory entries.
+dir.o: dir.cpp dir.hpp
+	$(COMPILE) -c $< `pkg-config fuse --cflags --libs` -o $@
 
 # Compile shell file system executable.
-dshfs: dshfs.cpp fs.o log.o kb.o kbsys.o dsys.o wndcmd.o dpycmd.o wsys.o ssys.o msys.o m.o wnd.o fb.o scr.o pix.o pos.o res.o evm.o ev.o
+dshfs: dshfs.cpp fs.o log.o kb.o kbsys.o dsys.o wndcmd.o dpycmd.o wsys.o ssys.o msys.o m.o wnd.o fb.o scr.o pix.o pos.o res.o evm.o ev.o ent.o dir.o file.o
 	$(COMPILE) $^ `pkg-config fuse --cflags --libs` -o $@
 
 # Compile "do"-program, the beginning program that ask the user what to do.

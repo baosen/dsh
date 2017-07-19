@@ -9,33 +9,34 @@
 #include "cmds.hpp"
 #include "dsys.hpp"
 #include "wsys.hpp"
-#include "dir.hpp"
+#include "file.hpp"
 #include "fs.hpp"
+#include "dir.hpp"
 using namespace std;
 
 // Return codes:
 #define SUCCESS 0 // Operation successful.
 
 // File tree.
-static dir root {
-    "/",            // Root directory.
+static dir root { // TODO: Remove root directory, which I think is unnecessary.
+    "/",          // Root directory.
     { 
         dir { 
             "kb", 
              { 
-                { "0", S_IFREG | 0444 }
+                file { "0" }
              }
         },
         dir { 
             "m", 
             { 
-                { "0", S_IFREG | 0444 }
+                file { "0" }
             }
         },
         dir {
             "wnd",
             {
-                { "0", S_IFREG | 0444 }
+                file { "0" }
             }
         }
     }
@@ -91,13 +92,16 @@ auto doifentry(const char *path, // Path of the file.
 // Initialize shell file system.
 void* fs::init(struct fuse_conn_info *conn)  
 {
-    UNUSED(conn);
+    // Setup shell.
+    setup();
     return nullptr;
 }
 
+// Destroy shell file system.
 void fs::destroy(void* p) 
 {
     UNUSED(p);
+    // Cleanup subsystems.
     cleanup();
 }
 
@@ -111,7 +115,7 @@ int fs::create(const char            *path, // File path.
 
     // Force O_DIRECT (direct I/O, no caching).
     fi->direct_io = 1;
-
+/*
     // Caller can only create files of type dpy* and wnd*.
     return filedo(path, [](const char *p) {
         // TODO: Create new display.
@@ -129,7 +133,8 @@ int fs::create(const char            *path, // File path.
         ents.emplace_back(p);
         return SUCCESS;
     });
-    return -EINVAL; // Invalid path.
+*/
+    return -EINVAL; // Invalid parameter.
 }
 
 // Get file attributes of a file in the shell file system.
@@ -147,12 +152,16 @@ int fs::getattr(const  char  *path,  // File path.
     } 
 
     // Check if the file system has it as a file entry.
-    return doifentry(path, [&]() {
-        stbuf->st_mode  = S_IFREG | 0444; // File and its permission bits.
-        stbuf->st_nlink = 0;              // Hard links.
-        stbuf->st_size  = 0;              // uhm... size of file?
-        return SUCCESS;
-    }); // else no file entry found.
+    const auto e = root.getent(path);
+    // Found entry?
+    if (!e)
+        return -ENOENT; // No entry found.
+
+    stbuf->st_mode  = e.mode;  // File and its permission bits.
+    stbuf->st_nlink = e.nlink; // Hard links.
+    stbuf->st_size  = 0;       // uhm... size of file?
+
+    return SUCCESS;
 }
 
 #define BUFFULL 1 // Is buffer full?
@@ -168,12 +177,18 @@ int fs::readdir(const char            *path,   // File path.
     UNUSED(offset);
     UNUSED(fi);
 
+    // Get directory from file path.
+    const auto e = root.getdir(path);
+    if (!e)
+        return -ENOENT;
+
     // Fill buffer with file entries.
-    for (const auto& e : ents)
+    for (const auto& f : e.files)
         // Build the file entries in the buffer.
-        if (fill(buf, e.c_str(), 0, 0) == BUFFULL) // Is buffer full?
+        if (fill(buf, f.name.c_str(), 0, 0) == BUFFULL) // Is buffer full?
             return -ENOBUFS;
 
+    // Operation successful.
     return SUCCESS;
 }
 
@@ -185,9 +200,17 @@ int fs::open(const char            *path, // Path to file to open.
     fi->direct_io = 1;
 
     // Check if a file exist and open it.
-    return doifentry(path, [&] {
-        return SUCCESS;
-    });
+    const auto e = root.getent(path);
+
+    // No such file or directory?
+    if (!e)
+        return -ENOENT;
+
+    // Trying to open a directory?
+    if (e.dir())
+        return -EISDIR;
+
+    return SUCCESS;
 }
 
 // Read file contents. Returns number of bytes read.
@@ -199,84 +222,25 @@ int fs::read(const char            *path,   // Pathname of the file to read.
 {
     UNUSED(fi);
 
-    // Do file read if the asked entry exists.
-    return doifentry(path, [&]() {
-        return filedo(path, [&](const char *name) { // Display.
-            UNUSED(name);
-
-            // Read from display.
-            dsys::read(name, buf, i, nbytes);
-            return SUCCESS;
-        }, [&](const char *name) {                  // Window.
-            UNUSED(name);
-
-            // Read from window.
-            return wsys::read(name, buf, i, nbytes);
-        }, [&](const char *name) {                  // Keyboard.
-            UNUSED(name);
-
-            // Check if the read is not whole (divisible).
-            const auto isize = sizeof(input_event);
-            if (isize % nbytes != 0)
-                return -EINVAL; // Invalid parameter.
-
-            // Read keyboard input event from keyboard.
-            const auto n = isize / nbytes;
-            int read = 0;
-            for (uint i = 0; i < n; ++i) {
-                *rcast<input_event*>(buf) = kbsys::get();
-                buf  += isize;
-                read += isize;
-            }
-
-            // Return number of bytes read.
-            return read;
-        }, [&](const char *name) {                  // Mouse.
-            UNUSED(name);
-            // Read from mouse.
-
-            // Check if divisible.
-            if (sizeof(msys::ev) % nbytes != 0)
-                return -EINVAL;
-
-            // Copy mouse event into the buffer.
-            return msys::getmot(buf, nbytes / sizeof(msys::ev));
-        });
-    });
+    auto e = root.getfile(path);
+    if (!e)
+        return -ENOENT;
+    return e.read(buf, i, nbytes);
 }
 
 // Write to file. Returns exactly the number of bytes written, except on error.
-int fs::write(const char            *path, // Path to the file to be written to.
-              const char            *buf,  // The buffer containing the data to write.
-              const size_t           size, // The number of bytes to write.
-              const off_t            i,    // The offset to write to.
-              struct fuse_file_info *fi)   // Other info about the file read.
+int fs::write(const char            *path,   // Path to the file to be written to.
+              const char            *buf,    // The buffer containing the data to write.
+              const size_t           nbytes, // The number of bytes to write.
+              const off_t            i,      // The offset to write to.
+              struct fuse_file_info *fi)     // Other info about the file read.
 {
     UNUSED(fi);
-
-    return doifentry(path, [&]() {
-        return filedo(path, [&](const char *name) { // Display.
-            // Write to display in the display/screen's pixel format.
-            dsys::write(name, buf, i, size);
-            return SUCCESS;
-        }, [&](const char *name) {                  // Window.
-            UNUSED(name);
-
-            // Write to window in the display/screen's pixel format.
-            wsys::write(name, buf, i, size);
-            return SUCCESS;
-        }, [](const char *name) {                   // Keyboard.
-            UNUSED(name);
-
-            // Keyboard is read-only.
-            return -EPERM; // Operation not permitted.
-        }, [](const char *name) {
-            UNUSED(name);
-
-            // Mouse is read-only.
-            return -EPERM; // Operation not permitted.
-        });
-    });
+    
+    auto e = root.getfile(path);
+    if (!e)
+        return -ENOENT;
+    return e.write(buf, i, nbytes);
 }
 
 // Control a file.
@@ -291,7 +255,8 @@ int fs::ioctl(const char            *path,  // Path of the file to control.
     UNUSED(fi);
     UNUSED(flags);
     UNUSED(data);
-
+    return -ENOENT;
+/*
     // Do if path entry exist in the file entries.
     return doifentry(path, [&]() {
         return filedo(path, [&](const char *name) { // Display.
@@ -310,6 +275,7 @@ int fs::ioctl(const char            *path,  // Path of the file to control.
             return -EINVAL;
         });
     });
+*/
 }
 
 // Make shell file node. Gets called for creation of all non-directory, non-symbolic link nodes.
@@ -318,26 +284,10 @@ int fs::mknod(const char *path, // File path.
               dev_t       dev)  // Optional device provided.
 {
     UNUSED(dev);
-
     return create(path, mode, nullptr);
 }
 
-// Create standard "this" and "parent" links.
-static void mklns() 
-{
-    // Set link to current directory.
-    ents.emplace_back(".");
-    // Set link to parent directory.
-    ents.emplace_back("..");
-}
-
-// Make the default numbered files at start.
-#define MKFILES(name) \
-    static uint i = 0; /* Current index of the keyboard. */ \
-    stringstream ss; \
-    ss << name << i; \
-    ents.emplace_back(ss.str()); 
-
+/*
 // Make the file that contain the color bit depth per component, which is used for all things graphics.
 static void mkcfmt() 
 {
@@ -346,7 +296,9 @@ static void mkcfmt()
     ents.emplace_back("b"); // contains color bit depth for blue component.
     ents.emplace_back("a"); // contains color bit depth for alpha component.
 }
+*/
 
+/*
 // Setup and initialize displays, and make the files pointing to them.
 static void mkdpys() 
 {
@@ -393,6 +345,7 @@ static void mkw()
     // Insert it into filesystem.
     MKFILES("wnd")
 }
+*/
 
 // Cleanup filesystem.
 void fs::cleanup() 
@@ -403,11 +356,12 @@ void fs::cleanup()
     // Check if cleanup has been called once.
     if (called)
         return;
-
+/*
     // Cleanup keyboard.
     kbsys::deinit();
     // Cleanup mouse.
     msys::deinit();
+*/
 
 /*
     // Cleanup display.
@@ -424,14 +378,12 @@ void fs::cleanup()
 // Setup shell.
 void fs::setup() 
 {
-    // Create standard "this" and "parent" links in the file system tree.
-    mklns();
+/*
     // Connect keyboards and make keyboard files.
     mkkb();
     // Connect mouse and make mouse files.
     mkm();
 
-/*
     // Connect to displays and make them as files.
     mkdpys();
 */
