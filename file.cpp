@@ -10,6 +10,6 @@ file::file(const std::string& name)
     : ent(name, FILEMODE)
 {}
 
-file::file(const std::string& name, const std::initializer_list<ent>& files)
-    : ent(name, FILEMODE, 0, files) 
+file::file(const std::string& name, const entlist& files)
+    : ent(name, FILEMODE, files) 
 {}

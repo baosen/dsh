@@ -19,77 +19,35 @@ using namespace std;
 // Return codes:
 #define SUCCESS 0 // Operation successful.
 
+typedef initializer_list<shared_ptr<ent>> ptrlist;
+
 // File tree.
 static dir root { // TODO: Remove root directory, which I think is unnecessary.
     "/",          // Root directory.
     { 
-        dir { 
+        make_shared<dir>
+        (    
             "kb", 
-             { 
-                kbf { "0" }
-             }
-        },
-        dir { 
-            "m", 
+            ptrlist
             { 
-                mf { "0" }
+                shared_ptr<ent>(new kbf("0"))
             }
-        },
-        dir {
-            "wnd",
-            {
-                file { "0" }
+        ),
+        make_shared<dir>
+        (   
+            "m", 
+            ptrlist
+            { 
+                shared_ptr<ent>(new mf("0"))
             }
-        }
+        )
     }
 };
 
 // File entries in the file system.
 static list<string> ents; // List of file entries.
 
-// Do correct file operation according to the file type.
-template<class F, class W, class K, class M> 
-auto filedo(const char *path, // Path of the file.
-            F           df,   // Function to call when the path points to a display file.
-            W           wf,   // Function to call when the path points to a window file.
-            K           kf,   // Function to call when the path points to a keyboard file.
-            M           mf)   // Function to call when the path points to a mouse file.
-{
-    // Check path for what kind of file is opened.
-    const char *bs = path+1, // Skip /-character.
-               *s;
-
-    // Is a display?
-    if ((s = strstr(bs, "dpy")))
-        // Call display function.
-        return df(s);
-    // Is a window?
-    else if ((s = strstr(bs, "wnd")))
-        // Call window function.
-        return wf(s);
-    // Is a keyboard?
-    else if ((s = strstr(bs, "kb")))
-        // Call keyboard function.
-        return kf(s);
-    // Is a mouse?
-    else if ((s = strstr(bs, "m")))
-        // Call mouse function.
-        return mf(s);
-    else
-        // Invalid file name.
-        return -EINVAL; 
-}
-
-// Do action if the path specified is in the file system.
-template<class F> 
-auto doifentry(const char *path, // Path of the file.
-               F           f)    // Function to call if entry exists.
-{
-    for (const auto& e : ents)
-        if (!strcmp(path+1, e.c_str()))
-            return f();
-    return -ENOENT;
-}
+// return -EINVAL; // Invalid file name.
 
 // Initialize shell file system.
 void* fs::init(struct fuse_conn_info *conn)  
@@ -139,13 +97,14 @@ int fs::getattr(const  char  *path,  // File path.
 
     // Check if the file system has it as a file entry.
     const auto e = root.getent(path);
+
     // Found entry?
-    if (!e)
+    if (!*e)
         return -ENOENT; // No entry found.
 
-    stbuf->st_mode  = e.mode;  // File and its permission bits.
-    stbuf->st_nlink = e.nlink; // Hard links.
-    stbuf->st_size  = 0;       // uhm... size of file?
+    stbuf->st_mode  = e->mode;  // File and its permission bits.
+    stbuf->st_nlink = e->nlink; // Hard links.
+    stbuf->st_size  = 0;        // uhm... size of file?
 
     return SUCCESS;
 }
@@ -165,13 +124,13 @@ int fs::readdir(const char            *path,   // File path.
 
     // Get directory from file path.
     const auto e = root.getdir(path);
-    if (!e)
+    if (!*e)
         return -ENOENT;
 
     // Fill buffer with file entries.
-    for (const auto& f : e.files)
+    for (const auto& f : e->files)
         // Build the file entries in the buffer.
-        if (fill(buf, f.name.c_str(), 0, 0) == BUFFULL) // Is buffer full?
+        if (fill(buf, f->name.c_str(), 0, 0) == BUFFULL) // Is buffer full?
             return -ENOBUFS;
 
     // Operation successful.
@@ -189,11 +148,11 @@ int fs::open(const char            *path, // Path to file to open.
     const auto e = root.getent(path);
 
     // No such file or directory?
-    if (!e)
+    if (!*e)
         return -ENOENT;
 
     // Trying to open a directory?
-    if (e.dir())
+    if (e->dir())
         return -EISDIR;
 
     return SUCCESS;
@@ -209,9 +168,9 @@ int fs::read(const char            *path,   // Pathname of the file to read.
     UNUSED(fi);
 
     auto e = root.getfile(path);
-    if (!e)
+    if (!*e)
         return -ENOENT;
-    return e.read(buf, i, nbytes);
+    return e->read(buf, i, nbytes);
 }
 
 // Write to file. Returns exactly the number of bytes written, except on error.
@@ -224,9 +183,9 @@ int fs::write(const char            *path,   // Path to the file to be written t
     UNUSED(fi);
     
     auto e = root.getfile(path);
-    if (!e)
+    if (!*e)
         return -ENOENT;
-    return e.write(buf, i, nbytes);
+    return e->write(buf, i, nbytes);
 }
 
 // Control a file.

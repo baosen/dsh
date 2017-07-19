@@ -14,8 +14,8 @@ dir::dir(const std::string& name)
    init(); 
 }
 
-dir::dir(const std::string& name, const std::initializer_list<ent>& files)
-    : ent(name, DIRMODE, 0, files) 
+dir::dir(const std::string& name, const entlist& files)
+    : ent(name, DIRMODE, files) 
 {    
     init();
 }

@@ -19,15 +19,15 @@ ent::ent(const std::string name, const mode_t mode)
     : name(name), mode(mode), nlink(0) 
 {}
 
-ent::ent(const std::string name, const mode_t mode, const std::initializer_list<ent>& files)
-    : name(name), mode(mode), nlink(0), files(files) 
+ent::ent(const std::string name, const mode_t mode, const entlist& files)
+    : name(name), mode(mode), nlink(0), files(files)
 {}
 
 ent::ent(const std::string name, const mode_t mode, const nlink_t nlink)
     : name(name), mode(mode), nlink(nlink) 
 {}
 
-ent::ent(const std::string name, const mode_t mode, const nlink_t nlink, const std::initializer_list<ent>& files)
+ent::ent(const std::string name, const mode_t mode, const nlink_t nlink, const entlist& files)
     : name(name), mode(mode), nlink(nlink), files(files) 
 {}
 
@@ -51,11 +51,11 @@ bool ent::file() const
 
 void ent::push(const std::string name, const mode_t mode)
 {
-    files.push_back(ent(name, mode));
+    files.push_back(make_unique<ent>(name, mode));
 }
 
 // Find entry pointed by s.
-ent find(const ent& e, const char **s)
+shared_ptr<ent> find(const shared_ptr<ent>& e, const char **s)
 {
     std::stringstream ss;
     
@@ -65,61 +65,75 @@ ent find(const ent& e, const char **s)
     for (; **s != '/' && **s != '\0'; ++(*s))
         ss << **s;
 
-    for (const auto& f : e.files)
-        if (ss.str() == f.name)
+    for (const auto& f : e->files)
+        if (ss.str() == f->name)
             return f;
+
 done: 
-    return ent();
+    return make_shared<ent>();
 }
 
 // Get directory entry if it exists.
-ent ent::getdir(const char* const path)
+shared_ptr<ent> ent::getdir(const char* const path)
 {
-    const char *s = path;
-    ent         e = *this,
-                found;
+    const char     *s = path;
+    shared_ptr<ent> e = make_shared<ent>(*this), 
+                    found;
 
     // Is root directory?
     if (!strcmp(path, "/") && this->name == "/")
-        return *this;
+        return e;
 
+    // Traverse file tree.
     do {
         e = find(e, &(++s));
-        if (e)
+        if (*e)
             found = e;
-    } while (*s != '\0' && e);
+    } while (*s != '\0' && *e);
 
-    return found.dir() ? found : ent();
+    return found->dir() ? found : make_shared<ent>();
 }
 
 // Get file entry if it exists.
-ent ent::getfile(const char* const path)
+shared_ptr<ent> ent::getfile(const char* const path)
 {
-    const char *s = path;
-    ent         e = *this,
-                found;
+    const char     *s = path;
+    shared_ptr<ent> e = make_shared<ent>(*this), 
+                    found;
+
+    if (!strcmp(path, "/"))
+        return make_shared<ent>();
+
+    if (path[0] == '/')
+        ++s;
 
     do {
-        e = find(e, &(++s));
-        if (e)
+        e = find(e, &s);
+        if (*e)
             found = e;
-    } while (*s != '\0' && e);
+    } while (*s != '\0' && *e);
 
-    return found.file() ? found : ent();
+    return found->file() ? found : make_shared<ent>();
 }
 
 // Get entry if it exists.
-ent ent::getent(const char* const path)
+shared_ptr<ent> ent::getent(const char* const path)
 {
-    const char *s = path;
-    ent         e = *this,
-                found;
+    const char     *s = path;
+    shared_ptr<ent> e = make_shared<ent>(*this), 
+                    found;
+
+    if (!strcmp(path, "/") && this->name == "/")
+        return e;
+
+    if (path[0] == '/')
+        ++s;
 
     do {
-        e = find(e, &(++s));
-        if (e)
+        e = find(e, &s);
+        if (*e)
             found = e;
-    } while (*s != '\0' && e);
+    } while (*s != '\0' && *e);
 
     return found;
 }
