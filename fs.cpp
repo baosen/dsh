@@ -115,25 +115,9 @@ int fs::create(const char            *path, // File path.
 
     // Force O_DIRECT (direct I/O, no caching).
     fi->direct_io = 1;
-/*
-    // Caller can only create files of type dpy* and wnd*.
-    return filedo(path, [](const char *p) {
-        // TODO: Create new display.
-        ents.emplace_back(p);
-        return SUCCESS;
-    }, [](const char *p) {
-        // TODO: Create new window.
-        ents.emplace_back(p);
-        return SUCCESS;
-    }, [&](const char *p) {
-        ents.emplace_back(p);
-        return SUCCESS;
-    }, [](const char *p) {
-        // TODO: Create new mouse.
-        ents.emplace_back(p);
-        return SUCCESS;
-    });
-*/
+
+    // TODO: Caller can only create files of type dpy* and wnd*.
+
     return -EINVAL; // Invalid parameter.
 }
 
@@ -255,27 +239,7 @@ int fs::ioctl(const char            *path,  // Path of the file to control.
     UNUSED(fi);
     UNUSED(flags);
     UNUSED(data);
-    return -ENOENT;
-/*
-    // Do if path entry exist in the file entries.
-    return doifentry(path, [&]() {
-        return filedo(path, [&](const char *name) { // Display.
-            UNUSED(name);
-            return dpycmd(cmd);
-        }, [&](const char *name) {                  // Window.
-            UNUSED(name);
-            return wndcmd(cmd);
-        }, [](const char *name) {                   // Keyboard.
-            UNUSED(name);
-            // No commands for keyboards.
-            return -EINVAL;
-        }, [](const char *name) {
-            UNUSED(name);
-            // TODO: Currently no commands for keyboards.
-            return -EINVAL;
-        });
-    });
-*/
+    return -EPERM;
 }
 
 // Make shell file node. Gets called for creation of all non-directory, non-symbolic link nodes.
