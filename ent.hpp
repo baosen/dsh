@@ -23,7 +23,7 @@ public:
     bool dir() const;
 
     // Get directory entry if it exists.
-    ent getdirent(const char *path);
+    ent getdir(const char *path);
 
     // Read from file.
     virtual int read(char *buf, const off_t i, const size_t nbytes);
@@ -37,4 +37,7 @@ private:
     std::list<ent> files; // If it is a directory, it can contain files.
 
     friend ent find(const ent& e, const char **s);
+    
+    // Output name of the file entry.
+    friend std::ostream& operator<<(std::ostream& o, const ent& e);
 };

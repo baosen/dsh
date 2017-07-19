@@ -36,35 +36,35 @@ static ent root {
 
 int main()
 {
-    auto e = getdirent<root>("/kb");
-    cout << e.name << endl;
+    auto e = root.getdir("/kb");
+    cout << e << endl;
 
-    e = getdirent<root>("/kb/");
-    cout << e.name << endl;
+    e = root.getdir("/kb/");
+    cout << e << endl;
 
-    e = getdirent<root>("/kb/0");
-    cout << e.name << endl;
+    e = root.getdir("/kb/0");
+    cout << e << endl;
 
-    e = getdirent<root>("/kb/0/");
-    cout << e.name << endl;
+    e = root.getdir("/kb/0/");
+    cout << e << endl;
 
-    e = getdirent<root>("/kb/1/");
-    cout << e.name << endl;
+    e = root.getdir("/kb/1/");
+    cout << e << endl;
 
-    e = getdirent<root>("/m");
-    cout << e.name << endl;
+    e = root.getdir("/m");
+    cout << e << endl;
 
-    e = getdirent<root>("/m/");
-    cout << e.name << endl;
+    e = root.getdir("/m/");
+    cout << e << endl;
 
-    e = getdirent<root>("/m/0");
-    cout << e.name << endl;
+    e = root.getdir("/m/0");
+    cout << e << endl;
 
-    e = getdirent<root>("/wnd");
-    cout << e.name << endl;
+    e = root.getdir("/wnd");
+    cout << e << endl;
 
-    e = getdirent<root>("/wnd/");
-    cout << e.name << endl;
+    e = root.getdir("/wnd/");
+    cout << e << endl;
 
     return EXIT_SUCCESS;
 }

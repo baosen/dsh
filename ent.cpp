@@ -1,4 +1,5 @@
 #include "ent.hpp"
+using namespace std;
 
 ent::ent() {}
 
@@ -35,7 +36,7 @@ bool ent::dir() const
 }
 
 // Get directory entry if it exists.
-ent ent::getdirent(const char *path)
+ent ent::getdir(const char *path)
 {
     const char *s = path;
     ent         e = *this,
@@ -84,4 +85,11 @@ ent find(const ent& e, const char **s)
             return f;
 done: 
     return ent();
+}
+
+// Output name of the file entry.
+ostream& operator<<(ostream& o, const ent& e)
+{
+    o << e.name;
+    return o;
 }
