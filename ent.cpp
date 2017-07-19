@@ -52,7 +52,7 @@ ent ent::getdir(const char* const path)
 }
 
 // Read from file.
-int ent::read(char *buf, const off_t i, const size_t nbytes)
+int ent::read(const char *buf, const off_t i, const size_t nbytes)
 {
     UNUSED(buf);
     UNUSED(i);

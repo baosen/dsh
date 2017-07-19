@@ -26,7 +26,7 @@ public:
     ent getdir(const char* const path);
 
     // Read from file.
-    virtual int read(char *buf, const off_t i, const size_t nbytes);
+    virtual int read(const char *buf, const off_t i, const size_t nbytes);
 
     // Write to file.
     virtual int write(char *buf, const off_t i, const size_t nbytes);
