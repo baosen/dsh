@@ -4,76 +4,37 @@
 #include <list>
 #include <sstream>
 #include <sys/stat.h>
+#include "types.hpp"
 
 // File entry.
-struct ent {
-    ent() {
-    }
+class ent {
+public:
+    ent();
+    ent(const mode_t mode, const nlink_t nlink);
+    ent(const std::string name, const mode_t mode);
+    ent(const std::string name, const mode_t mode, const std::initializer_list<ent>& files);
+    ent(const std::string name, const mode_t mode, const nlink_t nlink);
+    ent(const std::string name, const mode_t mode, const nlink_t nlink, const std::initializer_list<ent>& files);
 
-    ent(const std::string name, const mode_t mode)
-        : name(name), mode(mode), nlink(0) 
-    {}
+    // Is empty entry?
+    operator bool() const;
 
-    ent(const std::string name, const mode_t mode, const std::initializer_list<ent> files)
-        : name(name), mode(mode), nlink(0), files(files) 
-    {}
+    // Is a directory?
+    bool dir() const;
 
-    ent(const std::string name, const mode_t mode, const nlink_t nlink)
-        : name(name), mode(mode), nlink(nlink) 
-    {}
+    // Get directory entry if it exists.
+    ent getdirent(const char *path);
 
-    ent(const std::string name, const mode_t mode, const nlink_t nlink, const std::initializer_list<ent> files)
-        : name(name), mode(mode), nlink(nlink), files(files) 
-    {}
+    // Read from file.
+    virtual int read(char *buf, const off_t i, const size_t nbytes);
 
-    operator bool() const
-    {
-        return name.size() != 0;
-    }
-
-    bool dir() const
-    {
-        return (mode & S_IFDIR) == S_IFDIR;
-    }
-
+    // Write to file.
+    virtual int write(char *buf, const off_t i, const size_t nbytes);
+private:
     std::string    name;  // File name.
     mode_t         mode;  // Mode of file.
     nlink_t        nlink; // Number of hardlinks that points to this file that exists in the file system.
     std::list<ent> files; // If it is a directory, it can contain files.
+
+    friend ent find(const ent& e, const char **s);
 };
-
-// Find entry pointed by s.
-inline ent find(const ent& e, const char **s)
-{
-    std::stringstream ss;
-    
-    if (**s == '\0')
-        goto done;
-
-    for (; **s != '/' && **s != '\0'; ++(*s))
-        ss << **s;
-
-    for (const auto& f : e.files)
-        if (ss.str() == f.name)
-            return f;
-
-done: 
-    return ent();
-}
-
-// Get directory entry if it exists.
-template<ent& root>
-inline ent getdirent(const char *path)
-{
-    const char *s = path;
-    ent         e = root,
-                found;
-
-    do {
-        e = find(e, &(++s));
-        if (e)
-            found = e;
-    } while (*s != '\0' && e);
-
-    return found.dir() ? found : ent();
-}

@@ -137,8 +137,8 @@ int fs::create(const char            *path, // File path.
 }
 
 // Get file attributes of a file in the shell file system.
-int fs::getattr(const char  *path,  // File path.
-                struct stat *stbuf) // Buffer to fill the file attributes information.
+int fs::getattr(const  char  *path,  // File path.
+                struct stat  *stbuf) // Buffer to fill the file attributes information.
 {
     // Prepare stat-buffer.
     zero(*stbuf);
