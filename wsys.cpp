@@ -1,15 +1,8 @@
-#include <list>
-#include <unordered_map>
-#include <string>
-#include <memory>
 #include "wsys.hpp"
-#include "mwnd.hpp"
 using namespace std;
 
-namespace {
-    // Windows managed by the windowing subsystem.
-    unordered_map<string, unique_ptr<wnd>> wnds;
-}
+// Windows managed by the windowing subsystem.
+static unordered_map<string, unique_ptr<wnd>> wnds;
 
 // Initialize and setup window system.
 void wsys::init() 
@@ -19,6 +12,26 @@ void wsys::init()
 void wsys::deinit() 
 {
     wnds.clear();
+}
+
+uint wsys::getx(const char *name)
+{
+    return wnds[name]->pcur.x;
+}
+
+uint wsys::gety(const char *name)
+{
+    return wnds[name]->pcur.y;
+}
+
+void wsys::movex(const char *name, const uint x)
+{
+    wnds[name]->movex(x);
+}
+
+void wsys::movey(const char *name, const uint y)
+{
+    wnds[name]->movey(y);
 }
 
 // Read from window.
