@@ -1,8 +1,8 @@
-# Set the number of parallell jobs to be run to be equal to the number of CPU cores.
+# TODO: Set the number of parallell jobs to be run to be equal to the number of CPU cores.
 #CPUS      ?= $(shell sysctl -n hw.ncpu || echo 1)
 #MAKEFLAGS += --jobs=$(CPUS)
 
-# Set G++ as the C++ compiler.
+# Set C++ compiler.
 CXX      = g++
 # Set C++ compiler flags.
 CXXFLAGS = -std=c++17 -O3 -Wall -Wextra
