@@ -16,7 +16,8 @@ using namespace std;
 // Return codes:
 #define SUCCESS 0 // Operation successful.
 
-typedef initializer_list<shared_ptr<ent>> ptrlist;
+// Initializer list of file system entries.
+typedef initializer_list<shared_ptr<ent>> entries;
 // Make shared pointer to a directory.
 #define dirp make_shared<dir>
 
@@ -24,28 +25,22 @@ typedef initializer_list<shared_ptr<ent>> ptrlist;
 static dir root { // TODO: Remove root directory, which I think is unnecessary.
     "/",          // Root directory.
     { 
-        dirp
-        (    
+        dirp (    
             "kb", 
-            ptrlist
-            { 
-                shared_ptr<kbf>(new kbf("0"))
+            entries { 
+                make_shared<kbf>("0")
             }
         ),
-        dirp
-        (   
+        dirp (   
             "m", 
-            ptrlist
-            { 
-                shared_ptr<mf>(new mf("0"))
+            entries { 
+                make_shared<mf>("0")
             }
         ),
-        dirp
-        (
+        dirp (
             "wnd",
-            ptrlist
-            {
-                shared_ptr<wndf>(new wndf("0"))
+            entries {
+                make_shared<wndf>("0")
             }
         )
     }
