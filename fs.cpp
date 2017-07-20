@@ -30,7 +30,7 @@ static dir root { // TODO: Remove root directory, which I think is unnecessary.
             "kb", 
             ptrlist
             { 
-                shared_ptr<file>(new file("0"))
+                shared_ptr<kbf>(new kbf("0"))
             }
         ),
         make_shared<dir>
@@ -38,7 +38,7 @@ static dir root { // TODO: Remove root directory, which I think is unnecessary.
             "m", 
             ptrlist
             { 
-                shared_ptr<file>(new file("0"))
+                shared_ptr<mf>(new mf("0"))
             }
         )
     }
