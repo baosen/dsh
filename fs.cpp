@@ -1,16 +1,10 @@
 #include "zero.hpp"
 #include "kbsys.hpp"
 #include "msys.hpp"
-#include "ssys.hpp"
-#include "cmds.hpp"
-#include "dsys.hpp"
-#include "wsys.hpp"
-#include "file.hpp"
 #include "dir.hpp"
 #include "kbf.hpp"
 #include "mf.hpp"
 #include "wndf.hpp"
-#include "fs.hpp"
 using namespace std;
 
 // Return codes:
