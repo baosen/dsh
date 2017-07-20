@@ -22,8 +22,13 @@ public:
     // Returns the window's offsets to the color bits.
     off    o()  const;
 
-    // Move window to new position.
+    // Move window to a new position.
     void   move(const pos& p);
+    // Move x position.
+    void   movex(const uint x);
+    // Move y position.
+    void   movey(const uint y);
+
     // Resize window.
     void   resize(const res&);
     // Maximize the window to fill the entire screen.

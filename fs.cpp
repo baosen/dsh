@@ -4,16 +4,16 @@
 #include "dir.hpp"
 #include "kbf.hpp"
 #include "mf.hpp"
-#include "wndf.hpp"
+#include "wndx.hpp"
+#include "wndy.hpp"
+#include "errno.hpp"
 using namespace std;
-
-// Return codes:
-#define SUCCESS 0 // Operation successful.
 
 // Initializer list of file system entries.
 typedef initializer_list<shared_ptr<ent>> entries;
 // Make shared pointer to a directory.
 #define dirp make_shared<dir>
+#define filep(type) make_shared<type>
 
 // File tree.
 static dir root { // TODO: Remove root directory, which I think is unnecessary.
@@ -22,19 +22,25 @@ static dir root { // TODO: Remove root directory, which I think is unnecessary.
         dirp (    
             "kb", 
             entries { 
-                make_shared<kbf>("0")
+                filep(kbf)("0")
             }
         ),
         dirp (   
             "m", 
             entries { 
-                make_shared<mf>("0")
+                filep(mf)("0")
             }
         ),
         dirp (
             "wnd",
             entries {
-                make_shared<wndf>("0")
+                dirp (
+                    "0", 
+                    entries {
+                        filep(wndx)(),
+                        filep(wndy)()
+                    }
+                )
             }
         )
     }
@@ -42,8 +48,6 @@ static dir root { // TODO: Remove root directory, which I think is unnecessary.
 
 // File entries in the file system.
 static list<string> ents; // List of file entries.
-
-// return -EINVAL; // Invalid file name.
 
 // Initialize shell file system.
 void* fs::init(struct fuse_conn_info *conn)  
