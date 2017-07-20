@@ -24,13 +24,13 @@ public:
 
     // Move window to a new position.
     void   move(const pos& p);
-    // Move x position.
+    // Move/set x coordinate position.
     void   movex(const uint x);
-    // Move y position.
+    // Move/set y coordinate position.
     void   movey(const uint y);
 
     // Resize window.
-    void   resize(const res&);
+    void   resize(const res& newres);
     // Maximize the window to fill the entire screen.
     void   max();
     // Minimize the window.
