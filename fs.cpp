@@ -166,6 +166,7 @@ int fs::read(const char            *path,   // Pathname of the file to read.
              struct fuse_file_info *fi)     // Other info about the file read.
 {
     UNUSED(fi);
+    // TODO: Use file descriptor instead for performance?
 
     auto e = root.getfile(path);
     if (!*e)
@@ -181,6 +182,7 @@ int fs::write(const char            *path,   // Path to the file to be written t
               struct fuse_file_info *fi)     // Other info about the file read.
 {
     UNUSED(fi);
+    // TODO: Use file descriptor instead for performance?
     
     auto e = root.getfile(path);
     if (!*e)
@@ -233,24 +235,6 @@ static void mkdpys()
     MKFILES("dpy")
     // Make file that show the color format.
     mkcfmt();
-}
-
-// Setup mouse and make mouse files.
-static void mkm() 
-{
-    // Initialize mouse.
-    msys::init();
-    // Insert it into filesystem.
-    MKFILES("m")
-}
-
-// Setup keyboard and make keyboard files.
-static void mkkb() 
-{
-    // Initialize keyboard.
-    kbsys::init();
-    // Insert it into filesystem.
-    MKFILES("kb")
 }
 
 // Setup and make sound files.
