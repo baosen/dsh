@@ -11,6 +11,7 @@ using namespace std;
 
 // Initializer list of file system entries.
 typedef initializer_list<shared_ptr<ent>> entries;
+
 // Make shared pointer to a directory.
 #define dirp make_shared<dir>
 #define filep(type) make_shared<type>
