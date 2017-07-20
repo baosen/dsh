@@ -16,8 +16,8 @@ namespace wsys {
               const size_t size); // Size/length of read in bytes.
 
     // Write to window.
-    void write(const char  *name,  // File name.
-               const void  *buf,   // Buffer to write from.
+    int  write(const char  *name,  // File name.
+               const char  *buf,   // Buffer to write from.
                const off_t  i,     // Offset.
                const size_t size); // Size/length of write in bytes.
 }

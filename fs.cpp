@@ -9,6 +9,7 @@
 #include "dir.hpp"
 #include "kbf.hpp"
 #include "mf.hpp"
+#include "wndf.hpp"
 #include "fs.hpp"
 using namespace std;
 
@@ -16,12 +17,14 @@ using namespace std;
 #define SUCCESS 0 // Operation successful.
 
 typedef initializer_list<shared_ptr<ent>> ptrlist;
+// Make shared pointer to a directory.
+#define dirp make_shared<dir>
 
 // File tree.
 static dir root { // TODO: Remove root directory, which I think is unnecessary.
     "/",          // Root directory.
     { 
-        make_shared<dir>
+        dirp
         (    
             "kb", 
             ptrlist
@@ -29,12 +32,20 @@ static dir root { // TODO: Remove root directory, which I think is unnecessary.
                 shared_ptr<kbf>(new kbf("0"))
             }
         ),
-        make_shared<dir>
+        dirp
         (   
             "m", 
             ptrlist
             { 
                 shared_ptr<mf>(new mf("0"))
+            }
+        ),
+        dirp
+        (
+            "wnd",
+            ptrlist
+            {
+                shared_ptr<wndf>(new wndf("0"))
             }
         )
     }

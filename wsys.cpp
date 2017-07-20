@@ -13,10 +13,7 @@ namespace {
 
 // Initialize and setup window system.
 void wsys::init() 
-{
-    // TODO: For testing purposes.
-    wnds["wnd0"] = unique_ptr<wnd>(new wnd());
-}
+{}
 
 // Deinitialize the window system.
 void wsys::deinit() 
@@ -31,15 +28,15 @@ int wsys::read(const char  *name, // Name of the window.
                const size_t size) // The size in bytes to read from the buffer.
 {
     // TODO: What happens if it does not exists?
-    wnds[name]->read(buf, i, size);
+    return wnds[name]->read(buf, i, size);
 }
 
 // Write to window.
-void wsys::write(const char  *name, // Name of the window.
-                 const void  *buf,  // Name of the buffer.
-                 const off_t  i,    // Offset of the buffer to write to.
-                 const size_t size) // The size in bytes to write to the buffer.
+int wsys::write(const char  *name, // Name of the window.
+                const char  *buf,  // Buffer to write from.
+                const off_t  i,    // Offset of the buffer to write to.
+                const size_t size) // The size in bytes to write to the buffer.
 {
     // TODO: What happens if it does not exists?
-    wnds[name]->write(buf, i, size);
+    return wnds[name]->write(buf, i, size);
 }

@@ -3,7 +3,9 @@
 using namespace std;
 
 // Create an empty rectangular window in the framebuffer.
-wnd::wnd() {}
+wnd::wnd() 
+    : pcur(pos(0, 0)), rcur(res(0, 0))
+{}
 
 // Create a rectangular window in the framebuffer.
 wnd::wnd(const pos& p, // The position to place the rectangle in the framebuffer.
@@ -98,7 +100,6 @@ int wnd::read(void        *buf,  // Buffer of 32-bit unsigned RGBA pixels.
               const off_t  i,    // offset to write to framebuffer.
               const size_t size) // The size in bytes to write.
               const 
-              noexcept
 {
     // Check if size of read is out of range.
     if (size > this->size())
@@ -138,7 +139,6 @@ int wnd::read(void        *buf,  // Buffer of 32-bit unsigned RGBA pixels.
 int wnd::write(const void  *buf,  // Buffer of 32-bit unsigned RGBA pixels.
                const off_t  i,    // offset to write to framebuffer.
                const size_t size) // The size in bytes to write.
-               noexcept
 {
     UNUSED(size);
 
