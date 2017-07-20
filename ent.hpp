@@ -56,6 +56,8 @@ private:
     std::list<std::shared_ptr<ent>> files; // If it is a directory, it can contain files.
 
     friend bool find(std::shared_ptr<ent>& e, const std::string& name);
+
+    // Friends of the file system.
     friend int  fs::getattr(const char *path, struct stat *stbuf);
     friend int  fs::readdir(const char *path, void *buf, fuse_fill_dir_t fill, off_t offset, struct fuse_file_info *fi);    
     
