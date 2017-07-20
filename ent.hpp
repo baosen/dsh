@@ -30,14 +30,14 @@ public:
     // Is a file?
     bool file() const;
 
+    // Get entry if it exists.
+    std::shared_ptr<ent> getent(const char* const path);
+
     // Get directory entry if it exists.
     std::shared_ptr<ent> getdir(const char* const path);
 
     // Get file entry if it exists.
     std::shared_ptr<ent> getfile(const char* const path);
-
-    // Get entry if it exists.
-    std::shared_ptr<ent> getent(const char* const path);
 
     // Read from file.
     virtual int read(char *buf, const off_t i, const size_t nbytes);
@@ -55,10 +55,12 @@ private:
     nlink_t                         nlink; // Number of hardlinks that points to this file that exists in the file system.
     std::list<std::shared_ptr<ent>> files; // If it is a directory, it can contain files.
 
-    friend std::shared_ptr<ent> find(const std::shared_ptr<ent>& e, const char **s);
-    friend int fs::getattr(const char *path, struct stat *stbuf);
-    friend int fs::readdir(const char *path, void *buf, fuse_fill_dir_t fill, off_t offset, struct fuse_file_info *fi);    
+    friend bool find(std::shared_ptr<ent>& e, const std::string& name);
+    friend int  fs::getattr(const char *path, struct stat *stbuf);
+    friend int  fs::readdir(const char *path, void *buf, fuse_fill_dir_t fill, off_t offset, struct fuse_file_info *fi);    
     
     // Output name of the file entry.
     friend std::ostream& operator<<(std::ostream& o, const ent& e);
+    // Output name of the file entry.
+    friend std::ostream& operator<<(std::ostream& o, const std::shared_ptr<ent>& e);
 };

@@ -1,67 +1,116 @@
 #include <iostream>
+#include <cassert>
 #include "dir.hpp"
 #include "file.hpp"
 using namespace std;
 
+typedef initializer_list<shared_ptr<ent>> ptrlist;
+
 // File tree.
-static dir root {
-    "/", // Root directory.
+static dir root { // TODO: Remove root directory, which I think is unnecessary.
+    "/",          // Root directory.
     { 
-        dir { 
+        make_shared<dir>
+        (    
             "kb", 
-             { 
-                file { "0" },
-                file { "1" },
-                file { "2" },
-                file { "3" },
-             }
-        },
-        dir { 
-            "m", 
+            ptrlist
             { 
-                file { "0" }
+                shared_ptr<ent>(new file("0"))
             }
-        },
-        dir {
-            "wnd",
-            {
-                file { "0" }
+        ),
+        make_shared<dir>
+        (   
+            "m", 
+            ptrlist
+            { 
+                shared_ptr<ent>(new file("0"))
             }
-        }
+        ),
+        make_shared<dir>
+        (   
+            "wnd", 
+            ptrlist
+            { 
+                shared_ptr<ent>(new file("0"))
+            }
+        )
     }
 };
+
+void print(const shared_ptr<ent>& e)
+{
+    if (*e) {
+        cout << e << endl;
+        return;
+    }
+    cout << "None" << endl;
+}
 
 int main()
 {
     auto e = root.getdir("/kb");
-    cout << e << endl;
+    print(e);
+    assert(*e);
 
     e = root.getdir("/kb/");
-    cout << e << endl;
+    print(e);
+    assert(*e);
 
     e = root.getdir("/kb/0");
-    cout << e << endl;
+    print(e);
+    assert(!*e);
 
     e = root.getdir("/kb/0/");
-    cout << e << endl;
+    print(e);
+    assert(!*e);
+
+    e = root.getdir("/kb/1");
+    print(e);
+    assert(!*e);
 
     e = root.getdir("/kb/1/");
-    cout << e << endl;
+    print(e);
+    assert(!*e);
 
     e = root.getdir("/m");
-    cout << e << endl;
+    print(e);
+    assert(*e);
 
     e = root.getdir("/m/");
-    cout << e << endl;
+    print(e);
+    assert(*e);
 
     e = root.getdir("/m/0");
-    cout << e << endl;
+    print(e);
+    assert(!*e);
 
     e = root.getdir("/wnd");
-    cout << e << endl;
+    print(e);
+    assert(*e);
 
     e = root.getdir("/wnd/");
-    cout << e << endl;
+    print(e);
+    assert(*e);
+
+    e = root.getdir("/wnd/0");
+    print(e);
+    assert(!*e);
+
+    e = root.getdir("/wnd/1");
+    print(e);
+    assert(!*e);
+
+    e = root.getfile("/wnd/0");
+    print(e);
+    assert(*e);
+
+    e = root.getfile("/wnd/0/");
+    print(e);
+    assert(*e);
+
+    e = root.getfile("/wnd/1/");
+    print(e);
+    assert(!*e);
 
     return EXIT_SUCCESS;
 }
