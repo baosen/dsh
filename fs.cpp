@@ -1,7 +1,3 @@
-#include <list>
-#include <cstring>
-#include <sstream>
-#include <iostream>
 #include "zero.hpp"
 #include "kbsys.hpp"
 #include "msys.hpp"
