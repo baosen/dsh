@@ -1,5 +1,10 @@
 #include "wndd.hpp"
 #include "errno.hpp"
+using namespace std;
+
+wndd::wndd(const string& name, const entlist& files)
+    : dir(name, files)
+{}
 
 // Open window directory.
 int wndd::open(const char *path)

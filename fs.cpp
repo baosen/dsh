@@ -6,6 +6,7 @@
 #include "mf.hpp"
 #include "wndx.hpp"
 #include "wndy.hpp"
+#include "wndd.hpp"
 #include "errno.hpp"
 using namespace std;
 
@@ -13,7 +14,8 @@ using namespace std;
 typedef initializer_list<shared_ptr<ent>> entries;
 
 // Make shared pointer to a directory.
-#define dirp make_shared<dir>
+#define dirp        make_shared<dir>
+#define wnddp       make_shared<wndd>
 #define filep(type) make_shared<type>
 
 // File tree.
@@ -32,7 +34,7 @@ static dir root { // TODO: Remove root directory, which I think is unnecessary.
                 filep(mf)("0")
             }
         ),
-        dirp (
+        wnddp (
             "wnd",
             entries {
                 dirp (

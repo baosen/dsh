@@ -4,6 +4,9 @@
 // Window directory.
 class wndd : public dir {
 public:
+    wndd(const std::string& name, const entlist& l);
+
+    // IOCTL calls.
     enum {
         MOVE,
     };
