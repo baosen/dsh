@@ -15,7 +15,7 @@ FUSELIBS = `pkg-config fuse --cflags --libs`
 SRC      = m.cpp wnd.cpp pix.cpp pos.cpp fb.cpp scr.cpp log.cpp res.cpp ev.cpp evm.cpp msys.cpp kbsys.cpp kb.cpp wsys.cpp wd.cpp parse.cpp init.cpp mwnd.cpp 
 
 # Tests.
-TESTS    = mtest fbtest evmtest kbsystest msystest dpytests wtest kbtest utf8test fsktest fsmtest enttest
+TESTS    = mtest fbtest evmtest kbsystest msystest dpytests wtest kbtest utf8test fsktest fsmtest enttest gntest
 # Executables.
 EXECS    = dsh dshfs
 # Set the produced executable binaries.
@@ -79,6 +79,9 @@ fsmtest: fsmtest.cpp
 enttest: enttest.cpp ent.cpp dir.o file.o
 	$(COMPILE) $^ $(FUSELIBS) -o $@
 
+gntest: gntest.cpp gn.o
+	$(COMPILE) $^ -o $@
+
 # Tests for keyboard.
 kbtest: kbtest.cpp kb.o kbc.o utf8.o
 	$(COMPILE) $^ -o $@
@@ -116,11 +119,11 @@ mf.o: mf.cpp mf.hpp
 	$(COMPILE) -c $< $(FUSELIBS) -o $@
 
 # Window x coordinate file.
-wndx.o: wndx.cpp wndy.hpp
+wndx.o: wndx.cpp wndy.hpp gn.o
 	$(COMPILE) -c $< $(FUSELIBS) -o $@
 
 # Window y coordinate file.
-wndy.o: wndy.cpp wndy.hpp
+wndy.o: wndy.cpp wndy.hpp gn.o
 	$(COMPILE) -c $< $(FUSELIBS) -o $@
 
 # Compile shell file system executable.

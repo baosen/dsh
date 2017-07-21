@@ -2,6 +2,7 @@
 #include <vector>
 #include "wsys.hpp"
 #include "wndx.hpp"
+#include "gn.hpp"
 using namespace std;
 
 // Unsigned int x coordinate file for window.
@@ -9,33 +10,6 @@ using namespace std;
 wndx::wndx()
     : file("x")
 {}
-
-static vector<char> getname(const char *s)
-{
-    const char *p[2] = {0};
-
-    while (*s) {
-        if (*s == '/') {
-            swap(p[1], p[0]);
-            p[1] = s;
-        }
-        ++s;
-    }
-    p[0]++;
-    p[1]++;
-
-    vector<char> v(p[1] - p[0] + 1);
-
-    int i = 0;
-    while (p[1] != p[0]) {
-        v[i] = *p[0];
-        p[0]++;
-        i++;
-    }
-    v[v.size()-1] = '\0';
-
-    return v;
-}
 
 int wndx::read(const char  *path,   // File path.
                char        *buf,    // Buffer to read from.
