@@ -45,6 +45,9 @@ public:
     // Write to file.
     virtual int write(const char *buf, const off_t i, const size_t nbytes);
 
+    // Open file.
+    virtual int open(const char *path);
+
     virtual ~ent() {}
 protected:
     void push(const std::string name, const mode_t mode);

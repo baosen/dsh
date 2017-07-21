@@ -25,3 +25,12 @@ void dir::init()
     push(".", DIRMODE);  // "This" directory.
     push("..", DIRMODE); // Parent directory.
 }
+
+// Open directory.
+int dir::open(const char *path)
+{
+    UNUSED(path);
+
+    // You cannot open a directory!
+    return -EISDIR;
+}

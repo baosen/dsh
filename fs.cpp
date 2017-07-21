@@ -151,11 +151,8 @@ int fs::open(const char            *path, // Path to file to open.
     if (!*e)
         return -ENOENT;
 
-    // Trying to open a directory?
-    if (e->dir())
-        return -EISDIR;
-
-    return SUCCESS;
+    // Try to open it!
+    return e->open(path);
 }
 
 // Read file contents. Returns number of bytes read.

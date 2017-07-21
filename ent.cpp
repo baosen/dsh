@@ -1,4 +1,5 @@
 #include <cstring>
+#include "log.hpp"
 #include "ent.hpp"
 using namespace std;
 
@@ -51,9 +52,17 @@ bool ent::file() const
     return (mode & S_IFREG) == S_IFREG;
 }
 
+// Open file.
+int ent::open(const char *path) 
+{
+    warn("Bug: Trying to open an abstract entry!");
+    return -EPERM;
+}
+
+// Create a new file entry.
 void ent::push(const std::string name, const mode_t mode)
 {
-    files.push_back(make_unique<ent>(name, mode));
+    files.push_back(make_shared<ent>(name, mode));
 }
 
 // Find entry pointed by s.
