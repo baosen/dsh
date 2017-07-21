@@ -1,5 +1,10 @@
 #pragma once
+#include <list>
+#include <unordered_map>
+#include <string>
+#include <memory>
 #include "fio.hpp"
+#include "wnd.hpp"
 
 // Window system.
 namespace wsys {
@@ -8,6 +13,12 @@ namespace wsys {
 
     // Deinitialize the window system.
     void deinit();
+
+    uint getx(const char *name);
+    uint gety(const char *name);
+
+    void movex(const char *name, const uint x);
+    void movey(const char *name, const uint y);
 
     // Read from window.
     int  read(const char  *name,  // File name.

@@ -4,6 +4,11 @@
 #include "pix.hpp"
 #include "scr.hpp"
 
+namespace wsys {
+    uint getx(const char *name);
+    uint gety(const char *name);
+}
+
 // Rectangle image in framebuffer.
 class wnd {
 public:
@@ -61,4 +66,7 @@ private:
 
     // Save old window state.
     void save();
+
+    friend uint wsys::getx(const char *name);
+    friend uint wsys::gety(const char *name);
 };
