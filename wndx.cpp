@@ -7,6 +7,11 @@ using namespace std;
 
 // Unsigned int x coordinate file for window.
 // TODO: Make /wnd/0/xc for x ascii.
+
+wndx::wndx(const shared_ptr<wndd>& p)
+    : parent(p), file("x")
+{}
+
 wndx::wndx()
     : file("x")
 {}

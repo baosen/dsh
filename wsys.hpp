@@ -17,6 +17,7 @@ namespace wsys {
     uint getx(const char *name);
     uint gety(const char *name);
 
+    void move(const char *name, const pos& p);
     void movex(const char *name, const uint x);
     void movey(const char *name, const uint y);
 

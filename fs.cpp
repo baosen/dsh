@@ -34,10 +34,10 @@ static dir root { // TODO: Remove root directory, which I think is unnecessary.
                 filep(mf)("0")
             }
         ),
-        wnddp (
+        dirp (
             "wnd",
             entries {
-                dirp (
+                wnddp (
                     "0", 
                     entries {
                         filep(wndx)(),

@@ -24,6 +24,11 @@ uint wsys::gety(const char *name)
     return wnds[name]->pcur.y;
 }
 
+void wsys::move(const char *name, const pos& p)
+{
+    wnds[name]->move(p);
+}
+
 void wsys::movex(const char *name, const uint x)
 {
     wnds[name]->movex(x);
