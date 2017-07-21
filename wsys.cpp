@@ -14,29 +14,38 @@ void wsys::deinit()
     wnds.clear();
 }
 
+// Check if window exist. If it exists, get it!
+auto& get(const char *name)
+{
+    auto it = wnds.find(name);
+    if (it == wnds.end()) 
+        throw err("No window named " + string(name) + " found!");
+    return it->second;
+}
+
 uint wsys::getx(const char *name)
 {
-    return wnds[name]->pcur.x;
+    return get(name)->pcur.x;
 }
 
 uint wsys::gety(const char *name)
 {
-    return wnds[name]->pcur.y;
+    return get(name)->pcur.y;
 }
 
 void wsys::move(const char *name, const pos& p)
 {
-    wnds[name]->move(p);
+    get(name)->move(p);
 }
 
 void wsys::movex(const char *name, const uint x)
 {
-    wnds[name]->movex(x);
+    get(name)->movex(x);
 }
 
 void wsys::movey(const char *name, const uint y)
 {
-    wnds[name]->movey(y);
+    get(name)->movey(y);
 }
 
 // Read from window.
@@ -45,8 +54,7 @@ int wsys::read(const char  *name, // Name of the window.
                const off_t  i,    // Offset of the buffer to read from.
                const size_t size) // The size in bytes to read from the buffer.
 {
-    // TODO: What happens if it does not exists?
-    return wnds[name]->read(buf, i, size);
+    return get(name)->read(buf, i, size);
 }
 
 // Write to window.
@@ -55,6 +63,5 @@ int wsys::write(const char  *name, // Name of the window.
                 const off_t  i,    // Offset of the buffer to write to.
                 const size_t size) // The size in bytes to write to the buffer.
 {
-    // TODO: What happens if it does not exists?
-    return wnds[name]->write(buf, i, size);
+    return get(name)->write(buf, i, size);
 }
