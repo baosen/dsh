@@ -24,6 +24,7 @@ uint wnd::start(const scr::varinfo& v) const
     return pcur.x + pcur.y * v.xres; // The start index of the position.
 }
 
+// Get color offsets.
 off wnd::o() const
 {
     // Set the positions to the color bits.
@@ -93,6 +94,24 @@ void wnd::max()
     const auto v = fb.sc.vinfo();
     pcur = pos(0, 0);
     resize(res(v.xres, v.yres));
+}
+
+// Move window to a new position.
+void wnd::move(const pos& p)
+{
+    pcur = p;
+}
+
+// Move/set x coordinate position.
+void wnd::movex(const uint x)
+{
+    pcur.x = x;
+}
+
+// Move/set y coordinate position.
+void wnd::movey(const uint y)
+{
+    pcur.y = y;
 }
 
 // Read from the image buffer of the rectangular window.

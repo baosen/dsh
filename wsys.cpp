@@ -23,26 +23,31 @@ auto& get(const char *name)
     return it->second;
 }
 
+// Get X position of window.
 uint wsys::getx(const char *name)
 {
     return get(name)->pcur.x;
 }
 
+// Get Y position of window.
 uint wsys::gety(const char *name)
 {
     return get(name)->pcur.y;
 }
 
+// Get move window.
 void wsys::move(const char *name, const pos& p)
 {
     get(name)->move(p);
 }
 
+// Get move x window.
 void wsys::movex(const char *name, const uint x)
 {
     get(name)->movex(x);
 }
 
+// Get move y window.
 void wsys::movey(const char *name, const uint y)
 {
     get(name)->movey(y);

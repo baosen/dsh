@@ -17,8 +17,11 @@ namespace wsys {
     uint getx(const char *name);
     uint gety(const char *name);
 
+    // Get move window.
     void move(const char *name, const pos& p);
+    // Get move x window.
     void movex(const char *name, const uint x);
+    // Get move y window.
     void movey(const char *name, const uint y);
 
     // Read from window.
