@@ -18,6 +18,8 @@ int wndd::open(const char *path)
     return SUCCESS;
 }
 
+// Sad there is no ioctl(...) for directories.
+
 // Control window.
 int wndd::ioctl(int   cmd,  // The ioctl() command number passed.
                 void *data) // The data.

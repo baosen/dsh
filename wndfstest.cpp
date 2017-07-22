@@ -1,7 +1,7 @@
 #include <sys/ioctl.h>
 #include "log.hpp"
 #include "fio.hpp"
-#include "wndd.hpp"
+#include "wndctl.hpp"
 
 static void xtest()
 {
@@ -17,14 +17,14 @@ static void xtest()
         die("Failed to close window 0!");
 }
 
-static void dirtest()
+static void ctltest()
 {
-    auto fd = open("./sh/wnd/0", O_RDWR);
+    auto fd = open("./sh/wnd/0/ctl", O_RDWR);
     if (fd < 0)
         die("Failed to open window directory 0!");
 
-    if (ioctl(fd, wndd::MOVE) < 0)
-        die("ioctl");
+    if (ioctl(fd, wndctl::MOVE) < 0)
+        die("ioctl() error.");
 
     if (close(fd) < 0)
         die("Failed to close window directory 0!");
@@ -32,6 +32,6 @@ static void dirtest()
 
 int main()
 {
-    dirtest();
+    ctltest();
     return EXIT_SUCCESS;
 }

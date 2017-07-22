@@ -134,8 +134,12 @@ wndx.o: wndx.cpp wndy.hpp gn.o
 wndy.o: wndy.cpp wndy.hpp gn.o
 	$(COMPILE) -c $< $(FUSELIBS) -o $@
 
+# Window ctl.
+wndctl.o: wndctl.cpp wndctl.hpp
+	$(COMPILE) -c $< $(FUSELIBS) -o $@
+
 # Compile shell file system executable.
-dshfs: dshfs.cpp fs.o log.o kb.o kbsys.o dsys.o wndcmd.o dpycmd.o wsys.o ssys.o msys.o m.o wnd.o fb.o scr.o pix.o pos.o res.o evm.o ev.o ent.o dir.o file.o kbf.o mf.o wndx.o wndy.o gn.o wndd.o
+dshfs: dshfs.cpp fs.o log.o kb.o kbsys.o dsys.o wndcmd.o dpycmd.o wsys.o ssys.o msys.o m.o wnd.o fb.o scr.o pix.o pos.o res.o evm.o ev.o ent.o dir.o file.o kbf.o mf.o wndx.o wndy.o gn.o wndctl.o
 	$(COMPILE) $^ `pkg-config fuse --cflags --libs` -o $@
 
 # Compile "do"-program, the beginning program that ask the user what to do.

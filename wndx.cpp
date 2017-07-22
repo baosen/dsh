@@ -9,7 +9,7 @@ using namespace std;
 // TODO: Make /wnd/0/xc for x ascii.
 
 // Create window file x.
-wndx::wndx(const shared_ptr<wndd>& p)
+wndx::wndx(const shared_ptr<class dir>& p)
     : parent(p), file("x")
 {}
 

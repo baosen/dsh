@@ -6,7 +6,7 @@
 #include "mf.hpp"
 #include "wndx.hpp"
 #include "wndy.hpp"
-#include "wndd.hpp"
+#include "wndctl.hpp"
 #include "errno.hpp"
 using namespace std;
 
@@ -15,7 +15,6 @@ typedef initializer_list<shared_ptr<ent>> entries;
 
 // Make shared pointer to a directory.
 #define dirp        make_shared<dir>
-#define wnddp       make_shared<wndd>
 #define filep(type) make_shared<type>
 
 // File tree.
@@ -37,9 +36,10 @@ static dir root { // TODO: Remove root directory, which I think is unnecessary.
         dirp (
             "wnd",
             entries {
-                wnddp (
+                dirp (
                     "0", 
                     entries {
+                        filep(wndctl)(),
                         filep(wndx)(),
                         filep(wndy)()
                     }
@@ -202,7 +202,10 @@ int fs::ioctl(const char            *path,  // Path of the file to control.
     UNUSED(fi);
     UNUSED(flags);
     UNUSED(data);
-    return -EPERM;
+    auto e = root.getfile(path);
+    if (!*e)
+        return -ENOENT;
+    return e->ioctl(cmd, data);
 }
 
 // Make shell file node. Gets called for creation of all non-directory, non-symbolic link nodes.
