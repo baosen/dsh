@@ -6,30 +6,37 @@ using namespace std;
 // Return codes:
 #define SUCCESS 0 // Operation successful.
 
+// Construct empty entry.
 ent::ent() 
     : mode(0), nlink(0) 
 {}
 
+// Construct entry and set its file mode.
 ent::ent(const mode_t mode)
     : mode(mode), nlink(0) 
 {}
 
+// Construct entry and set its file mode and number of hard links.
 ent::ent(const mode_t mode, const nlink_t nlink)
     : mode(mode), nlink(nlink) 
 {}
 
+// Construct entry and set its name and file mode.
 ent::ent(const std::string name, const mode_t mode)
     : name(name), mode(mode), nlink(0) 
 {}
 
+// Construct entry and set its name and file mode, and insert files into it.
 ent::ent(const std::string name, const mode_t mode, const entlist& files)
     : name(name), mode(mode), nlink(0), files(files)
 {}
 
+// Construct entry and set its name, file mode and number of hard links.
 ent::ent(const std::string name, const mode_t mode, const nlink_t nlink)
     : name(name), mode(mode), nlink(nlink) 
 {}
 
+// Construct entry and set its name, file mode and number of hard links, and insert files into it.
 ent::ent(const std::string name, const mode_t mode, const nlink_t nlink, const entlist& files)
     : name(name), mode(mode), nlink(nlink), files(files) 
 {}
