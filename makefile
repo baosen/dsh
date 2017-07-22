@@ -15,7 +15,7 @@ FUSELIBS = `pkg-config fuse --cflags --libs`
 SRC      = m.cpp wnd.cpp pix.cpp pos.cpp fb.cpp scr.cpp log.cpp res.cpp ev.cpp evm.cpp msys.cpp kbsys.cpp kb.cpp wsys.cpp wd.cpp parse.cpp init.cpp mwnd.cpp 
 
 # Tests.
-TESTS    = mtest fbtest evmtest kbsystest msystest dpytests wtest kbtest utf8test fsktest fsmtest enttest gntest wndfstest
+TESTS    = mtest fbtest evmtest kbsystest msystest dpytests wtest kbtest utf8test fsktest fsmtest enttest gntest wndfstest wsystest
 # Executables.
 EXECS    = dsh dshfs
 # Set the produced executable binaries.
@@ -62,6 +62,10 @@ evmtest: evmtest.cpp evm.o log.o ev.o
 
 # Tests for the mouse subsystem.
 msystest: msystest.cpp msys.o evm.o ev.o m.o log.o
+	$(COMPILE) $^ -o $@
+
+# Tests for the window subsystem.
+wsystest: wsystest.cpp wsys.o keywait.o wnd.o pos.o res.o fb.o scr.o pix.o log.o
 	$(COMPILE) $^ -o $@
 
 # Tests for the keyboard subsystem.

@@ -10,7 +10,12 @@ wnd::wnd()
 // Create a rectangular window in the framebuffer.
 wnd::wnd(const pos& p, // The position to place the rectangle in the framebuffer.
          const res& r) // The resolution of the rectangle in the framebuffer.
-    : pcur(p), rcur(r) {}
+    : pcur(p), rcur(r) 
+{
+#ifndef NDEBUG
+    fill(pix(255, 255, 255, 255));
+#endif
+}
 
 // Computes the index of its position in the framebuffer.
 uint wnd::i() const 
@@ -106,6 +111,7 @@ void wnd::move(const pos& p)
 void wnd::movex(const uint x)
 {
     pcur.x = x;
+    fill(pix(255, 255, 255, 255));
 }
 
 // Move/set y coordinate position.

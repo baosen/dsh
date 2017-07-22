@@ -6,7 +6,9 @@ static unordered_map<string, unique_ptr<wnd>> wnds;
 
 // Initialize and setup window system.
 void wsys::init() 
-{}
+{
+    wnds["0"] = make_unique<wnd>(pos(0, 0), res(100, 100));
+}
 
 // Deinitialize the window system.
 void wsys::deinit() 
