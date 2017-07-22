@@ -50,7 +50,11 @@ static void movetest()
         if (py < 0)
             py = 0;
         wnd r(pos(px, py), res(100, 100));
-        r.fill(pix(255, 255, 255, 255));
+        try {
+            r.fill(pix(255, 255, 255, 255));
+        } catch (const err& e) {
+            continue;
+        }
     }
 }
 
@@ -58,7 +62,8 @@ static void movetest()
 int main() 
 {
     //test1();
-    test2();
+    //test2();
+    movetest();
 
     return EXIT_SUCCESS;
 }

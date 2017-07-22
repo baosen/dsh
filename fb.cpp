@@ -67,6 +67,7 @@ void fb::setfbptrs()
 }
 
 // Set double buffer pointers.
+// NOTICE: Using this, the buffer gets remade each time it is opened and cleared on destruction.
 void fb::setdbufptrs()
 {
     get8p  = &fb::dbufget8;
@@ -119,12 +120,18 @@ u8& fb::dbufget8(const uint i)   // Index beginning at 0 indexing a string of fr
 // Access the frame buffer 8 bits/byte at a time.
 u8& fb::fbget8(const uint i) // Index beginning at 0 indexing a string of framebuffer bytes.
 {
+    if (i >= size)
+        throw err("Indexing outside framebuffer boundary!");
+
     return fbp[i];
 }
 
 // Access memory 32 bits/4 bytes at a time.
 u32& fb::get32(const uint i) // Index beginning at 0 indexing a string of framebuffer bytes. 
 {
+    if (i >= plen)
+        throw err("Indexing outside framebuffer boundary!");
+
     return CALLMEMBFN(get32p)(i);
 }
 
@@ -179,6 +186,7 @@ void fb::dbufflip()
 
     // Wait for vertical sync before copying.
     this->vsync();
+
     // Copy double buffer into the framebuffer.
     memcpy(fbp, &dbuf[0], size);
 }
