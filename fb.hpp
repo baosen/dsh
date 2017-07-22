@@ -1,5 +1,4 @@
 #pragma once
-#include <memory>
 #include "pos.hpp"
 #include "pix.hpp"
 #include "scr.hpp"
@@ -50,8 +49,7 @@ private:
         boff, // Blue offset.
         aoff; // Alpha offset.
 
-    std::unique_ptr<u8[]> dbuf;    // Double buffer for tear-free framebuffer manipulation.
-    bool                  vsyncen; // Is vertical sync enabled.
+    bool   vsyncen; // Is vertical sync enabled.
 
     u8*    fbp;
 

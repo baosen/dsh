@@ -1,20 +1,22 @@
+#include <vector>
 #include <cstring>
 #include <sys/mman.h>
 #include "fb.hpp"
 #include "log.hpp"
 using namespace std;
 
+// Double buffer for tear-free framebuffer manipulation.
+static std::vector<u8> dbuf; 
+
 // Setup framebuffer file mapping to the address space.
 fb::fb() 
     : roff(-1), goff(-1), boff(-1), aoff(-1), // Blanken color offsets.
       vsyncen(true)                           // Enable vertical sync.
 {
-    // Check if double buffer using double height of virtual screen is setup.
-    if (sc.dbufen) {
+    // Check if we can double buffer by doubling the height of the virtual screen.
+    if (sc.pageen) {
         // Get size of framebuffer in bytes and half it to accommedate for the virtual screen.
         size = sc.finfo().smem_len / 2;
-        // Do not use any allocated double buffer in the system memory.
-        dbuf = nullptr;
     } else // No double buffer setup for the framebuffer screen.
         // Get size of framebuffer in bytes.
         size = sc.finfo().smem_len;
@@ -49,7 +51,7 @@ void fb::setptrs()
     vsyncen = sc.isvsync();
     if (vsyncen) {
         // Set size of the double buffer to be the same as the framebuffer size in bytes.
-        dbuf = make_unique<u8[]>(size);
+        dbuf.resize(size);
         // Set function pointers to use the double buffer functions.
         setdbufptrs();
     } else
@@ -177,10 +179,9 @@ void fb::flip()
 // Double buffer flip.
 void fb::dbufflip()
 {
-    // Blit by copying the double buffer into the framebuffer.
-    if (sc.dbufen) {
+    // Swap page!
+    if (sc.pageen) {
         sc.flip();
-        // TODO: Change pointer.
         return;
     }
 

@@ -12,7 +12,7 @@ using namespace std;
 // Setup double-buffered framebuffer screen.
 scr::scr() 
     : page(0),     // Start on page buffer 0.
-      dbufen(true) // Enable double buffering using fbdev by default.
+      pageen(true) // Enable double page buffers by default.
 {
     // Open the framebuffer file.
     fd = ::open("/dev/fb0", O_RDWR);
@@ -45,7 +45,7 @@ scr::scr()
 #ifdef DEBUG
         syserror("Failed to setup double buffering!");
 #endif
-        dbufen = false;
+        pageen = false;
     }
 }
 
@@ -77,7 +77,7 @@ scr::fixinfo scr::finfo()
 // Wait for vertical sync.
 void scr::vsync()
 {
-    if (isvsync()) {
+    if (CTL(FBIO_WAITFORVSYNC, 0) < 0) {
 #ifdef DEBUG
 #   define ERRMSG "Failed to wait for vertical synchronization!";
         syserror(ERRMSG);

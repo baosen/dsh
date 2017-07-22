@@ -50,11 +50,7 @@ static void movetest()
         if (py < 0)
             py = 0;
         wnd r(pos(px, py), res(100, 100));
-        try {
-            r.fill(pix(255, 255, 255, 255));
-        } catch (const err& e) {
-            continue;
-        }
+        r.fill(pix(255, 255, 255, 255));
     }
 }
 
