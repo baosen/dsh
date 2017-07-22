@@ -13,7 +13,14 @@ wnd::wnd(const pos& p, // The position to place the rectangle in the framebuffer
     : pcur(p), rcur(r) 
 {
 #ifndef NDEBUG
-    fill(pix(255, 255, 255, 255));
+    fillflip(pix(255, 255, 255, 255));
+#endif
+}
+
+wnd::~wnd()
+{
+#ifndef NDEBUG
+    fillflip(pix(0, 0, 0, 0));
 #endif
 }
 
@@ -48,21 +55,31 @@ off wnd::o() const
     return o;
 }
 
+#define DOFILL \
+    /* Open framebuffer. */ \
+    fb fb; \
+\
+    /* Compute pixel color and position. */ \
+    const auto v = fb.sc.vinfo(); \
+    const auto s = start(v); /* The start index of the position. */ \
+\
+    /* Fill the rectangle in Linux framebuffer. */ \
+    for (size_t y = 0; y < rcur.h; ++y) \
+        for (size_t x = 0; x < rcur.w; ++x) \
+            fb.set(s + x + (y * v.xres), c); \
+
 // Fill the rectangular window in the framebuffer with the colour c.
 void wnd::fill(const pix& c) // Colour to fill the inside of the rectangle with.
                const 
 {
-    // Open framebuffer.
-    fb fb;
+    DOFILL
+}
 
-    // Compute pixel color and position.
-    const auto v = fb.sc.vinfo();
-    const auto s = start(v); // The start index of the position.
-
-    // Fill the rectangle in Linux framebuffer.
-    for (size_t y = 0; y < rcur.h; ++y)
-        for (size_t x = 0; x < rcur.w; ++x)
-            fb.set(s + x + (y * v.xres), c);
+// Fill the rectangular window in the framebuffer with the colour c.
+void wnd::fillflip(const pix& c) // Colour to fill the inside of the rectangle with.
+                   const 
+{
+    DOFILL
 
     // Show it to the user!
     fb.flip();
@@ -104,14 +121,17 @@ void wnd::max()
 // Move window to a new position.
 void wnd::move(const pos& p)
 {
+    fill(pix(0, 0, 0, 0));
     pcur = p;
+    fillflip(pix(255, 255, 255, 255));
 }
 
 // Move/set x coordinate position.
 void wnd::movex(const uint x)
 {
+    fill(pix(0, 0, 0, 0));
     pcur.x = x;
-    fill(pix(255, 255, 255, 255));
+    fillflip(pix(255, 255, 255, 255));
 }
 
 // Move/set y coordinate position.

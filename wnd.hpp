@@ -14,9 +14,12 @@ class wnd {
 public:
     wnd();
     wnd(const pos& p, const res& r);
+    ~wnd();
 
     // Fill window with a colour.
     void   fill(const pix& c) const;
+    // Fill window with a colour and flip.
+    void   fillflip(const pix& c) const;
 
     // Returns the index to its position in the framebuffer.
     uint   i()    const;

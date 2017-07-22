@@ -10,20 +10,20 @@ static void test1()
     wnd r1(pos(400, 400), res(100, 100)),
         r2(pos(200, 200), res(100, 100));
 
-    r1.fill(pix(255, 255, 255, 255));
+    r1.fillflip(pix(255, 255, 255, 255));
     keywait();
-    r2.fill(pix(255, 0, 255, 255));
+    r2.fillflip(pix(255, 0, 255, 255));
     keywait();
 
     r2.max();
-    r2.fill(pix(0, 0, 255, 255));
+    r2.fillflip(pix(0, 0, 255, 255));
     keywait();
 }
 
 static void test2()
 {
     wnd w(pos(0, 0), res(100, 100));
-    w.fill(pix(255, 0, 255, 255));
+    w.fillflip(pix(255, 0, 255, 255));
     keywait();
 
     const auto  o = w.o();
@@ -39,7 +39,7 @@ static void movetest()
         py = 0;
 
     wnd r(pos(px, py), res(100, 100));
-    r.fill(pix(255, 255, 255, 255));
+    r.fillflip(pix(255, 255, 255, 255));
 
     for (;;) {
         const auto e = m.rd();
@@ -49,8 +49,7 @@ static void movetest()
             px = 0;
         if (py < 0)
             py = 0;
-        wnd r(pos(px, py), res(100, 100));
-        r.fill(pix(255, 255, 255, 255));
+        r.move(pos(px, py));
     }
 }
 
