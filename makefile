@@ -73,8 +73,8 @@ fsktest: fsktest.cpp kbc.o locale.o
 	$(COMPILE) $^ -o $@
 
 # Window file tests.
-wndfstest: wndfstest.cpp log.cpp
-	$(COMPILE) $^ -o $@
+wndfstest: wndfstest.cpp log.o
+	$(COMPILE) $^ $(FUSELIBS) -o $@
 
 # Mouse file tests.
 fsmtest: fsmtest.cpp

@@ -15,7 +15,6 @@ public:
     virtual int open(const char *path) override;
 
     // Control window.
-    int ioctl(int   cmd,  // The ioctl() command number passed.
-              void *arg); // The arguments provided to the ioctl() call.
-
+    virtual int ioctl(int   cmd,            // The ioctl() command number passed.
+                      void *data) override; // The data.
 };

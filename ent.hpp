@@ -48,12 +48,16 @@ public:
     // Open file.
     virtual int open(const char *path);
 
+    // Control window.
+    virtual int ioctl(int   cmd,   // The ioctl() command number passed.
+                      void *data); // The data.
+
     virtual ~ent() {}
 protected:
     void push(const std::string name, const mode_t mode);
 
-private:
     std::string                     name;  // File name.
+private:
     mode_t                          mode;  // Mode of file.
     nlink_t                         nlink; // Number of hardlinks that points to this file that exists in the file system.
     std::list<std::shared_ptr<ent>> files; // If it is a directory, it can contain files.

@@ -152,6 +152,15 @@ int ent::write(const char *buf, const off_t i, const size_t nbytes)
     return -EPERM; // Operation not permitted.
 }
 
+// Control window.
+int ent::ioctl(int   cmd,  // The ioctl() command number passed.
+               void *data) // The data.
+{
+    UNUSED(cmd);
+    UNUSED(data);
+    return -EPERM;
+}
+
 // Output name of the file entry.
 ostream& operator<<(ostream& o, const ent& e)
 {
