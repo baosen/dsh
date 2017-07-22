@@ -2,6 +2,9 @@
 #include "errno.hpp"
 using namespace std;
 
+// Create window directory and insert files.
+// name:  name of the directory.
+// files: files to insert.
 wndd::wndd(const string& name, const entlist& files)
     : dir(name, files)
 {}
