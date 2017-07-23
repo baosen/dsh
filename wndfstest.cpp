@@ -1,11 +1,13 @@
 #include <sys/ioctl.h>
 #include "log.hpp"
 #include "fio.hpp"
+#include "pos.hpp"
 #include "wndctl.hpp"
 
 static void xtest()
 {
     auto fd = open("./sh/wnd/0/x", O_RDWR);
+
     if (fd < 0)
         die("Failed to open window 0!");
 
@@ -19,11 +21,13 @@ static void xtest()
 
 static void ctltest()
 {
-    auto fd = open("./sh/wnd/0/ctl", O_RDWR);
+    auto fd = open("./sh6/wnd/0/ctl", O_RDWR);
+
     if (fd < 0)
         die("Failed to open window directory 0!");
 
-    if (ioctl(fd, wndctl::MOVE) < 0)
+    const auto p = pos(100, 100);
+    if (ioctl(fd, wndctl::MOVE, &p) < 0)
         die("ioctl() error.");
 
     if (close(fd) < 0)

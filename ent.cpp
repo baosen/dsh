@@ -22,22 +22,22 @@ ent::ent(const mode_t mode, const nlink_t nlink)
 {}
 
 // Construct entry and set its name and file mode.
-ent::ent(const std::string name, const mode_t mode)
+ent::ent(const std::string& name, const mode_t mode)
     : name(name), mode(mode), nlink(0) 
 {}
 
 // Construct entry and set its name and file mode, and insert files into it.
-ent::ent(const std::string name, const mode_t mode, const entlist& files)
+ent::ent(const std::string& name, const mode_t mode, const entlist& files)
     : name(name), mode(mode), nlink(0), files(files)
 {}
 
 // Construct entry and set its name, file mode and number of hard links.
-ent::ent(const std::string name, const mode_t mode, const nlink_t nlink)
+ent::ent(const std::string& name, const mode_t mode, const nlink_t nlink)
     : name(name), mode(mode), nlink(nlink) 
 {}
 
 // Construct entry and set its name, file mode and number of hard links, and insert files into it.
-ent::ent(const std::string name, const mode_t mode, const nlink_t nlink, const entlist& files)
+ent::ent(const std::string& name, const mode_t mode, const nlink_t nlink, const entlist& files)
     : name(name), mode(mode), nlink(nlink), files(files) 
 {}
 
@@ -67,7 +67,7 @@ int ent::open(const char *path)
 }
 
 // Create a new file entry.
-void ent::push(const std::string name, const mode_t mode)
+void ent::push(const std::string& name, const mode_t mode)
 {
     files.push_back(make_shared<ent>(name, mode));
 }

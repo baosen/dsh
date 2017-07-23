@@ -18,10 +18,10 @@ public:
     ent();
     ent(const mode_t mode);
     ent(const mode_t mode, const nlink_t nlink);
-    ent(const std::string name, const mode_t mode);
-    ent(const std::string name, const mode_t mode, const entlist& files);
-    ent(const std::string name, const mode_t mode, const nlink_t nlink);
-    ent(const std::string name, const mode_t mode, const nlink_t nlink, const entlist& files);
+    ent(const std::string& name, const mode_t mode);
+    ent(const std::string& name, const mode_t mode, const entlist& files);
+    ent(const std::string& name, const mode_t mode, const nlink_t nlink);
+    ent(const std::string& name, const mode_t mode, const nlink_t nlink, const entlist& files);
 
     // Is empty entry?
     operator bool() const;
@@ -55,7 +55,7 @@ public:
 
     virtual ~ent() {}
 protected:
-    void push(const std::string name, const mode_t mode);
+    void push(const std::string& name, const mode_t mode);
 
     std::string                     name;  // File name.
 private:

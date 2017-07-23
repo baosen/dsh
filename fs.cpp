@@ -1,5 +1,6 @@
 #include "zero.hpp"
 #include "kbsys.hpp"
+#include "wsys.hpp"
 #include "msys.hpp"
 #include "dir.hpp"
 #include "kbf.hpp"
@@ -18,10 +19,10 @@ typedef initializer_list<shared_ptr<ent>> entries;
 #define filep(type) make_shared<type>
 
 // Window directory.
-shared_ptr<dir> wnddir = dirp (
+static shared_ptr<dir> wnddir = dirp (
     "0", 
     entries {
-        filep(wndctl)(wnddir),
+        filep(wndctl)("0"),
         filep(wndx)(),
         filep(wndy)()
     }
@@ -67,6 +68,7 @@ void* fs::init(struct fuse_conn_info *conn)
 void fs::destroy(void* p) 
 {
     UNUSED(p);
+
     // Cleanup subsystems.
     cleanup();
 }
@@ -205,6 +207,7 @@ int fs::ioctl(const char            *path,  // Path of the file to control.
     UNUSED(fi);
     UNUSED(flags);
     UNUSED(data);
+
     auto e = root.getfile(path);
     if (!*e)
         return -ENOENT;
@@ -255,8 +258,6 @@ static void mksnd()
 // Setup and make windows.
 static void mkw() 
 {
-    // Initialize windows.
-    wsys::init();
     // Insert it into filesystem.
     MKFILES("wnd")
 }
@@ -266,9 +267,14 @@ static void mkw()
 void fs::setup() 
 {
     // Initialize keyboard.
-    kbsys::init();
+    //kbsys::init();
+
     // Initialize mouse.
-    msys::init();
+    //msys::init();
+
+    // Initialize windows.
+    wsys::init();
+
 /*
     // Connect to displays and make them as files.
     mkdpys();
@@ -286,17 +292,19 @@ void fs::cleanup()
         return;
 
     // Cleanup keyboard.
-    kbsys::deinit();
+    //kbsys::deinit();
+
     // Cleanup mouse.
-    msys::deinit();
+    //msys::deinit();
+
+    // Cleanup window.
+    wsys::deinit();
 
 /*
     // Cleanup display.
     dsys::deinit();
     // Cleanup sound.
     ssys::deinit();
-    // Cleanup window.
-    wsys::deinit();
 */
 
     called = true;

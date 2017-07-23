@@ -3,6 +3,10 @@
 #include "wndctl.hpp"
 using namespace std;
 
+wndctl::wndctl(const std::string& pname)
+    : file("ctl"), pname(pname)
+{}
+
 // Construct window ctl file.
 wndctl::wndctl(const shared_ptr<class dir>& p)
     : file("ctl"), parent(p)
@@ -14,7 +18,8 @@ int wndctl::ioctl(int   cmd,  // The ioctl() command number passed.
 {
     switch (cmd) {
     case MOVE:
-        wsys::move(parent->name.c_str(), *rcast<pos*>(data));
+        wsys::move(pname.c_str(),       // Name of the window directory.
+                   *rcast<pos*>(data)); // The position object.
         break;
     default:
         break;
