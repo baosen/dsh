@@ -1,15 +1,18 @@
 #pragma once
 #include <memory>
+#include <string>
 #include "pos.hpp"
 #include "file.hpp"
 
 class wndx : public file {
 public:
-    wndx();
-    wndx(const std::shared_ptr<class dir>& parent);
+    wndx(const std::string& pname);
 
-    virtual int read(const  char *path, char *buf, const off_t i, const size_t nbytes);
-    virtual int write(const char *path, const char *buf, const off_t i, const size_t nbytes);
+    // Read from file.
+    virtual int read(char *buf, const off_t i, const size_t nbytes) override;
+
+    // Write to file.
+    virtual int write(const char *buf, const off_t i, const size_t nbytes) override;
 private:
-    std::shared_ptr<class dir> parent;
+    std::string pname;
 };

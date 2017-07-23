@@ -3,12 +3,11 @@
 #include "wsys.hpp"
 #include "wndy.hpp"
 
-wndy::wndy()
-    : file("y")
+wndy::wndy(const std::string& p)
+    : file("y"), pname(p)
 {}
 
-int wndy::read(const char  *path,
-               char        *buf,     // Buffer to read to.
+int wndy::read(char        *buf,     // Buffer to read to.
                const off_t  i,       // Index.
                const size_t nbytes)  // Number of bytes to read.
 {
@@ -17,14 +16,13 @@ int wndy::read(const char  *path,
     if (nbytes > sizeof(y) || i + (nbytes-1) >= sizeof(y))
         return -EINVAL;
 
-    y = wsys::gety(getname(path).data());
+    y = wsys::gety(pname.c_str());
     memcpy(buf + i, &y, nbytes);
 
     return nbytes;
 }
 
-int wndy::write(const char  *path,
-                const char  *buf,    // Buffer to write from.
+int wndy::write(const char  *buf,    // Buffer to write from.
                 const off_t  i,      // Index.
                 const size_t nbytes) // Number of bytes to write.
 {
@@ -34,7 +32,7 @@ int wndy::write(const char  *path,
         return -EINVAL;
 
     memcpy(rcast<char*>(&y) + i, buf, nbytes);
-    wsys::movey(getname(path).data(), y);
+    wsys::movey(pname.c_str(), y);
 
     return nbytes;
 }

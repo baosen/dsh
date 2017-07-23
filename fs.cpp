@@ -23,8 +23,8 @@ static shared_ptr<dir> wnddir = dirp (
     "0", 
     entries {
         filep(wndctl)("0"),
-        filep(wndx)(),
-        filep(wndy)()
+        filep(wndx)("0"),
+        filep(wndy)("0")
     }
 );
 
@@ -59,6 +59,8 @@ static list<string> ents; // List of file entries.
 // Initialize shell file system.
 void* fs::init(struct fuse_conn_info *conn)  
 {
+    UNUSED(conn);
+
     // Setup shell.
     setup();
     return nullptr;

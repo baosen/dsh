@@ -9,18 +9,12 @@ using namespace std;
 // TODO: Make /wnd/0/xc for x ascii.
 
 // Create window file x.
-wndx::wndx(const shared_ptr<class dir>& p)
-    : parent(p), file("x")
-{}
-
-// Destroy window file x.
-wndx::wndx()
-    : file("x")
+wndx::wndx(const std::string& p)
+    : file("x"), pname(p)
 {}
 
 // Read window x coordinate.
-int wndx::read(const char  *path,   // File path.
-               char        *buf,    // Buffer to read from.
+int wndx::read(char        *buf,    // Buffer to read from.
                const off_t  i,      // Offset.
                const size_t nbytes) // Number of bytes to read.
 {
@@ -30,15 +24,14 @@ int wndx::read(const char  *path,   // File path.
     if (nbytes > sizeof(x) || i + (nbytes-1) >= sizeof(x))
         return -EINVAL;
 
-    x = wsys::getx(getname(path).data());
+    x = wsys::getx(pname.c_str());
     memcpy(buf + i, &x, nbytes);
 
     return nbytes;
 }
 
 // Write window x coordinate.
-int wndx::write(const char  *path,   // File path.
-                const char  *buf,    // Buffer to write from.
+int wndx::write(const char  *buf,    // Buffer to write from.
                 const off_t  i,      // Index.
                 const size_t nbytes) // Number of bytes to write.
 {
@@ -49,7 +42,7 @@ int wndx::write(const char  *path,   // File path.
         return -EINVAL;
 
     memcpy(rcast<char*>(&x) + i, buf, nbytes);
-    wsys::movex(getname(path).data(), x);
+    wsys::movex(pname.c_str(), x);
 
     return nbytes;
 }

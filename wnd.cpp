@@ -137,7 +137,9 @@ void wnd::movex(const uint x)
 // Move/set y coordinate position.
 void wnd::movey(const uint y)
 {
+    fill(pix(0, 0, 0, 0));
     pcur.y = y;
+    fillflip(pix(255, 255, 255, 255));
 }
 
 // Read from the image buffer of the rectangular window.

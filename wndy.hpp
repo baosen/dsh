@@ -1,10 +1,16 @@
 #pragma once
+#include <string>
 #include "file.hpp"
 
 class wndy : public file {
 public:
-    wndy();
+    wndy(const std::string& pname);
 
-    virtual int read(const  char *path, char *buf, const off_t i, const size_t nbytes);
-    virtual int write(const char *path, const char *buf, const off_t i, const size_t nbytes);
+    // Read from file.
+    virtual int read(char *buf, const off_t i, const size_t nbytes) override;
+
+    // Write to file.
+    virtual int write(const char *buf, const off_t i, const size_t nbytes) override;
+private:
+    std::string pname;
 };

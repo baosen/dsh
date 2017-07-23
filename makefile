@@ -77,7 +77,7 @@ fsktest: fsktest.cpp kbc.o locale.o
 	$(COMPILE) $^ -o $@
 
 # Window file tests.
-wndfstest: wndfstest.cpp log.o pos.o
+wndfstest: wndfstest.cpp log.o pos.o keywait.o
 	$(COMPILE) $^ $(FUSELIBS) -o $@
 
 # Mouse file tests.
