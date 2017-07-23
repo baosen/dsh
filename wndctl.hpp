@@ -6,7 +6,6 @@
 // Window ctl file.
 class wndctl : public file {
 public:
-    wndctl();
     wndctl(const std::shared_ptr<class dir>& parent);
 
     // IOCTL calls.

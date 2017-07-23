@@ -17,6 +17,16 @@ typedef initializer_list<shared_ptr<ent>> entries;
 #define dirp        make_shared<dir>
 #define filep(type) make_shared<type>
 
+// Window directory.
+shared_ptr<dir> wnddir = dirp (
+    "0", 
+    entries {
+        filep(wndctl)(wnddir),
+        filep(wndx)(),
+        filep(wndy)()
+    }
+);
+
 // File tree.
 static dir root { // TODO: Remove root directory, which I think is unnecessary.
     "/",          // Root directory.
@@ -36,14 +46,7 @@ static dir root { // TODO: Remove root directory, which I think is unnecessary.
         dirp (
             "wnd",
             entries {
-                dirp (
-                    "0", 
-                    entries {
-                        filep(wndctl)(),
-                        filep(wndx)(),
-                        filep(wndy)()
-                    }
-                )
+                wnddir
             }
         )
     }

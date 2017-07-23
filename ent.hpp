@@ -9,6 +9,7 @@
 #include "fs.hpp"
 
 class ent;
+class wndctl;
 typedef std::initializer_list<std::shared_ptr<ent>> entlist;
 
 // File entry.
@@ -72,4 +73,7 @@ private:
     friend std::ostream& operator<<(std::ostream& o, const ent& e);
     // Output name of the file entry.
     friend std::ostream& operator<<(std::ostream& o, const std::shared_ptr<ent>& e);
+
+    // Control window.
+    friend class wndctl;
 };
