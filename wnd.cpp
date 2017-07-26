@@ -38,14 +38,15 @@ uint wnd::start(const scr::varinfo& v) const
     return pcur.x + pcur.y * v.xres; // The start index of the position.
 }
 
-// Get color offsets.
+// Get the offsets to the color bits.
 off wnd::o() const
 {
-    // Set the positions to the color bits.
+    // Open framebuffer.
     fb         fb;
     const auto v = fb.sc.vinfo();
     off        o;
 
+    // Set the positions to the color bits.
     if (v.red.length)
         o.roff = v.red.offset;    // Position to red bits.
     if (v.green.length)
@@ -54,6 +55,7 @@ off wnd::o() const
         o.boff = v.blue.offset;   // Position to blue bits.
     if (v.transp.length)
         o.aoff = v.transp.offset; // Position to alpha-transparency bits.
+
     return o;
 }
 

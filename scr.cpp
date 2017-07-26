@@ -60,8 +60,10 @@ scr::~scr()
 scr::varinfo scr::vinfo() 
 {
     varinfo v;
+
     if (CTL(FBIOGET_VSCREENINFO, &v) < 0)
         throw err("Failed to read video screen information from framebuffer file!");
+
     return v;
 }
 
@@ -69,8 +71,10 @@ scr::varinfo scr::vinfo()
 scr::fixinfo scr::finfo() 
 {
     fixinfo f;
+
     if (CTL(FBIOGET_FSCREENINFO, &f) < 0)
         throw err("Failed to read fixed screen information from framebuffer file!");
+
     return f;
 }
 
