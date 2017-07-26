@@ -5,6 +5,7 @@
 #include "wndctl.hpp"
 #include "keywait.hpp"
 
+// Test writing to x coordinate file.
 static void xtest()
 {
     auto fd = open("./sh/wnd/0/x", O_RDWR);
@@ -20,6 +21,7 @@ static void xtest()
         die("Failed to close window 0!");
 }
 
+// Test writing to y coordinate file.
 static void ytest()
 {
     auto fd = open("./sh/wnd/0/y", O_RDWR);
@@ -35,6 +37,7 @@ static void ytest()
         die("Failed to close window 0!");
 }
 
+// Test writing to ctl file.
 static void ctltest()
 {
     auto fd = open("./sh/wnd/0/ctl", O_RDWR);
@@ -50,13 +53,17 @@ static void ctltest()
         die("Failed to close window directory 0!");
 }
 
+// Run window file tests.
 int main()
 {
     ctltest();
     keywait();
+
     xtest();
     keywait();
+
     ytest();
     keywait();
+
     return EXIT_SUCCESS;
 }
