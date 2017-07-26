@@ -13,7 +13,8 @@ public:
 
     // IOCTL calls.
     enum {
-        MOVE = _IOW('W', 0, pos)
+        MOVE = _IOW(0, 0, pos), // Move window.
+        CP   = _IOW(1, 0, pos)  // Get color properties.
     };
 
     // Control window.
@@ -21,5 +22,5 @@ public:
               void *data) override; // The data.
 private:
     std::shared_ptr<class dir> parent;
-    std::string pname;
+    std::string                pname;
 };

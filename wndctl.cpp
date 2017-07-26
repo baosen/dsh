@@ -21,6 +21,9 @@ int wndctl::ioctl(int   cmd,  // The ioctl() command number passed.
         wsys::move(pname.c_str(),       // Name of the window directory.
                    *rcast<pos*>(data)); // The position object.
         break;
+    case CP:
+        // TODO: Return color properties.
+        break;
     default:
         break;
     }
