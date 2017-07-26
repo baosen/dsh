@@ -26,7 +26,7 @@ public:
     // Returns the window's current position.
     pos    p()    const;
     // Returns the window's color properties.
-    prop   c()    const;
+    prop   cp()   const;
 
 
     // Move window to a new position.

@@ -26,9 +26,9 @@ static void test2()
     w.fillflip(pix(255, 0, 255, 255));
     keywait();
 
-    const auto  o = w.o();
+    const auto  cp = w.cp();
     vector<u32> v(w.size());
-    fill(begin(v), end(v), pix(255, 255, 255, 255).val(o));
+    fill(begin(v), end(v), pix(255, 255, 255, 255).val(cp));
     w.write(v.data(), 0, v.size());
 }
 

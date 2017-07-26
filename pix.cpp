@@ -5,7 +5,10 @@ pix::pix(const uint r, // Red.
          const uint g, // Green.
          const uint b, // Blue.
          const uint a) // Alpha.
-    : r(r), g(g), b(b), a(a) 
+    : r(r), // Red.
+      g(g), // Green.
+      b(b), // Blue.
+      a(a)  // Alpha.
 {}
 
 // Compute pixel formatted to the framebuffer's pixel format.
@@ -29,7 +32,9 @@ u32 pix::val(const int roff, // Red bit position.
     return pix;
 }
 
-u32 pix::val(const prop& p) const
+// Compute pixel formatted to the framebuffer's pixel format.
+u32 pix::val(const prop& p) // Color properties.
+             const
 {
     u32 pix = 0;
 

@@ -39,27 +39,27 @@ uint wnd::start(const scr::varinfo& v) const
 }
 
 // Get the offsets to the color bits.
-prop wnd::c() const
+prop wnd::cp() const
 {
     // Open framebuffer.
     fb         fb;
     const auto v = fb.sc.vinfo();
-    Prop       c;
+    prop       p;
 
     // Set the positions to the color bits.
-    c.rlen = v.red.length;
-    c.roff = v.red.offset;    // Position to red bits.
+    p.rlen = v.red.length;
+    p.roff = v.red.offset;    // Position to red bits.
 
-    c.glen = v.green.length;
-    c.goff = v.green.offset;  // Position to green bits.
+    p.glen = v.green.length;
+    p.goff = v.green.offset;  // Position to green bits.
 
-    c.blen = v.blue.length;
-    c.boff = v.blue.offset;   // Position to blue bits.
+    p.blen = v.blue.length;
+    p.boff = v.blue.offset;   // Position to blue bits.
 
-    c.alen = v.transp.length;
-    c.aoff = v.transp.offset; // Position to alpha-transparency bits.
+    p.alen = v.transp.length;
+    p.aoff = v.transp.offset; // Position to alpha-transparency bits.
 
-    return c;
+    return p;
 }
 
 #define DOFILL \
@@ -182,22 +182,6 @@ int wnd::read(void        *buf,  // Buffer of 32-bit unsigned RGBA pixels.
     for (uint y = 0; y < rcur.h; ++y)
         memcpy(rcast<u32*>(buf) + (y * rcur.w), &fb.get32(s + i + (y * v.xres)), rcur.w * sizeof(u32));
 
-/*
-    // Get screen attributes.
-    const auto v = fb.sc.vinfo();
-    const auto s = pcur.x + pcur.y * v.xres;
-
-    // Get width of the rectangle to read.
-    const auto w = this->rcur.w;
-
-    // TODO: Read framebuffer, convert and copy the pixels into the buffer provided by the caller.
-    for (size_t y = 0; y < rcur.h; ++y) {
-        for (size_t x = 0; x < rcur.w; ++x) {
-            u32* p = rcast<u32*>(buf);
-            // TODO: Convert framebuffer pixel into 32-bit RGBA pixel.
-        }
-    }
-*/
     return 0; // Operation succeeded.
 }
 
@@ -226,6 +210,7 @@ int wnd::write(const void  *buf,  // Buffer of 32-bit unsigned RGBA pixels.
 /*
     // Convert pixels in the given buffer and write it to the framebuffer file.
     const auto w = this->rcur.w;
+
     for (uint y = 0; y < rcur.h; ++y) {
         for (uint x = 0; x < rcur.w; ++x) {
             // Assume 32-bit unsigned RGBA pixels.
@@ -234,6 +219,7 @@ int wnd::write(const void  *buf,  // Buffer of 32-bit unsigned RGBA pixels.
                        g = p[1+x+y+w], // 32-bit green.
                        b = p[2+x+y+w], // 32-bit blue.
                        a = p[3+x+y+w]; // 32-bit alpha-transparency.
+
             fb.set(s+x+y*v.xres, Pix(r, g, b, a));
         }
     }

@@ -62,6 +62,8 @@ bool ent::file() const
 // Open file.
 int ent::open(const char *path) 
 {
+    UNUSED(path);
+
     warn("Bug: Trying to open an abstract entry!");
     return -EPERM;
 }
