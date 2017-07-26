@@ -12,14 +12,12 @@ namespace wsys {
 // Rectangle image in framebuffer.
 class wnd {
 public:
+    // Create a window in the framebuffer.
     wnd();
+    // Create a window at position p and resolutionr in the framebuffer.
     wnd(const pos& p, const res& r);
+    // Destroy the window.
     ~wnd();
-
-    // Fill window with a colour.
-    void   fill(const pix& c) const;
-    // Fill window with a colour and flip.
-    void   fillflip(const pix& c) const;
 
     // Returns the index to its position in the framebuffer.
     uint   i()    const;
@@ -29,6 +27,7 @@ public:
     pos    p()    const;
     // Returns the window's offsets to the color bits.
     off    o()  const;
+
 
     // Move window to a new position.
     void   move(const pos& p);
@@ -44,12 +43,17 @@ public:
     // Minimize the window.
     void   min();
 
+    // Fill window with a colour.
+    void   fill(const pix& c) // Color the fill with.
+                const;
+    // Fill window with a colour and flip.
+    void   fillflip(const pix& c) // Color to fill with.
+                    const;
     // Read from the image buffer of the rectangular window.
     int    read(void        *buf, // Buffer to read to.
                 const off_t  i,   // Offset in elements to read from.
                 const size_t n)   // Number of elements to read.
                 const;
-
     // Write to the image buffer of the rectangular window. Returns exactly the number of elements written except on error.
     int    write(const void  *buf, 
                  const off_t  i, 

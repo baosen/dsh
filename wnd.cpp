@@ -196,7 +196,7 @@ int wnd::read(void        *buf,  // Buffer of 32-bit unsigned RGBA pixels.
 
 // Write to the picture buffer to the rectangle. Returns exactly the number of bytes written except on error.
 int wnd::write(const void  *buf,  // Buffer of 32-bit unsigned RGBA pixels.
-               const off_t  i,    // offset to write to framebuffer.
+               const off_t  i,    // Offset to write to framebuffer.
                const size_t size) // The size in bytes to write.
 {
     UNUSED(size);
