@@ -3,11 +3,13 @@
 #include "utf8.hpp"
 using namespace std;
 
+// Create empty character.
 utf8c::utf8c()
 {
     push_back('\0');
 }
 
+// Assign UTF-8 string of n bytes.
 void utf8c::set(const byte  *s, 
                 const size_t n)
 {
