@@ -4,7 +4,8 @@
 // Keyboard file.
 class kbf : public file {
 public:
-    kbf(const std::string name);
+    // Create keyboard file.
+    kbf(const std::string& name);
 
     // Read linux keyboard input events.
     virtual int read(char *buf, const off_t i, const size_t nbytes);

@@ -121,25 +121,37 @@ void wnd::max()
 // Move window to a new position.
 void wnd::move(const pos& p)
 {
+#ifndef NDEBUG
     fill(pix(0, 0, 0, 0));
+#endif
     pcur = p;
+#ifndef NDEBUG
     fillflip(pix(255, 255, 255, 255));
+#endif
 }
 
 // Move/set x coordinate position.
 void wnd::movex(const uint x)
 {
+#ifndef NDEBUG
     fill(pix(0, 0, 0, 0));
+#endif
     pcur.x = x;
+#ifndef NDEBUG
     fillflip(pix(255, 255, 255, 255));
+#endif
 }
 
 // Move/set y coordinate position.
 void wnd::movey(const uint y)
 {
+#ifndef NDEBUG
     fill(pix(0, 0, 0, 0));
+#endif
     pcur.y = y;
+#ifndef NDEBUG
     fillflip(pix(255, 255, 255, 255));
+#endif
 }
 
 // Read from the image buffer of the rectangular window.
