@@ -292,12 +292,13 @@ void fs::cleanup()
     // Check if cleanup has been called once.
     if (called)
         return;
-
+/*
     // Cleanup keyboard.
-    //kbsys::deinit();
+    kbsys::deinit();
 
     // Cleanup mouse.
-    //msys::deinit();
+    msys::deinit();
+*/
 
     // Cleanup window.
     wsys::deinit();
