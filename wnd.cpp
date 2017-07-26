@@ -39,24 +39,27 @@ uint wnd::start(const scr::varinfo& v) const
 }
 
 // Get the offsets to the color bits.
-off wnd::o() const
+prop wnd::c() const
 {
     // Open framebuffer.
     fb         fb;
     const auto v = fb.sc.vinfo();
-    off        o;
+    Prop       c;
 
     // Set the positions to the color bits.
-    if (v.red.length)
-        o.roff = v.red.offset;    // Position to red bits.
-    if (v.green.length)
-        o.goff = v.green.offset;  // Position to green bits.
-    if (v.blue.length)
-        o.boff = v.blue.offset;   // Position to blue bits.
-    if (v.transp.length)
-        o.aoff = v.transp.offset; // Position to alpha-transparency bits.
+    c.rlen = v.red.length;
+    c.roff = v.red.offset;    // Position to red bits.
 
-    return o;
+    c.glen = v.green.length;
+    c.goff = v.green.offset;  // Position to green bits.
+
+    c.blen = v.blue.length;
+    c.boff = v.blue.offset;   // Position to blue bits.
+
+    c.alen = v.transp.length;
+    c.aoff = v.transp.offset; // Position to alpha-transparency bits.
+
+    return c;
 }
 
 #define DOFILL \

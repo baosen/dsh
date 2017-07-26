@@ -25,8 +25,8 @@ public:
     size_t size() const;
     // Returns the window's current position.
     pos    p()    const;
-    // Returns the window's offsets to the color bits.
-    off    o()  const;
+    // Returns the window's color properties.
+    prop   c()    const;
 
 
     // Move window to a new position.

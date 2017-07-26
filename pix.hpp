@@ -1,8 +1,15 @@
 #pragma once
 #include "types.hpp"
 
-// Offsets to the pixel bits.
-struct off {
+// Color properties.
+struct prop {
+    // Length.
+    int rlen, // Number of bits in red color.
+        glen, // Number of bits in green color.
+        blen, // Number of bits in blue color.
+        alen; // Number of bits in alpha color.
+
+    // Offsets to the pixel bits.
     int roff, // Red offset.
         goff, // Green offset.
         boff, // Blue offset.
@@ -24,7 +31,7 @@ public:
             const int aoff) // Alpha offset.
             const;
 
-    u32 val(const off& o) const;
+    u32 val(const prop& o) const;
 private:
     uint r, // Red.
          g, // Green.

@@ -25,7 +25,10 @@ scr::scr()
     // Report screen attributes.
 #ifdef DEBUG
     // Display screen resolution.
-    printf("Screen resolution: %ux%u, %ubpp\n", v.xres, v.yres, v.bits_per_pixel);
+    printf("Screen resolution: %ux%u, %ubpp\n", 
+            v.xres, // X resolution.
+            v.yres, // Y resolution.
+            v.bits_per_pixel);
     // Display the length in bits of a screen pixel.
     printf("Color format: RGBA%u%u%u%u\n", v.red.length,     // Length of bits representing the color red.
                                            v.green.length,   // Length of bits representing the color green.

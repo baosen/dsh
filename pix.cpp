@@ -5,7 +5,8 @@ pix::pix(const uint r, // Red.
          const uint g, // Green.
          const uint b, // Blue.
          const uint a) // Alpha.
-    : r(r), g(g), b(b), a(a) {}
+    : r(r), g(g), b(b), a(a) 
+{}
 
 // Compute pixel formatted to the framebuffer's pixel format.
 u32 pix::val(const int roff, // Red bit position.
@@ -15,6 +16,7 @@ u32 pix::val(const int roff, // Red bit position.
              const 
 {
     u32 pix = 0;
+
     if (roff >= 0)
         pix |= r << roff;
     if (goff >= 0)
@@ -23,19 +25,22 @@ u32 pix::val(const int roff, // Red bit position.
         pix |= b << boff;
     if (aoff >= 0)
         pix |= a << aoff;
+
     return pix;
 }
 
-u32 pix::val(const off& o) const
+u32 pix::val(const prop& p) const
 {
     u32 pix = 0;
-    if (o.roff >= 0)
-        pix |= r << o.roff;
-    if (o.goff >= 0)
-        pix |= g << o.goff;
-    if (o.boff >= 0)
-        pix |= b << o.boff;
-    if (o.aoff >= 0)
-        pix |= a << o.aoff;
+
+    if (p.roff >= 0)
+        pix |= r << p.roff;
+    if (p.goff >= 0)
+        pix |= g << p.goff;
+    if (p.boff >= 0)
+        pix |= b << p.boff;
+    if (p.aoff >= 0)
+        pix |= a << p.aoff;
+
     return pix;
 }
