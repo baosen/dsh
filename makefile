@@ -84,7 +84,7 @@ wndfstest: wndfstest.cpp log.o pos.o keywait.o
 fsmtest: fsmtest.cpp
 	$(COMPILE) $^ -o $@
 
-enttest: enttest.cpp ent.cpp dir.o file.o log.o
+enttest: enttest.cpp ent.o dir.o file.o log.o
 	$(COMPILE) $^ $(FUSELIBS) -o $@
 
 gntest: gntest.cpp gn.o

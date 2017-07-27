@@ -176,11 +176,13 @@ int wnd::read(void        *buf,  // Buffer of 32-bit unsigned RGBA pixels.
 
     // Get screen attributes.
     const auto v = fb.sc.vinfo(); // Get "variable" screen info.
-    const auto s = start(v);       // Compute the start index of the window position.
+    const auto s = start(v);      // Compute the start index of the window position.
+    const auto w = rcur.w;        // Window width.
+    const auto h = rcur.h;        // Window height.
 
-    // Copy row by row.
-    for (uint y = 0; y < rcur.h; ++y)
-        memcpy(rcast<u32*>(buf) + (y * rcur.w), 
+    // Copy row by row to the read buffer.
+    for (uint y = 0; y < h; ++y)
+        memcpy(rcast<u32*>(buf) + (y * w), 
                &fb.get32(s + i + (y * v.xres)), 
                rcur.w * sizeof(u32));
 
@@ -204,11 +206,13 @@ int wnd::write(const void  *buf,  // Buffer of 32-bit unsigned RGBA pixels.
     // Get screen attributes.
     const auto v = fb.sc.vinfo(); // Get "variable" screen info.
     const auto s = start(v);      // Compute the start index of the window position.
+    const auto w = rcur.w;        // Window width.
+    const auto h = rcur.h;        // Window height.
 
-    // Copy row by row.
-    for (uint y = 0; y < rcur.h; ++y)
+    // Copy row by row from the buffer into the framebuffer.
+    for (uint y = 0; y < h; ++y)
         memcpy(&fb.get32(s + i + (y * v.xres)), 
-               rcast<const u32*>(buf) + (y * rcur.w), 
+               rcast<const u32*>(buf) + (y * w), 
                rcur.w * sizeof(u32));
 
     // Show it to the user!
