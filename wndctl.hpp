@@ -18,8 +18,8 @@ public:
     };
 
     // Control window.
-    int ioctl(int   cmd,            // The ioctl() command number passed.
-              void *data) override; // The data.
+    int ioctl(const int cmd,            // The ioctl() command number passed.
+              void     *data) override; // The data.
 private:
     std::shared_ptr<class dir> parent;
     std::string                pname;

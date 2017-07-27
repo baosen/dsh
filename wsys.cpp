@@ -37,6 +37,12 @@ uint wsys::gety(const char *name)
     return get(name)->pcur.y;
 }
 
+// Get color properties of a window.
+prop wsys::getcp(const char *name)
+{
+    return get(name)->cp();
+}
+
 // Get move window.
 void wsys::move(const char *name, const pos& p)
 {

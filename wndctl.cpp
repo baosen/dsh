@@ -13,16 +13,18 @@ wndctl::wndctl(const shared_ptr<class dir>& p)
 {}
 
 // Control window.
-int wndctl::ioctl(int   cmd,  // The ioctl() command number passed.
-                  void *data) // The data.
+int wndctl::ioctl(const int cmd,  // The ioctl() command number passed.
+                  void     *data) // The data.
 {
     switch (cmd) {
+    // Move a window.
     case MOVE:
         wsys::move(pname.c_str(),       // Name of the window directory.
                    *rcast<pos*>(data)); // The position object.
         break;
+    // Get color properties.
     case CP:
-        // TODO: Return color properties.
+        *rcast<prop*>(data) = wsys::getcp(pname.c_str());
         break;
     default:
         break;
