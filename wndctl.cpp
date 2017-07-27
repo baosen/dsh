@@ -13,14 +13,17 @@ int wndctl::ioctl(const int cmd,  // The ioctl() command number passed.
                   void     *data) // The data.
 {
     switch (cmd) {
+    // Get color properties.
+    case CP:
+        *rcast<prop*>(data) = wsys::getcp(pname.c_str());
+        break;
     // Move a window.
     case MOVE:
         wsys::move(pname.c_str(),       // Name of the window directory.
                    *rcast<pos*>(data)); // The position object.
         break;
-    // Get color properties.
-    case CP:
-        *rcast<prop*>(data) = wsys::getcp(pname.c_str());
+    case RESIZE:
+        // TODO!
         break;
     default:
         break;

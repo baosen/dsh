@@ -13,8 +13,9 @@ public:
 
     // IOCTL calls.
     enum {
-        MOVE = _IOW(0, 0, pos), // Move window.
-        CP   = _IOW(1, 0, pos)  // Get color properties.
+        CP     = _IOW(0, 0, pos), // Get color properties.
+        MOVE   = _IOW(1, 0, pos), // Move window.
+        RESIZE = _IOW(2, 0, pos), // Resize window.
     };
 
     // Control window.
