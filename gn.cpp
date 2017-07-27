@@ -3,6 +3,7 @@
 #include <algorithm>
 #include "gn.hpp"
 
+// Print the characters in the vector to standard output.
 void print(const std::vector<char>& v)
 {
     for (const auto& c : v)
@@ -10,6 +11,7 @@ void print(const std::vector<char>& v)
     std::cout << std::endl;
 }
 
+// Copy the characters into a new vector.
 std::vector<char> dup(const char *s)
 {
     std::vector<char> v;
@@ -23,6 +25,7 @@ std::vector<char> dup(const char *s)
     return v;
 }
 
+// Get the name of a file in a path string.
 std::vector<char> getname(const char *in)
 {
     if (in[0] != '/')
