@@ -20,18 +20,31 @@ static void test1()
     keywait();
 }
 
-static void test2()
+// Test calling on wnd's write().
+static void wndwrittest()
 {
+    // Create window.
     wnd w(pos(0, 0), res(100, 100));
-    w.fillflip(pix(255, 0, 255, 255));
-    keywait();
 
+    // Fill with blue!
     const auto  cp = w.cp();
     vector<u32> v(w.size());
-    fill(begin(v), end(v), pix(255, 255, 255, 255).val(cp));
+    fill(begin(v), end(v), pix(0, 0, 255, 255).val(cp));
     w.write(v.data(), 0, v.size());
+    keywait();
+
+    // Fill with red!
+    fill(begin(v), end(v), pix(255, 0, 0, 255).val(cp));
+    w.write(v.data(), 0, v.size());
+    keywait();
+
+    // Fill with green!
+    fill(begin(v), end(v), pix(0, 255, 0, 255).val(cp));
+    w.write(v.data(), 0, v.size());
+    keywait();
 }
 
+// Test moving the window.
 static void movetest()
 {
     m   m(1);
@@ -57,8 +70,8 @@ static void movetest()
 int main() 
 {
     //test1();
-    //test2();
-    movetest();
+    wndwrittest();
+    //movetest();
 
     return EXIT_SUCCESS;
 }

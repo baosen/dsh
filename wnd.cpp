@@ -180,7 +180,9 @@ int wnd::read(void        *buf,  // Buffer of 32-bit unsigned RGBA pixels.
 
     // Copy row by row.
     for (uint y = 0; y < rcur.h; ++y)
-        memcpy(rcast<u32*>(buf) + (y * rcur.w), &fb.get32(s + i + (y * v.xres)), rcur.w * sizeof(u32));
+        memcpy(rcast<u32*>(buf) + (y * rcur.w), 
+               &fb.get32(s + i + (y * v.xres)), 
+               rcur.w * sizeof(u32));
 
     return 0; // Operation succeeded.
 }
@@ -205,25 +207,9 @@ int wnd::write(const void  *buf,  // Buffer of 32-bit unsigned RGBA pixels.
 
     // Copy row by row.
     for (uint y = 0; y < rcur.h; ++y)
-        memcpy(&fb.get32(s + i + (y * v.xres)), rcast<const u32*>(buf) + (y * rcur.w), rcur.w*sizeof(u32));
-
-/*
-    // Convert pixels in the given buffer and write it to the framebuffer file.
-    const auto w = this->rcur.w;
-
-    for (uint y = 0; y < rcur.h; ++y) {
-        for (uint x = 0; x < rcur.w; ++x) {
-            // Assume 32-bit unsigned RGBA pixels.
-            const u32* p = rcast<const u32*>(buf);
-            uint       r = p[0+x+y*w], // 32-bit red.
-                       g = p[1+x+y+w], // 32-bit green.
-                       b = p[2+x+y+w], // 32-bit blue.
-                       a = p[3+x+y+w]; // 32-bit alpha-transparency.
-
-            fb.set(s+x+y*v.xres, Pix(r, g, b, a));
-        }
-    }
-*/
+        memcpy(&fb.get32(s + i + (y * v.xres)), 
+               rcast<const u32*>(buf) + (y * rcur.w), 
+               rcur.w * sizeof(u32));
 
     // Show it to the user!
     fb.flip();

@@ -38,13 +38,13 @@ u32 pix::val(const prop& p) // Color properties.
 {
     u32 pix = 0;
 
-    if (p.roff >= 0)
+    if (p.rlen > 0)
         pix |= r << p.roff;
-    if (p.goff >= 0)
+    if (p.glen > 0)
         pix |= g << p.goff;
-    if (p.boff >= 0)
+    if (p.blen > 0)
         pix |= b << p.boff;
-    if (p.aoff >= 0)
+    if (p.alen > 0)
         pix |= a << p.aoff;
 
     return pix;
