@@ -3,13 +3,9 @@
 #include "wndctl.hpp"
 using namespace std;
 
+// Construct window ctl file with name as parent.
 wndctl::wndctl(const std::string& pname)
     : file("ctl"), pname(pname)
-{}
-
-// Construct window ctl file.
-wndctl::wndctl(const shared_ptr<class dir>& p)
-    : file("ctl"), parent(p)
 {}
 
 // Control window.

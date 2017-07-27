@@ -8,8 +8,8 @@
 // Window ctl file.
 class wndctl : public file {
 public:
+    // Construct window ctl file with name as parent.
     wndctl(const std::string& pname);
-    wndctl(const std::shared_ptr<class dir>& parent);
 
     // IOCTL calls.
     enum {
@@ -21,6 +21,5 @@ public:
     int ioctl(const int cmd,            // The ioctl() command number passed.
               void     *data) override; // The data.
 private:
-    std::shared_ptr<class dir> parent;
     std::string                pname;
 };
