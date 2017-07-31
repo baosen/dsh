@@ -28,9 +28,12 @@ fb::fb()
     plen = size / sizeof(u32);
 
     // Map framebuffer to computer's address space.
-    fbp = scast<u8*>(mmap(nullptr, size, 
+    fbp = scast<u8*>(mmap(nullptr,                // Offset.
+                          size,                   // Size of memory.
                           PROT_READ | PROT_WRITE, // Read and write access!
-                          MAP_SHARED, sc.fd, 0));
+                          MAP_SHARED,             // Shared memory.
+                          sc.fd,                  // File descriptor to put it.
+                          0));                    // ???.
 
     // Set the positions to the color bits.
     const auto v = sc.vinfo();
