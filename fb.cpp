@@ -10,19 +10,29 @@ static std::vector<u8> dbuf;
 
 // Setup framebuffer file mapping to the address space.
 fb::fb() 
-    : roff(-1), goff(-1), boff(-1), aoff(-1), // Blanken color offsets.
-      vsyncen(true)                           // Enable vertical sync.
+    : roff(-1), goff(-1), boff(-1), aoff(-1) // Blanken color offsets.
 {
     // Check if we can double buffer by doubling the height of the virtual screen.
     if (sc.pageen) {
         // Get size of framebuffer in bytes and half it to accommedate for the virtual screen.
-        size = sc.finfo().smem_len / 2;
-    } else // No double buffer setup for the framebuffer screen.
-        // Get size of framebuffer in bytes.
+        size  = sc.finfo().smem_len / 2;
+        // Set function pointers to use the direct framebuffer manipulation functions.
+        setfbptrs();
+        // Use the double-height framebuffer swap for no tearing.
+        flipp = &fb::scrflip;
+    } else if (sc.isvsync()) { // Double buffer on vertical sync.
+        // Set size of the double buffer to be the same as the framebuffer size in bytes.
+        dbuf.resize(size);
+        // Set function pointers to use the double buffer functions.
+        setdbufptrs();
+    } else { // Manipulate framebuffer directly.
+        // Get size of the framebuffer in bytes.
         size = sc.finfo().smem_len;
-
-    // Set function pointers for manipulating the framebuffer.
-    setptrs();
+        // Set function pointers to use the direct framebuffer manipulation functions.
+        setfbptrs();
+        // Use framebuffer directly.
+        flipp  = &fb::nullflip;
+    }
 
     // Compute number of pixels.
     plen = size / sizeof(u32);
@@ -47,27 +57,11 @@ fb::fb()
         aoff = v.transp.offset; // Position to alpha-transparency bits.
 }
 
-// Set the function pointers to manipulate the framebuffer according to the supported control calls.
-void fb::setptrs()
-{
-    // Try waiting for vertical sync to check if it is available.
-    vsyncen = sc.isvsync();
-    if (vsyncen) {
-        // Set size of the double buffer to be the same as the framebuffer size in bytes.
-        dbuf.resize(size);
-        // Set function pointers to use the double buffer functions.
-        setdbufptrs();
-    } else
-        // Set function pointers to use the direct framebuffer manipulation functions.
-        setfbptrs();
-}
-
 // Set framebuffer pointers.
 void fb::setfbptrs()
 {
     get8p  = &fb::fbget8;
     get32p = &fb::fbget32;
-    flipp  = &fb::nullflip;
     clearp = &fb::fbclear;
 }
 
@@ -77,7 +71,7 @@ void fb::setdbufptrs()
 {
     get8p  = &fb::dbufget8;
     get32p = &fb::dbufget32;
-    flipp  = &fb::dbufflip;
+    flipp  = &fb::vsyncflip;
     clearp = &fb::dbufclear;
 }
 
@@ -163,14 +157,8 @@ void fb::copy(const uint   i,   // Index indexing into the buffer array of bytes
 // Wait for vertical sync.
 void fb::vsync()
 {
-    // Try waiting for vertical sync.
-    try {
-        sc.vsync();
-    } catch (const err& e) {
-        // Disable vertical sync, because it is not supported.
-        vsyncen = false;
-        throw;
-    }
+    // Waiting for vertical sync.
+    sc.vsync();
 }
 
 // Flip between two buffers, thus reduce tearing.
@@ -179,15 +167,15 @@ void fb::flip()
     CALLMEMBFN(flipp)();
 }
 
-// Double buffer flip.
-void fb::dbufflip()
+// Flip "double screen".
+void fb::scrflip()
 {
-    // Swap page!
-    if (sc.pageen) {
-        sc.flip();
-        return;
-    }
+    sc.flip();
+}
 
+// Flip double buffer on vertical sync.
+void fb::vsyncflip()
+{
     // Wait for vertical sync before copying.
     this->vsync();
 

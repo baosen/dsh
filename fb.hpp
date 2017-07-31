@@ -33,7 +33,6 @@ public:
     // Flip between buffers.
     void flip();
 private:
-    void setptrs();
     void setfbptrs();
     void setdbufptrs();
     void vsync();
@@ -53,17 +52,20 @@ private:
 
     u8*    fbp;
 
-    // Framebuffer methods.
+    // Framebuffer methods:
     u8&  (fb::*get8p) (const uint i);
     u32& (fb::*get32p)(const uint i);
     void (fb::*flipp) ();
     void (fb::*clearp)();
 
-    // Double buffer methods.
+    // Double buffer methods:
     u8&  dbufget8(const uint i);
     u32& dbufget32(const uint i);
-    void dbufflip();
     void dbufclear();
+    void vsyncflip(); // Flip double buffer on vsync.
+
+    // Double-height screen buffer methods:
+    void scrflip();   // Flip "double screen" on the framebuffer device.
 
     // Methods for directly manipulating the framebuffer.
     u8&  fbget8(const uint i);
