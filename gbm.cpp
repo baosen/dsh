@@ -13,10 +13,13 @@ namespace {
 // Initialize Mesa's generic buffer management.
 void gbm::init()
 {
-    const auto fd = open(CARD0_PATH, O_RDWR | FD_CLOEXEC);
+    // Open DRI file.
+    const auto fd = open(CARD0_PATH, 
+                         O_RDWR | FD_CLOEXEC); // Read/Write and close on execute succeed.
     if (fd < 0)
         die("Failed to open " CARD0_PATH "!");
 
+    // Create generic buffer manager device.
     gbmdev = gbm_create_device(fd);
     if (!gbmdev)
         die("Failed to create a GBM device.");
@@ -27,8 +30,11 @@ void gbm::init()
     egldisp = eglGetDisplay(EGL_DEFAULT_DISPLAY);
 #endif
 
+    // Check if we found a display.
     if (egldisp == EGL_NO_DISPLAY)
         die("Found no EGL display.");
+
+    // The version of the EGL API set by eglInitialize().
     EGLint major, // Major version number.
            minor; // Minor version number.
 
