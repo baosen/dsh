@@ -25,88 +25,96 @@ namespace {
 void drm::init() 
 {
     // Setup DRM structure.
-    Drm drm;
-    zero(drm);
+    Drm d;
+    zero(d);
     int i,    // index.
         area; // ??.
 
     // Open DRM device file.
-    if ((drm.fd = ::open(CARD0_PATH, O_RDWR)) < 0)
+    if ((d.fd = ::open(CARD0_PATH, O_RDWR)) < 0)
         // TODO: Warn about this error here.
         throw errno; 
 
     // Get DRM mode resources.
-	if (!(drm.resources = drmModeGetResources(drm.fd))) {
+	if (!(d.resources = drmModeGetResources(d.fd))) {
         syserror("Failed to get DRM mode resources!");
         throw -1;
     }
 
 	// Find a connected connector.
-	for (i = 0; i < drm.resources->count_connectors; i++) {
+	for (i = 0; i < d.resources->count_connectors; i++) {
         // Is connector connected?
-		drm.connector = drmModeGetConnector(drm.fd, drm.resources->connectors[i]);
-		if (drm.connector->connection == DRM_MODE_CONNECTED)
+		d.connector = drmModeGetConnector(d.fd, d.resources->connectors[i]);
+		if (d.connector->connection == DRM_MODE_CONNECTED)
             break; // Use it.
-		drmModeFreeConnector(drm.connector);
-		drm.connector = nullptr;
+		drmModeFreeConnector(d.connector);
+		d.connector = nullptr;
 	}
 
     // Is DRM connected?
-	if (!drm.connector) {
+	if (!d.connector) {
 		// TODO: Listen for hotplug events and wait for a connector.
 		syserror("No connected connector!");
 		throw -1;
 	}
 
-	// Find preferred mode or the highest resolution mode.
-	for (i = 0, area = 0; i < drm.connector->count_modes; i++) {
-		drmModeModeInfo *current_mode = &drm.connector->modes[i];
-		if (current_mode->type & DRM_MODE_TYPE_PREFERRED)
-			drm.mode = current_mode;
-		const auto current_area = current_mode->hdisplay * current_mode->vdisplay;
-		if (current_area > area) {
-			drm.mode = current_mode;
-			area = current_area;
+	// Find preferred resolution mode or use the highest resolution mode.
+	for (i = 0, area = 0; i < d.connector->count_modes; i++) {
+        // Current mode.
+		drmModeModeInfo *cmode = &d.connector->modes[i];
+
+        // Found mode preferred by the device.
+		if (cmode->type & DRM_MODE_TYPE_PREFERRED)
+			d.mode = cmode;
+
+        // Resolution for the current mode.
+		const auto carea = cmode->hdisplay * cmode->vdisplay;
+        // If it is larget, use it.
+		if (carea > area) {
+			d.mode = cmode;
+			area     = carea;
 		}
 	}
 
-    // ??.
-	if (!drm.mode) {
-		syserror("Could not find DRM mode!");
+    // Check if we found a usable DRM mode.
+	if (!d.mode) {
+		syserror("Could not find any useable DRM mode!");
         throw -1;
 	}
 
-	// Look for an encoder.
-	for (i = 0; i < drm.resources->count_encoders; i++) {
-		drm.encoder = drmModeGetEncoder(drm.fd, drm.resources->encoders[i]);
-		if (drm.encoder->encoder_id == drm.connector->encoder_id)
+	// Look for an encoder. (wtf is this???)
+	for (i = 0; i < d.resources->count_encoders; i++) {
+		d.encoder = drmModeGetEncoder(d.fd, d.resources->encoders[i]);
+
+		if (d.encoder->encoder_id == d.connector->encoder_id)
 			break;
-		drmModeFreeEncoder(drm.encoder);
-		drm.encoder = nullptr;
+
+		drmModeFreeEncoder(d.encoder);
+		d.encoder = nullptr;
 	}
 
     // If no encoder was found.
-	if (drm.encoder)
-		drm.crtc_id = drm.encoder->crtc_id;
+	if (d.encoder)
+		d.crtc_id = d.encoder->crtc_id;
     else { // Encoder was found.
-		const auto id = find_crtc_for_connector(drm, drm.resources, drm.connector);
+		const auto id = find_crtc_for_connector(d, d.resources, d.connector);
 		if (id == 0) {
 			syserror("No CRT controller found!");
 			throw -1;
 		}
-		drm.crtc_id = id;
+		d.crtc_id = id;
 	}
 
-    // ??.
-	for (i = 0; i < drm.resources->count_crtcs; i++) {
-		if (drm.resources->crtcs[i] == drm.crtc_id) {
-			drm.crtc_index = i;
+    // Iterate over CRT controllers?
+	for (i = 0; i < d.resources->count_crtcs; i++) {
+		if (d.resources->crtcs[i] == d.crtc_id) {
+			d.crtc_index = i;
 			break;
 		}
 	}
 
     // Cleanup.
-	drmModeFreeResources(drm.resources);
+	drmModeFreeResources(d.resources);
 }
 
 // Deinitialize the direct rendering manager.
