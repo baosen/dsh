@@ -21,6 +21,8 @@ fb::fb()
         // Use the double-height framebuffer swap for no tearing.
         flipp = &fb::scrflip;
     } else if (sc.isvsync()) { // Double buffer on vertical sync.
+        // Get size of the framebuffer in bytes.
+        size = sc.finfo().smem_len;
         // Set size of the double buffer to be the same as the framebuffer size in bytes.
         dbuf.resize(size);
         // Set function pointers to use the double buffer functions.
@@ -31,7 +33,7 @@ fb::fb()
         // Set function pointers to use the direct framebuffer manipulation functions.
         setfbptrs();
         // Use framebuffer directly.
-        flipp  = &fb::nullflip;
+        flipp = &fb::nullflip;
     }
 
     // Compute number of pixels.
@@ -154,13 +156,6 @@ void fb::copy(const uint   i,   // Index indexing into the buffer array of bytes
     memcpy(&dbuf[i], buf, len);
 }
 
-// Wait for vertical sync.
-void fb::vsync()
-{
-    // Waiting for vertical sync.
-    sc.vsync();
-}
-
 // Flip between two buffers, thus reduce tearing.
 void fb::flip()
 {
@@ -177,7 +172,7 @@ void fb::scrflip()
 void fb::vsyncflip()
 {
     // Wait for vertical sync before copying.
-    this->vsync();
+    sc.vsync();
 
     // Copy double buffer into the framebuffer.
     memcpy(fbp, &dbuf[0], size);

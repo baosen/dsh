@@ -35,7 +35,6 @@ public:
 private:
     void setfbptrs();
     void setdbufptrs();
-    void vsync();
 
     scr    sc;  // The screen to grab the framebuffer.
 
