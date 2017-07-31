@@ -88,14 +88,13 @@ void drm::init()
     // If no encoder was found.
 	if (drm.encoder)
 		drm.crtc_id = drm.encoder->crtc_id;
-    else {
-    // Encoder was found.
-		const auto crtc_id = find_crtc_for_connector(drm, drm.resources, drm.connector);
-		if (crtc_id == 0) {
+    else { // Encoder was found.
+		const auto id = find_crtc_for_connector(drm, drm.resources, drm.connector);
+		if (id == 0) {
 			syserror("No CRT controller found!");
 			throw -1;
 		}
-		drm.crtc_id = crtc_id;
+		drm.crtc_id = id;
 	}
 
     // ??.

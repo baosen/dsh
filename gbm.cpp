@@ -16,18 +16,23 @@ void gbm::init()
     const auto fd = open(CARD0_PATH, O_RDWR | FD_CLOEXEC);
     if (fd < 0)
         die("Failed to open " CARD0_PATH "!");
+
     gbmdev = gbm_create_device(fd);
     if (!gbmdev)
         die("Failed to create a GBM device.");
+
 #ifdef EGL_MESA_platform_gbm
     egldisp = eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_MESA, gbm, nullptr);
 #else
     egldisp = eglGetDisplay(EGL_DEFAULT_DISPLAY);
 #endif
+
     if (egldisp == EGL_NO_DISPLAY)
         die("Found no EGL display.");
     EGLint major, // Major version number.
            minor; // Minor version number.
+
+    // Initialize embedded OpenGL.
     if (!eglInitialize(egldisp, &major, &minor))
         die("Failed to initialize EGL!");
 }
@@ -50,7 +55,7 @@ void config()
         die("Failed to get EGL configurations.");
 
     // Allocate EGL configuration.
-    EGLConfig *configs = malloc(n*sizeof(EGLConfig));
+    EGLConfig *configs = malloc(n * sizeof(EGLConfig));
     if (!eglChooseConfig(egldisp, attribs, configs, n, &n)) {
         free(configs);
         die("Failed to choose EGL configuration.");
@@ -88,6 +93,7 @@ static Wnd getwnd()
     w.gbm = gbm_surface_create(gbm, 256, 256, GBM_FORMAT_XRGB8888, GBM_BO_USE_RENDERING);
     if (!w.gbm)
         die("Failed to get GBM surface!");
+
 #ifdef EGL_MESA_platform_gbm
     w.egl = eglCreatePlatformWindowSurfaceEXT(egl, egl, gbm, nullptr);
 #else
@@ -95,5 +101,6 @@ static Wnd getwnd()
 #endif
     if (w.egl == EGL_NO_SURFACE)
         die("No GBM surface exists!");
+
     return w;
 }
