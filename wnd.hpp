@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include "pos.hpp"
 #include "res.hpp"
 #include "pix.hpp"
@@ -73,6 +74,7 @@ private:
 
     // Save old window state.
     void save();
+    std::vector<u32> savegfx();
 
     friend uint wsys::getx(const char *name);
     friend uint wsys::gety(const char *name);

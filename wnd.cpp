@@ -12,18 +12,12 @@ wnd::wnd()
 wnd::wnd(const pos& p, // The position to place the rectangle in the framebuffer.
          const res& r) // The resolution of the rectangle in the framebuffer.
     : pcur(p), rcur(r) 
-{
-#ifndef NDEBUG
-    fillflip(pix(255, 255, 255, 255));
-#endif
-}
+{}
 
 // Destroy window.
 wnd::~wnd()
 {
-#ifndef NDEBUG
-    fillflip(pix(0, 0, 0, 0));
-#endif
+    // TODO: Fill with background color.
 }
 
 // Computes the index of its position in the framebuffer.
@@ -125,40 +119,57 @@ void wnd::max()
     resize(res(v.xres, v.yres));
 }
 
+// Save current window graphics.
+vector<u32> wnd::savegfx()
+{
+    vector<u32> tmp(this->size());
+    this->read(tmp.data(), 0, this->size());
+    return tmp;
+}
+
 // Move window to a new position.
 void wnd::move(const pos& p)
 {
-#ifndef NDEBUG
-    fill(pix(0, 0, 0, 0));
-#endif
+    // Read current window graphic.
+    auto tmp = savegfx();
+
+    // TODO: Fill current window with background color.
+
+    // Move window.
     pcur = p;
-#ifndef NDEBUG
-    fillflip(pix(255, 255, 255, 255));
-#endif
+
+    // Write back window.
+    this->write(tmp.data(), 0, this->size());
 }
 
 // Move/set x coordinate position.
 void wnd::movex(const uint x)
 {
-#ifndef NDEBUG
-    fill(pix(0, 0, 0, 0));
-#endif
+    // Read current window graphic.
+    auto tmp = savegfx();
+
+    // TODO: Fill current window with background color.
+
+    // Move window on X axis.
     pcur.x = x;
-#ifndef NDEBUG
-    fillflip(pix(255, 255, 255, 255));
-#endif
+
+    // Write back window.
+    this->write(tmp.data(), 0, this->size());
 }
 
 // Move/set y coordinate position.
 void wnd::movey(const uint y)
 {
-#ifndef NDEBUG
-    fill(pix(0, 0, 0, 0));
-#endif
+    // Read current window graphic.
+    auto tmp = savegfx();
+
+    // TODO: Fill current window with background color.
+
+    // Move window on Y axis.
     pcur.y = y;
-#ifndef NDEBUG
-    fillflip(pix(255, 255, 255, 255));
-#endif
+
+    // Write back window.
+    this->write(tmp.data(), 0, this->size());
 }
 
 // Read from the image buffer of the rectangular window.
@@ -181,6 +192,7 @@ int wnd::read(void        *buf,  // Buffer of 32-bit unsigned RGBA pixels.
     const auto h = rcur.h;        // Window height.
 
     // Copy row by row to the read buffer.
+    // TODO: By bit size.
     for (uint y = 0; y < h; ++y)
         memcpy(rcast<u32*>(buf) + (y * w), 
                &fb.get32(s + i + (y * v.xres)), 
@@ -210,6 +222,7 @@ int wnd::write(const void  *buf,  // Buffer of 32-bit unsigned RGBA pixels.
     const auto h = rcur.h;        // Window height.
 
     // Copy row by row from the buffer into the framebuffer.
+    // TODO: By bit size.
     for (uint y = 0; y < h; ++y)
         memcpy(&fb.get32(s + i + (y * v.xres)), 
                rcast<const u32*>(buf) + (y * w), 

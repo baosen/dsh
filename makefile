@@ -5,7 +5,7 @@
 # Set C++ compiler.
 CXX      = g++
 # Set C++ compiler flags.
-CXXFLAGS = -std=c++17 -O3 -Wall -Wextra
+CXXFLAGS = -std=c++17 -O3 -Wall -Wextra -g
 # Compile command.
 COMPILE  = @$(CXX) $(CXXFLAGS)
 # FUSE libraries.
@@ -21,8 +21,12 @@ EXECS    = dsh dshfs
 # Set the produced executable binaries.
 BINS     = $(TESTS) $(EXECS)
 
+.PHONY: all release test clean
+
 # Build everything.
 all: $(BINS)
+
+release: $(BINS)
 
 # Remove built files.
 clean:
@@ -152,5 +156,3 @@ do: do.cpp do.hpp
 
 %.o: %.cpp
 	$(COMPILE) -c $< -o $@
-
-.PHONY: all test clean

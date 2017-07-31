@@ -70,8 +70,8 @@ static void movetest()
 int main() 
 {
     //test1();
-    wndwrittest();
-    //movetest();
+    //wndwrittest();
+    movetest();
 
     return EXIT_SUCCESS;
 }
