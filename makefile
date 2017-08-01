@@ -69,7 +69,7 @@ msystest: msystest.cpp msys.o evm.o ev.o m.o log.o
 	$(COMPILE) $^ -o $@
 
 # Tests for the window subsystem.
-wsystest: wsystest.cpp wsys.o keywait.o wnd.o pos.o res.o fb.o scr.o pix.o log.o
+wsystest: wsystest.cpp wsys.o keywait.o wnd.o pos.o res.o fb.o scr.o pix.o log.o bg.o
 	$(COMPILE) $^ -o $@
 
 # Tests for the keyboard subsystem.
@@ -147,7 +147,7 @@ wndctl.o: wndctl.cpp wndctl.hpp
 	$(COMPILE) -c $< $(FUSELIBS) -o $@
 
 # Compile shell file system executable.
-dshfs: dshfs.cpp fs.o log.o kb.o kbsys.o dsys.o wndcmd.o dpycmd.o wsys.o ssys.o msys.o m.o wnd.o fb.o scr.o pix.o pos.o res.o evm.o ev.o ent.o dir.o file.o kbf.o mf.o wndx.o wndy.o gn.o wndctl.o
+dshfs: dshfs.cpp fs.o log.o kb.o kbsys.o dsys.o wndcmd.o dpycmd.o wsys.o ssys.o msys.o m.o wnd.o fb.o scr.o pix.o pos.o res.o evm.o ev.o ent.o dir.o file.o kbf.o mf.o wndx.o wndy.o gn.o wndctl.o bg.o
 	$(COMPILE) $^ `pkg-config fuse --cflags --libs` -o $@
 
 # Compile "do"-program, the beginning program that ask the user what to do.

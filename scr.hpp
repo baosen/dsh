@@ -1,5 +1,6 @@
 #pragma once
 #include <linux/fb.h>
+#include "types.hpp"
 
 // Double-buffered framebuffer screen.
 class scr {
