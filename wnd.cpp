@@ -122,9 +122,9 @@ void wnd::max()
 // Save current window graphics.
 vector<u32> wnd::savegfx()
 {
-    vector<u32> tmp(this->size());
-    this->read(tmp.data(), 0, this->size());
-    return tmp;
+    vector<u32> v(size());
+    read(v.data(), 0, size());
+    return v;
 }
 
 // Move window to a new position.
