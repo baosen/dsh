@@ -17,7 +17,7 @@ SRC      = m.cpp wnd.cpp pix.cpp pos.cpp fb.cpp scr.cpp log.cpp res.cpp ev.cpp e
 # Tests.
 TESTS    = mtest fbtest evmtest kbsystest msystest dpytests wtest kbtest utf8test fsktest fsmtest enttest gntest wndfstest wsystest
 # Executables.
-EXECS    = dsh dshfs
+EXECS    = dshfs
 # Set the produced executable binaries.
 BINS     = $(TESTS) $(EXECS)
 
@@ -103,8 +103,8 @@ utf8test: utf8test.cpp utf8.o
 	$(COMPILE) $^ -o $@
 
 # The shell running on top of the filesystem in userspace.
-dsh: dsh.cpp
-	$(COMPILE) $(SRC) $< -o $@ -lpthread
+#dsh: dsh.cpp
+#	$(COMPILE) $(SRC) $< -o $@ -lpthread
 
 # File system.
 fs.o: fs.cpp fs.hpp
