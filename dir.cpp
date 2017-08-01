@@ -11,7 +11,7 @@ dir::dir()
 dir::dir(const std::string& name) 
     : ent(name, DIRMODE)
 {    
-   init(); 
+    init(); 
 }
 
 dir::dir(const std::string& name, const entlist& files)
