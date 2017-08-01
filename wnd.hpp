@@ -72,8 +72,11 @@ private:
     // Compute start index position.
     uint start(const scr::varinfo& v) const;
 
-    // Save old window state.
+    // Save current window state.
     void save();
+    // Load old window state.
+    void load();
+
     std::vector<u32> savegfx();
 
     friend uint wsys::getx(const char *name);

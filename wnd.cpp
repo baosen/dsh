@@ -119,6 +119,13 @@ void wnd::max()
     resize(res(v.xres, v.yres));
 }
 
+// Minimize window.
+void wnd::min()
+{
+    // Load the old position.
+    load();
+}
+
 // Save current window graphics.
 vector<u32> wnd::savegfx()
 {
@@ -235,10 +242,20 @@ int wnd::write(const void  *buf,  // Buffer of 32-bit unsigned RGBA pixels.
     return 0; // Operation succeeded.
 }
 
-// Save old pos and res of old window.
+// Save current postion and resolution of the window.
 void wnd::save() 
 {
     // Save current rectangle.
-    rold = rcur;
-    pold = pcur;
+    rold = rcur; // Save current resolution.
+    pold = pcur; // Save current position.
+}
+
+// Load old postion and resolution of the old window.
+void wnd::load() 
+{
+    fillflip(pix(0, 0, 0, 255));
+
+    // Load current rectangle.
+    rcur = rold; // Load old resolution.
+    pcur = pold; // Load old position.
 }
