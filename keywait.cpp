@@ -4,6 +4,6 @@ using namespace std;
 // Wait for keypress.
 void keywait() 
 {
-    cout << "Press any key on your keyboard." << endl;
+    cout << "Press the Enter/Return key on your keyboard." << endl;
     cin.get();
 }
