@@ -15,7 +15,8 @@ void wsys::init()
     bg.update();
 
     // Create a single window.
-    wnds["0"] = make_unique<wnd>(pos(0, 0), res(100, 100));
+    wnds["0"] = make_unique<wnd>(pos(0, 0), 
+                                 res(100, 100));
 }
 
 // Deinitialize the window system.
@@ -28,8 +29,10 @@ void wsys::deinit()
 auto& get(const char *name)
 {
     auto it = wnds.find(name);
+
     if (it == wnds.end()) 
         throw err("No window named " + string(name) + " found!");
+
     return it->second;
 }
 

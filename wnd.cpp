@@ -2,16 +2,18 @@
 #include "fb.hpp"
 using namespace std;
 
-// Create an empty rectangular window in the framebuffer.
-wnd::wnd() 
-    : pcur(pos(0, 0)), // Set position (0, 0).
-      rcur(res(0, 0))  // Set resolution (0, 0).
-{}
-
 // Create a rectangular window in the framebuffer.
 wnd::wnd(const pos& p, // The position to place the rectangle in the framebuffer.
          const res& r) // The resolution of the rectangle in the framebuffer.
     : pcur(p), rcur(r) 
+{
+    fillflip(pix(255, 255, 255, 255));
+}
+
+// Create an empty rectangular window in the framebuffer.
+wnd::wnd() 
+    : wnd(pos(0, 0), // Set position (0, 0).
+          res(0, 0)) // Set resolution (0, 0).
 {}
 
 // Destroy window.
