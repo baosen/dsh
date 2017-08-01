@@ -7,6 +7,7 @@
 #include "mf.hpp"
 #include "wndx.hpp"
 #include "wndy.hpp"
+#include "wndxc.hpp"
 #include "wndctl.hpp"
 #include "errno.hpp"
 using namespace std;
@@ -23,6 +24,7 @@ static shared_ptr<dir> wnddir = dirp (
     "0", 
     entries {
         filep(wndctl)("0"),
+        filep(wndxc)("0"),
         filep(wndx)("0"),
         filep(wndy)("0")
     }

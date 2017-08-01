@@ -19,9 +19,10 @@ int wndxc::read(char        *buf,    // Buffer to read from.
 {
     // TODO: Check if app ask too much?
 
-    const auto s  = to_string(wsys::getx(pname.c_str()));
+    const auto s   = to_string(wsys::getx(pname.c_str()));
     const auto len = s.size();
 
+    // Check if app wants less bytes and copy that amount.
     if (nbytes < len) {
         memcpy(buf + i, s.c_str(), nbytes);
         return nbytes;
@@ -37,8 +38,12 @@ int wndxc::write(const char  *buf,    // Buffer to write from.
                  const off_t  i,      // Offset.
                  const size_t nbytes) // Number of bytes to write.
 {
-    const auto x = atoi(buf);
-    wsys::movex(pname.c_str(), x);
+    UNUSED(i);
+    UNUSED(nbytes);
+
+    wsys::movex(pname.c_str(), 
+                atoi(buf));
+
     // TODO: I am faking the return value here.
     return nbytes;
 }
