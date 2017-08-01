@@ -43,10 +43,10 @@ void ev::close()
     // If no event device file is opened yet.
     if (fd == -2)
         return;
+
     // Try closing event device file.
-    stringstream ss;
-    // BUG: I'm getting bad file descriptor here.
-    if (::close(fd) < 0) {
+    if (::close(fd) < 0) { // BUG: I'm getting bad file descriptor here.
+        stringstream ss;
         ss << "Cannot close event device file: " << strerror(errno);
         // TODO!
         die(ss.str().c_str());
