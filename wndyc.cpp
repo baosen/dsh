@@ -1,23 +1,23 @@
 #include <cstring>
 #include <string>
 #include "wsys.hpp"
-#include "wndxc.hpp"
+#include "wndyc.hpp"
 using namespace std;
 
-// Create window ASCII file x.
-wndxc::wndxc(const std::string& p)
-    : file("xc"), 
+// Create window ASCII file y.
+wndyc::wndyc(const std::string& p)
+    : file("yc"), 
       pname(p)   // Parent directory name.
 {}
 
 // Read window x coordinate.
-int wndxc::read(char        *buf,    // Buffer to read from.
+int wndyc::read(char        *buf,    // Buffer to read from.
                 const off_t  i,      // Offset.
                 const size_t nbytes) // Number of bytes to read.
 {
     // TODO: Check if app ask too much?
 
-    const auto s   = to_string(wsys::getx(pname.c_str()));
+    const auto s   = to_string(wsys::gety(pname.c_str()));
     const auto len = s.size();
 
     // Check if app wants less bytes and copy that amount.
@@ -32,14 +32,14 @@ int wndxc::read(char        *buf,    // Buffer to read from.
 }
 
 // Write window x coordinate.
-int wndxc::write(const char  *buf,    // Buffer to write from.
+int wndyc::write(const char  *buf,    // Buffer to write from.
                  const off_t  i,      // Offset.
                  const size_t nbytes) // Number of bytes to write.
 {
     UNUSED(i);
     UNUSED(nbytes);
 
-    wsys::movex(pname.c_str(), 
+    wsys::movey(pname.c_str(), 
                 atoi(buf));
 
     // TODO: I am faking the return value here.

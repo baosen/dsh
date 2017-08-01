@@ -5,17 +5,14 @@ using namespace std;
 // Windows managed by the windowing subsystem.
 static unordered_map<string, unique_ptr<wnd>> wnds;
 
-// Background image.
-static bg bg;
-
 // Initialize and setup window system.
 void wsys::init() 
 {
-    // Update the background image according to the screen.
-    bg.update();
+    // Create background window.
+    wnds["0"] = make_unique<bg>();
 
     // Create a single window.
-    wnds["0"] = make_unique<wnd>(pos(0, 0), 
+    wnds["1"] = make_unique<wnd>(pos(0, 0), 
                                  res(100, 100));
 }
 

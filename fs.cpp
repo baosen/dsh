@@ -8,6 +8,7 @@
 #include "wndx.hpp"
 #include "wndy.hpp"
 #include "wndxc.hpp"
+#include "wndyc.hpp"
 #include "wndctl.hpp"
 #include "errno.hpp"
 using namespace std;
@@ -19,14 +20,23 @@ typedef initializer_list<shared_ptr<ent>> entries;
 #define dirp        make_shared<dir>
 #define filep(type) make_shared<type>
 
-// Window directory.
-static shared_ptr<dir> wnddir = dirp (
+// Background window directory.
+static shared_ptr<dir> bgdir = dirp (
     "0", 
     entries {
-        filep(wndctl)("0"),
-        filep(wndxc)("0"),
-        filep(wndx)("0"),
-        filep(wndy)("0")
+        filep(wndctl)("0")
+    }
+);
+
+// Background window directory.
+static shared_ptr<dir> wnddir = dirp (
+    "1", 
+    entries {
+        filep(wndctl)("1"),
+        filep(wndxc)("1"),
+        filep(wndyc)("1"),
+        filep(wndx)("1"),
+        filep(wndy)("1")
     }
 );
 
@@ -49,6 +59,7 @@ static dir root { // TODO: Remove root directory, which I think is unnecessary.
         dirp (
             "wnd",
             entries {
+                bgdir,
                 wnddir
             }
         )

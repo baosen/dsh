@@ -29,6 +29,8 @@ public:
     // Returns the window's color properties.
     prop   cp()   const;
 
+    // Show current window state.
+    void   show();
 
     // Move window to a new position.
     void   move(const pos& p);

@@ -1,11 +1,12 @@
 #include "bg.hpp"
+#include "scr.hpp"
 
-// Update background.
-void bg::update()
+// Create background window.
+bg::bg()
 {
-    // Get screen resolution.
-    scr s;
-    auto v = s.vinfo();
-    // Resize background to the current screen esolution.
-    vec.resize(v.xres * v.yres);
+    scr        s;
+    const auto v = s.vinfo();
+    pcur = pos(0, 0);
+    rcur = res(v.xres, v.yres);
+    fill(pix(0, 0, 100, 255));
 }

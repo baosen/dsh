@@ -11,7 +11,7 @@ wnd::wnd(const pos& p, // The position to place the rectangle in the framebuffer
 }
 
 // Create an empty rectangular window in the framebuffer.
-wnd::wnd() 
+wnd::wnd()
     : wnd(pos(0, 0), // Set position (0, 0).
           res(0, 0)) // Set resolution (0, 0).
 {}
@@ -131,6 +131,7 @@ void wnd::min()
 // Save current window graphics.
 vector<u32> wnd::savegfx()
 {
+    fill(pix(255, 255, 255, 255));
     vector<u32> v(size());
     read(v.data(), 0, size());
     return v;
@@ -242,6 +243,13 @@ int wnd::write(const void  *buf,  // Buffer of 32-bit unsigned RGBA pixels.
 
     // Indicate success!
     return 0; // Operation succeeded.
+}
+
+// Show current window state.
+void wnd::show()
+{
+    fb fb;
+    fb.flip();
 }
 
 // Save current postion and resolution of the window.

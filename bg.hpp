@@ -1,11 +1,9 @@
 #include <vector>
-#include "scr.hpp"
+#include "wnd.hpp"
 #include "types.hpp"
 
-// Background image.
-class bg : public std::vector<u32> {
+// Background window displaying something nice :).
+class bg : public wnd {
 public:
-    void update();
-private:
-    std::vector<u32> vec;
+    bg();
 };
