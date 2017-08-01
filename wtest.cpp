@@ -6,7 +6,7 @@
 using namespace std;
 
 // Test double flip and maximize window.
-static void maxtest()
+static void maxmintest()
 {
     wnd r1(pos(400, 400), res(100, 100)),
         r2(pos(200, 200), res(100, 100));
@@ -93,9 +93,9 @@ static void movetest()
 // Test "hacky" mouse combined with window rectangle.
 int main() 
 {
-    maxtest();
+    //maxmintest();
     //writetest();
-    //movetest();
+    movetest();
 
     return EXIT_SUCCESS;
 }
