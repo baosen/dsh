@@ -130,7 +130,7 @@ vector<u32> wnd::savegfx()
 // Move window to a new position.
 void wnd::move(const pos& p)
 {
-    // Read current window graphic.
+    // Save current window graphic.
     auto tmp = savegfx();
 
     // TODO: Fill current window with background color.
@@ -145,7 +145,7 @@ void wnd::move(const pos& p)
 // Move/set x coordinate position.
 void wnd::movex(const uint x)
 {
-    // Read current window graphic.
+    // Save current window graphic.
     auto tmp = savegfx();
 
     // TODO: Fill current window with background color.
@@ -160,7 +160,7 @@ void wnd::movex(const uint x)
 // Move/set y coordinate position.
 void wnd::movey(const uint y)
 {
-    // Read current window graphic.
+    // Save current window graphic.
     auto tmp = savegfx();
 
     // TODO: Fill current window with background color.
