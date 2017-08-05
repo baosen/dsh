@@ -1,6 +1,7 @@
 #include <cstring>
 #include <sstream>
 #include "fio.hpp"
+#include "ferr.hpp"
 #include "types.hpp"
 #include "dbg.hpp"
 #include "kb.hpp"
@@ -8,7 +9,6 @@ using namespace std;
 
 static const char *pathev1  = "/dev/input/event1";
 static const char *pathev2  = "/dev/input/event2";
-static const int  NONE      = -2;
 
 // Creates an empty keyboard that is not opened yet.
 kb::kb()
@@ -17,13 +17,13 @@ kb::kb()
 {}
 
 // Close the keyboard file descriptor.
-kb::~kb() 
+kb::~kb()
 {
     close();
 }
 
 // Open keyboard from file path.
-void kb::open() 
+void kb::open()
 {
     // TODO: Check if its already open.
 
@@ -46,7 +46,7 @@ void kb::open()
 }
 
 // Close keyboard event file.
-void kb::close() 
+void kb::close()
 {
     if (fdev1 != NONE && ::close(fdev1) < 0) {
         stringstream ss;

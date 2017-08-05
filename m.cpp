@@ -1,17 +1,18 @@
 #include <sstream>
 #include "fio.hpp"
+#include "ferr.hpp"
 #include "zero.hpp"
 #include "log.hpp"
 #include "m.hpp"
 using namespace std;
 
 // Open an empty "hacky" mouse.
-m::m() 
-    : fd(-2) 
+m::m()
+    : fd(NONE)
 {}
 
 // Open the "hacky" mouse input device file.
-m::m(const uint i) 
+m::m(const uint i)
 {
     // Open mouse i.
     if (open(i))
@@ -26,13 +27,13 @@ m::m(const uint i)
 }
 
 // Close mouse input device file.
-m::~m() 
+m::~m()
 {
     close();
 }
 
 // Open "hacky" mouse.
-bool m::open(const uint i) 
+bool m::open(const uint i)
 {
     // Generic input using mouse* device file.
     stringstream ss;
@@ -41,11 +42,12 @@ bool m::open(const uint i)
 }
 
 // Close "hacky" mouse.
-void m::close() 
+void m::close()
 {
     // If empty "hacky" mouse.
     if (fd == -2)
         return;
+
     // Close "hacky" mouse file.
     stringstream ss;
     if (::close(fd) < 0) {
@@ -56,15 +58,16 @@ void m::close()
 }
 
 // Read mouse input from mouse device file.
-m::ev m::rd() 
+m::ev m::rd()
 {
     // Read using generic mouse device file.
     char       e[3]; // The read mouse state.
     const auto ret = ::read(fd, &e, sizeof e);
 
-    // Failed to read?
+    // Failed to read from the "hacky" mouse?
     if (ret < 0)
-        throw errno; // todo.
+        throw errno; // TODO!.
+
     if (ret == sizeof e) {
         m::ev evt;
         evt.x     = e[1];              // x.
