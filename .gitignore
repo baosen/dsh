@@ -1,4 +1,3 @@
-tags
-.idea
 *.o
+*.elf
 a.out
