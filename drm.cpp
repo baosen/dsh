@@ -7,9 +7,9 @@
 #include "fio.hpp"
 #include "drm.hpp"
 
-// Direct rendering manager-system.
+// Direct Rendering Manager-system.
 namespace {
-    int fd = -1; // File descriptor to DRM device.
+    int fd = -1; // The file descriptor to DRM device.
 
     // DRM instance.
     struct Drm {
@@ -69,7 +69,7 @@ void drm::init()
 
         // Resolution for the current mode.
 		const auto carea = cmode->hdisplay * cmode->vdisplay;
-        // If it is larget, use it.
+        // If it is larger, use the area.
 		if (carea > area) {
 			d.mode = cmode;
 			area     = carea;
@@ -121,5 +121,5 @@ void drm::init()
 void drm::deinit() 
 {
     if (close(fd) < 0)
-        die("Failed to close the Direct Rendering Manager!");
+        die("Failed to close the Direct Rendering Manager file!");
 }

@@ -57,15 +57,18 @@ void config()
 
     // Get EGL configurations.
     EGLint n;
+
     if (!eglGetConfigs(egldisp, nullptr, 0, &n))
         die("Failed to get EGL configurations.");
 
     // Allocate EGL configuration.
     EGLConfig *configs = malloc(n * sizeof(EGLConfig));
+
     if (!eglChooseConfig(egldisp, attribs, configs, n, &n)) {
         free(configs);
         die("Failed to choose EGL configuration.");
     }
+
     if (!n) {
         free(configs);
         die("No EGL configuration exists.");
@@ -82,6 +85,7 @@ void config()
             return config;
         }
     }
+
     // Failed to find a config with a matching GBM format.
     die("Failed to find a configuration with a matching GBM format.");
 }
@@ -93,18 +97,21 @@ struct Wnd {
 };
 
 // Get GBM window.
-static Wnd getwnd()
+static auto getwnd()
 {
-    Wnd w;
-    w.gbm = gbm_surface_create(gbm, 256, 256, GBM_FORMAT_XRGB8888, GBM_BO_USE_RENDERING);
-    if (!w.gbm)
+    auto gbm = gbm_surface_create(gbm, 
+                                  256, 256, 
+                                  GBM_FORMAT_XRGB8888,   // What image format to use.
+                                  GBM_BO_USE_RENDERING); // ??.
+    if (!gbm)
         die("Failed to get GBM surface!");
 
 #ifdef EGL_MESA_platform_gbm
-    w.egl = eglCreatePlatformWindowSurfaceEXT(egl, egl, gbm, nullptr);
+    egl = eglCreatePlatformWindowSurfaceEXT(egl, egl, gbm, nullptr);
 #else
-    w.egl = eglCreateWindowSurface(w.egl, config.egl, w.gbm, nullptr);
+    egl = eglCreateWindowSurface(egl, config.egl, w.gbm, nullptr);
 #endif
+
     if (w.egl == EGL_NO_SURFACE)
         die("No GBM surface exists!");
 
