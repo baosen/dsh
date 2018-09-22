@@ -5,6 +5,7 @@
 #include "pix.hpp"
 #include "scr.hpp"
 
+// Window system.
 namespace wsys {
     uint getx(const char *name);
     uint gety(const char *name);
