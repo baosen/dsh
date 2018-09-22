@@ -10,7 +10,7 @@ namespace wsys {
     uint gety(const char *name);
 }
 
-// Rectangle image in framebuffer.
+// Window: A movable rectangle image in framebuffer.
 class wnd {
 public:
     // Create a window in the framebuffer.
