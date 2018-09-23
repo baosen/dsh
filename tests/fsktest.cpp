@@ -24,7 +24,7 @@ int main()
     wchar_t     c;
     input_event e;
     int         n;
-    for (;;) {
+    forever  {
         n = ::read(fd, &e, sizeof(e));
         if (n < 0) {
             puts("Failed to read keyboard file!");

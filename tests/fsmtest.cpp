@@ -19,7 +19,7 @@ int main()
     msys::ev e;
     int      n;
 
-    for (;;) {
+    forever {
         n = ::read(fd, &e, sizeof(e));
         if (n < 0) {
             puts("Failed to read mouse file!");

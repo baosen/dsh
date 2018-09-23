@@ -9,7 +9,7 @@ using namespace std;
 
 // Create window file x.
 wndx::wndx(const std::string& p)
-    : file("x"), 
+    : file("x"), // Name of window file.
       pname(p)   // Parent directory name.
 {}
 

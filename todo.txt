@@ -1,5 +1,7 @@
 Name change to gwsh (Graphical window shell) or file shell (fsh?)??
 
+Windowing file system???
+
 Hotkeys:
 - "Super"-key to open RUN-program.
 
@@ -8,3 +10,5 @@ Arch:
 
 Seats.
 - Multiple user and seats for a single computer.
+
+X11/Mir -> dsh -> fb/drm

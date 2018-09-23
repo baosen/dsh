@@ -78,7 +78,7 @@ static void movetest()
     wnd r(pos(px, py), res(100, 100));
     r.fillflip(pix(255, 255, 255, 255));
 
-    for (;;) {
+    forever {
         const auto e = m.rd();
         px += e.x;
         py += -1*e.y;

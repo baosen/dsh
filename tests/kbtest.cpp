@@ -8,7 +8,7 @@ static void wctest(kb& kb)
 {
     wchar_t     c[2] = {0};
     input_event k;
-    for (;;) {
+    forever  {
         k    = kb.rd1();
         c[0] = towc(k);
         if (c[0] == '\0')
@@ -22,7 +22,7 @@ static void asciitest(kb& kb)
 {
     char c;
     input_event k;
-    for (;;) {
+    forever  {
         k = kb.rd1();
         cout << "Read!" << endl;
         c = toc(k);
@@ -35,13 +35,13 @@ static void asciitest(kb& kb)
 
 static void get1(kb& kb)
 {
-    for (;;)
+    forever
         kb.get1();
 }
 
 static void get2(kb& kb)
 {
-    for (;;)
+    forever
         kb.get2();
 }
 

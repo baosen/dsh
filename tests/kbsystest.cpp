@@ -20,7 +20,7 @@ static void asciitest()
     input_event e;
     char        c;
 
-    for (;;) {
+    forever {
         e = get();
         c = toc(e);
         if (c == '\0')
@@ -35,7 +35,7 @@ static void wctest()
     wchar_t     c;
     input_event e;
 
-    for (;;) {
+    forever {
         e = get();
         c = towc(e);
         if (c == '\0') {

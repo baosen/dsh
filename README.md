@@ -1,6 +1,6 @@
 # dsh
 
-A file system that manages windows.
+A file system (using FUSE) that manages windows.
 
 # Authors
 
