@@ -3,23 +3,52 @@
 ###########
 
 all: \
-	$(OBJDIR)/log.o \
-	$(OBJDIR)/fb.o \
-	$(OBJDIR)/pix.o \
-	$(OBJDIR)/scr.o \
-	$(OBJDIR)/fs.o \
-	$(OBJDIR)/ent.o \
-	$(OBJDIR)/file.o \
+	$(OBJDIR)/bg.o \
 	$(OBJDIR)/dir.o \
+	$(OBJDIR)/dpycmd.o \
+	$(OBJDIR)/dpy.o \
+	$(OBJDIR)/dpytests.o \
+	$(OBJDIR)/dsh.o \
+	$(OBJDIR)/dsys.o \
+	$(OBJDIR)/ent.o \
+	$(OBJDIR)/ev.o \
+	$(OBJDIR)/evm.o \
+	$(OBJDIR)/evts.o \
+	$(OBJDIR)/fb.o \
+	$(OBJDIR)/file.o \
+	$(OBJDIR)/fs.o \
+	$(OBJDIR)/gn.o \
+	$(OBJDIR)/init.o \
+	$(OBJDIR)/kbc.o \
+	$(OBJDIR)/kb.o \
 	$(OBJDIR)/kbf.o \
+	$(OBJDIR)/kbsys.o \
+	$(OBJDIR)/keywait.o \
+	$(OBJDIR)/locale.o \
+	$(OBJDIR)/log.o \
 	$(OBJDIR)/m.o \
 	$(OBJDIR)/mf.o \
+	$(OBJDIR)/mrd.o \
+	$(OBJDIR)/msys.o \
+	$(OBJDIR)/mwnd.o \
+	$(OBJDIR)/parse.o \
+	$(OBJDIR)/pix.o \
+	$(OBJDIR)/pos.o \
+	$(OBJDIR)/res.o \
+	$(OBJDIR)/scr.o \
+	$(OBJDIR)/ssys.o \
+	$(OBJDIR)/topos.o \
+	$(OBJDIR)/utf8.o \
+	$(OBJDIR)/wd.o \
+	$(OBJDIR)/wndcmd.o \
+	$(OBJDIR)/wnd.o \
+	$(OBJDIR)/wndctl.o \
 	$(OBJDIR)/wndd.o \
-	$(OBJDIR)/wndx.o \
-	$(OBJDIR)/wndy.o \
 	$(OBJDIR)/wndxc.o \
+	$(OBJDIR)/wndx.o \
 	$(OBJDIR)/wndyc.o \
-	$(OBJDIR)/wndctl.o
+	$(OBJDIR)/wndy.o \
+	$(OBJDIR)/wsys.o
 
 # Log module.
 $(OBJDIR)/log.o: log.cpp $(INCDIR)/log.hpp
